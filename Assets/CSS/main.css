@@ -13,7 +13,7 @@ body {
     width: 200px;
     transition: all 0.5s;
     cursor: pointer;
-    margin: 5px;
+    margin: auto;
     vertical-align: middle;
     position: relative;
 
@@ -43,8 +43,8 @@ body {
     right: 0;
 }
 #mainHeader{
-    color: #ff3399;
-    font-size: 40px;
+    color: #303036;
+    font-size: 100px;
     text-align: center;
     padding-top: 100px;
     margin-bottom: 25px;
