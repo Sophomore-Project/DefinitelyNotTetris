@@ -2,7 +2,7 @@ body {
     background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png")
 }
 .button {
-    display: inline-block;
+    display: block;
     border-radius: 6px;
     background-color: #303036;
     border: none;
@@ -15,8 +15,12 @@ body {
     cursor: pointer;
     margin: 5px;
     vertical-align: middle;
-}
+    position: relative;
 
+}
+.mainDiv{
+    margin: auto;
+}
 .button span{
     cursor: pointer;
     display: inline-block;
@@ -37,4 +41,11 @@ body {
 .button:hover span:after{
     opacity:1;
     right: 0;
+}
+#mainHeader{
+    color: #ff3399;
+    font-size: 40px;
+    text-align: center;
+    padding-top: 100px;
+    margin-bottom: 25px;
 }
