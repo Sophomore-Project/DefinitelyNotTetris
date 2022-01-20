@@ -1,5 +1,6 @@
 body {
-    background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png")
+    background-image: url("/Assets/Images/Background.png")
+    
 }
 .button {
     display: block;
@@ -9,23 +10,21 @@ body {
     color: #FFFAFF;
     text-align: center;
     font-size: 30px;
-    padding: 20px;
-    width: 200px;
+    padding: 50px;
+    width: 500px;
     transition: all 0.5s;
+    margin: 10px;
+    margin-left:auto;
+    margin-right: auto;
     cursor: pointer;
-    margin: auto;
-    vertical-align: middle;
     position: relative;
 
-}
-.mainDiv{
-    margin: auto;
 }
 .button span{
     cursor: pointer;
     display: inline-block;
     position: relative;
-    transition: 1s;
+    transition: 0.5s;
 }
 .button span:after{
     content: '\00bb';
@@ -43,8 +42,8 @@ body {
     right: 0;
 }
 #mainHeader{
-    color: #303036;
-    font-size: 100px;
+    color: #1f1300;
+    font-size: 65px;
     text-align: center;
     padding-top: 100px;
     margin-bottom: 25px;
