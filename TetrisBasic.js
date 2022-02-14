@@ -29,3 +29,25 @@ function coordArray(){ //creating a coordinate Array
          i=0;
     }
 }
+
+function initiateCanvas(){
+   canvas = document.getElementById('my-canvas');
+   ctx = canvas.getContext('2d');
+   canvas.width = 936; //total width of 936 pixels
+   canvas.height = 956; //total height
+   ctx.scale(2,2); //making it all 2x bigger
+
+   //drawing a rectangle inside canvas
+   ctx.fillStyle = 'white';
+   ctx.fillRect(0,0, canvas.width, canvas.height);
+
+   //drawing stroke around rectangle
+   ctx.strokeStyle = 'black';
+   ctx.strokeRect(8, 8, 280, 462);
+
+   coordArray();
+   //could add DrawTetromino();
+
+
+
+}
