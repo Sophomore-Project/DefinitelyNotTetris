@@ -4,7 +4,7 @@ let gArrayHeight = 20; //20 squares going down
 let gArrayWidth = 12; //12 blocks going across the game board
 let initX = 4; //starts the tetriminoes start 4 blocksaway
 let initY = 0;
-let coordinateArray = [...Array(gArrayHeight)].map(e => (gArrayWidth).fill(0)); //this creates a multi dimensional array
+let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 
 class Coordinates{
@@ -14,7 +14,7 @@ class Coordinates{
     }
 }
 
-document.addEventListener('DOMContentLoaded', SetupCanvas); //when the DOM Content is Loaded it calls our function set up canvas
+document.addEventListener('DOMContentLoaded', initiateCanvas); //when the DOM Content is Loaded it calls our function set up canvas
 
 function coordArray(){ //creating a coordinate Array
     let i = 0, j = 0;
@@ -32,7 +32,7 @@ function coordArray(){ //creating a coordinate Array
 
 function initiateCanvas(){
    canvas = document.getElementById('my-canvas');
-   ctx = canvas.getContext('2d');
+   ctx = canvas.getContext('2d'); //making it 2d since thats what we are working with
    canvas.width = 936; //total width of 936 pixels
    canvas.height = 956; //total height
    ctx.scale(2,2); //making it all 2x bigger
