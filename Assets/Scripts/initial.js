@@ -1,10 +1,3 @@
-let canvas;
-let ctx;
-let gArrayHeight = 20; //20 squares going down
-let gArrayWidth = 10; //10 blocks going across the game board
-let initX = 4; //Tetromino's spawn in the 4th x Array spot
-let initY = 0; // And 0'th array spot
-let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
