@@ -68,8 +68,6 @@ function InitiateCanvas(){
    ctx.strokeStyle = 'black';
    ctx.strokeRect(8, 8, 234, 462);
 
-window.requestAnimationFrame(gameLoop);
-
     document.addEventListener('keydown', HandleKeyPress);
 
     //Function calls
@@ -77,7 +75,6 @@ window.requestAnimationFrame(gameLoop);
     CreateTetromino();
     CoordArray();
     DrawTetromino();
-
 
 }
 /*This function utilizes our coordinate array that allows to check the location of where we want to draw our Tetromino rectangles
@@ -108,9 +105,7 @@ function DrawTetromino(){
 
     }
 }
-function gameLoop(timeStamp){
-draw t
-}
+
 function HandleKeyPress(key){
     //KeyCode 37 is for left arrow key
     if(key.keyCode === 37){
