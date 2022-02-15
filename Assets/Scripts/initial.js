@@ -18,6 +18,9 @@ let curTetrominoColor;
 //gameBoardArray stores all the positions of currently places squares
 let gameBoardArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
+//stoppedArray is where all the no longer moving pieces of the game will be stored
+let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
+
 let DIRECTION = {
     IDLE: 0,
     DOWN: 1,
@@ -121,10 +124,13 @@ function HandleKeyPress(key){
         DrawTetromino();
     }//KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
-        direction = DIRECTION.DOWN;
-        DeleteTetromino();
-        initY++;
-        DrawTetromino();
+        //If the tetromino hasn't hit the floow yet, then move down.
+        if(!HitTheBottom()){
+            direction = DIRECTION.DOWN;
+            DeleteTetromino();
+            initY++;
+            DrawTetromino();
+        }
     }
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
@@ -168,4 +174,63 @@ function CreateTetromino(){
     curTetromino = tetrominos[randomTetromino];
     curTetrominoColor = tetrominoColors[randomTetromino];
     //identifies a unique color for each shape
+}
+
+//I (Majeed) am tasked with generating tetrominos after they stop and can't go down anymore.
+//I plan on simply starting the initial function for the bottom collision, but since that it Claire's
+//part, I am only putting what I think would work for tetromino generation.
+
+function HitTheBottom(){
+    //initially there would be no collisions
+    let collision = false;
+    //creating a copy of curTetromino
+    //let tetrominoCopy = curTetromino;
+
+    for(let i = 0; i < curTetromino.length; i++){
+
+        let block = curTetromino[i];
+        //the x pixel value is x value of the tetromino block + the initial x value
+        let x = block[0] + initX;
+        //the y pixel value is the y value of the tetromino block array + the initial y value
+        let y = block[1] + initY;
+        //if it moves down, increment y
+        if(direction === DIRECTION.DOWN){
+            y++
+        }
+        //if the type of the stoppedArray is string, indicate we have a collision and cement it
+        if(typeof stoppedArray[x][y+1] === 'string'){
+            DeleteTetromino();
+            initY++;
+            DrawTetromino();
+            collision = true;
+            break;
+        }
+        //if y >= 20, indicate we have collided with the border
+        if(y >= 20){
+            collision = true;
+            break;
+        }
+
+    }
+    //if we have collided add the curTetromino to the stoppedArray
+    if(collision){
+        for(let i = 0; i < curTetromino.length; i++){
+            let square = curTetromino[i];
+            let x = square[0] + initX;
+            let y = square[1] + initY;
+            stoppedArray[x][y] = curTetrominoColor;
+            
+        }
+
+        CreateTetromino();
+        //set direction to idle so it doesn't move
+        direction = DIRECTION.IDLE;
+        initX = 4;
+        initY = 0;
+        DrawTetromino();
+        
+    }
+    //return collision
+    return collision;
+
 }
