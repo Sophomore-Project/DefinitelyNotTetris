@@ -5,7 +5,26 @@ let gArrayWidth = 10; //10 blocks going across the game board
 let initX = 4; //Tetromino's spawn in the 4th x Array spot
 let initY = 0; // And 0'th array spot
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
-let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
+
+//this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
+//The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
+let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; 
+
+//Stores all the tetromino shape combination
+let tetrominos = [];
+let tetrominoColors = ['purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
+let curTetrominoColor;
+
+//gameBoardArray stores all the positions of currently places squares
+let gameBoardArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
+
+let DIRECTION = {
+    IDLE: 0,
+    DOWN: 1,
+    LEFT: 2,
+    RIGHT: 3,
+}
+let direction;
 
 class Coordinates{
     constructor(x,y){
@@ -14,9 +33,9 @@ class Coordinates{
     }
 }
 
-document.addEventListener('DOMContentLoaded', initiateCanvas); //when the DOM Content is Loaded it calls our function set up canvas
+document.addEventListener('DOMContentLoaded', InitiateCanvas); //when the DOM Content is Loaded it calls our function set up canvas
 
-function coordArray(){ //creating a coordinate Array
+function CoordArray(){ //creating a coordinate Array
     let i = 0, j = 0;
 //starts off 9 pixels from the top of the screen and it continues this loop until it reaches the end
 //which is 446 pixels long, add 23 pixels because that is the size of one block
@@ -31,7 +50,7 @@ function coordArray(){ //creating a coordinate Array
     }
 }
 
-function initiateCanvas(){
+function InitiateCanvas(){
    canvas = document.getElementById('canvas');
    ctx = canvas.getContext('2d');
    canvas.width = 936; //total width of 936 pixels
@@ -46,7 +65,107 @@ function initiateCanvas(){
    ctx.strokeStyle = 'black';
    ctx.strokeRect(8, 8, 234, 462);
 
-   coordArray();
-   //could add DrawTetromino();
+    document.addEventListener('keydown', HandleKeyPress);
 
+    //Function calls
+    CreateTetrominos();
+    CreateTetromino();
+    CoordArray();
+    DrawTetromino();
+
+}
+/*This function utilizes our coordinate array that allows to check the location of where we want to draw our Tetromino rectangles
+For example the [0],[0] spot would be x=11 pixels and y=9 pixels respectively
+More examples: would be [1],[1] x=34 and y=32 respectively and [8],[16] x=172 and y=400 respectively 
+Cycling through current Tetromino identifies the current shape by cycling throug ha 2d array [r][c]
+[[1,0],  the below for loop cycles through x values as such x = 1 + 4 then 0 + 4 then 1 + 4 then 2 + 4
+[0,1],   and loops through y values as 0 + 0 then 1 + 0 then 1 + 0 then 1+0 then 1 + 0
+[1,1], 
+[2,1]]
+*/
+function DrawTetromino(){
+    //console.log("Current Tetromino length is = " + curTetromino[0][0]);
+    for (let i = 0; i < curTetromino.length ; i++){        
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+        //places a 1 in this spot to identify that there is a rectangle in this exact spot
+        gameBoardArray[x][y] = 1;
+        console.log(coordinateArray[x][y]);
+        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        
+        //Canvas context editor
+        //console.log(curTetrominoColor);
+        ctx.fillStyle = curTetrominoColor;
+        ctx.fillRect(coorX,coorY, 21, 21);
+
+    }
+}
+
+function HandleKeyPress(key){
+    //KeyCode 37 is for left arrow key
+    if(key.keyCode === 37){
+        console.log("Left key is pressed");
+        direction = DIRECTION.LEFT;
+        DeleteTetromino();
+        initX--;
+        DrawTetromino();
+    }//KeyCode 39 is for right arrow key
+    else if(key.keyCode === 39){
+        console.log("Right key is pressed");
+        direction = DIRECTION.RIGHT;
+        DeleteTetromino();
+        initX++;
+        
+        DrawTetromino();
+    }//KeyCode 40 is for down arrow key
+    else if(key.keyCode == 40){
+        direction = DIRECTION.DOWN;
+        DeleteTetromino();
+        initY++;
+        DrawTetromino();
+    }
+    //KeyCode 38 is for up arrowkey
+    else if(key.keyCode == 38){
+        console.log("Rotation function to be called here");
+        //RotateTetromino();
+    }
+}
+//This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
+function DeleteTetromino(){
+    for(let i = 0; i<curTetromino.length; i++){
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+        gameBoardArray[x][y] = 0;
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(coorX, coorY, 21, 21);
+    }
+}
+function CreateTetrominos(){
+    //Push method essentially means adding into an array
+    // Pushes T shape array into our Tetrominos array
+    tetrominos.push([[1,0], [0,1], [1,1], [2,1]]);
+    // Pushes I shape array into our Tetrominos array
+    tetrominos.push([[0,0], [1,0], [2,0], [3,0]]);
+    // Pushes J shape array into our Tetrominos array
+    tetrominos.push([[0,0], [0,1], [1,1], [2,1]]);
+    // Pushes Square shape array into our Tetrominos array
+    tetrominos.push([[0,0], [1,0], [0,1], [1,1]]);
+    // Pushes L shape array into our Tetrominos array
+    tetrominos.push([[2,0], [0,1], [1,1], [2,1]]);
+    // Pushes S shape array into our Tetrominos array
+    tetrominos.push([[1,0], [2,0], [0,1], [1,1]]);
+    // Pushes Z shape array into our Tetrominos array
+    tetrominos.push([[0,0], [1,0], [1,1], [2,1]]);
+}
+
+function CreateTetromino(){
+    //Retrieves a random tetromino from the tetrominos array which we initialized within CreateTetrominos method
+    let randomTetromino = Math.floor(Math.random() * tetrominos.length);
+    curTetromino = tetrominos[randomTetromino];
+    curTetrominoColor = tetrominoColors[randomTetromino];
+    //identifies a unique color for each shape
 }
