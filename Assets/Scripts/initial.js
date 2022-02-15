@@ -68,7 +68,7 @@ function InitiateCanvas(){
    ctx.strokeStyle = 'black';
    ctx.strokeRect(8, 8, 234, 462);
 
-//window.requestAnimationFrame(gameLoop);
+window.requestAnimationFrame(gameLoop);
 
     document.addEventListener('keydown', HandleKeyPress);
 
@@ -108,10 +108,9 @@ function DrawTetromino(){
 
     }
 }
-/*
 function gameLoop(timeStamp){
 draw t
-}*/
+}
 function HandleKeyPress(key){
     //KeyCode 37 is for left arrow key
     if(key.keyCode === 37){
@@ -144,12 +143,6 @@ function HandleKeyPress(key){
         //RotateTetromino();
     }
 }
-window.setInterval(function(){
-    direction = DIRECTION.DOWN;
-},1000);
-
-
-
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
 function DeleteTetromino(){
     for(let i = 0; i<curTetromino.length; i++){
