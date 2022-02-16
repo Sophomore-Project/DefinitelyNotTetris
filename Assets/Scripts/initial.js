@@ -284,3 +284,9 @@ function GetLastSquareX()
     }
     return lastX;
 }
+
+
+//moves the tetromino down every second
+window.setInterval(function(){
+    MoveTetrominoDown();
+},1000);
