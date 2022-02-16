@@ -215,6 +215,26 @@ function HitTheBottom(){
             break;
         }
     }
+    //if we have collided add the curTetromino to the stoppedArray
+    if(collision){
+        for(let i = 0; i < curTetromino.length; i++){
+            let square = curTetromino[i];
+            let x = square[0] + initX;
+            let y = square[1] + initY;
+            stoppedArray[x][y] = curTetrominoColor;
+            
+        }
+
+        CreateTetromino();
+        //set direction to idle so it doesn't move
+        direction = DIRECTION.IDLE;
+        initX = 4;
+        initY = 0;
+        DrawTetromino();
+        
+    }
+    //return collision
+    return collision;
 }
 
 
@@ -239,28 +259,9 @@ function CheckHorizontal(xMove) {
         if( (checkX < 0) || (checkX > gArrayWidth) || (gameBoardArray[checkX][checkY] != 0) ) {
             return true;
         }
-
     }
-    //if we have collided add the curTetromino to the stoppedArray
-    if(collision){
-        for(let i = 0; i < curTetromino.length; i++){
-            let square = curTetromino[i];
-            let x = square[0] + initX;
-            let y = square[1] + initY;
-            stoppedArray[x][y] = curTetrominoColor;
-            
-        }
-
-        CreateTetromino();
-        //set direction to idle so it doesn't move
-        direction = DIRECTION.IDLE;
-        initX = 4;
-        initY = 0;
-        DrawTetromino();
-        
-    }
-    //return collision
-    return collision;
+    // if no collision was found to any of the components of the current tetromino, there are no horizontal obstructions
+    return false;
 
 }
 
@@ -320,3 +321,6 @@ function GetLastSquareX()
 window.setInterval(function(){
     MoveTetrominoDown();
 },1000);
+    // if no collision was found to any of the components of the current tetromino, there are no horizontal obstructions
+    return false;
+}
