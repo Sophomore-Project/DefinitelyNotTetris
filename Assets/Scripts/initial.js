@@ -4,7 +4,6 @@ let gArrayHeight = 20; //20 squares going down
 let gArrayWidth = 10; //10 blocks going across the game board
 let initX = 4; //Tetromino's spawn in the 4th x Array spot
 let initY = 0; // And 0'th array spot
-let score = 0;
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
@@ -126,16 +125,12 @@ function HandleKeyPress(key){
     }//KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //If the tetromino hasn't hit the floow yet, then move down.
-        MoveTetrominoDown();
-        }
-    }
-
-    function MoveTetrominoDown(){
         if(!HitTheBottom()){
             direction = DIRECTION.DOWN;
             DeleteTetromino();
             initY++;
             DrawTetromino();
+        }
     }
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
@@ -143,11 +138,6 @@ function HandleKeyPress(key){
         RotateTetromino();
     }
 }
-//moves the tetromino down every second
-window.setInterval(function(){
-    MoveTetrominoDown();
-},1000);
-
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
 function DeleteTetromino(){
     for(let i = 0; i<curTetromino.length; i++){
@@ -244,6 +234,9 @@ function HitTheBottom(){
     return collision;
 
 }
+//Preconditions: The player hits a key indictacting they wish to rotate the currentTetromino
+//postconditions: The x and y values of the current Tetromino are exchanged to simulate a rotation
+
 function RotateTetromino()
 {
     let newRotation = new Array();//the function will use this to replace curTetromino
@@ -291,3 +284,9 @@ function GetLastSquareX()
     }
     return lastX;
 }
+
+
+//moves the tetromino down every second
+window.setInterval(function(){
+    MoveTetrominoDown();
+},1000);
