@@ -105,7 +105,14 @@ function DrawTetromino(){
 
     }
 }
-
+function MoveTetrominoDown(){
+    if(!HitTheBottom()){
+        direction = DIRECTION.DOWN;
+        DeleteTetromino();
+        initY++;
+        DrawTetromino();
+    }
+}
 function HandleKeyPress(key){
     //KeyCode 37 is for left arrow key
     if(key.keyCode === 37){
@@ -126,10 +133,7 @@ function HandleKeyPress(key){
     else if(key.keyCode == 40){
         //If the tetromino hasn't hit the floow yet, then move down.
         if(!HitTheBottom()){
-            direction = DIRECTION.DOWN;
-            DeleteTetromino();
-            initY++;
-            DrawTetromino();
+            MoveTetrominoDown();
         }
     }
     //KeyCode 38 is for up arrowkey
