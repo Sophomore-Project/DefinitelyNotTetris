@@ -327,4 +327,3 @@ function GetLastSquareX()
 window.setInterval(function(){
     MoveTetrominoDown();
 },1000);
-
