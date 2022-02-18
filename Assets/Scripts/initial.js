@@ -118,18 +118,23 @@ function HandleKeyPress(key){
     if(key.keyCode === 37){
         console.log("Left key is pressed");
         direction = DIRECTION.LEFT;
-        DeleteTetromino();
-        initX--;
-        DrawTetromino();
-    }//KeyCode 39 is for right arrow key
+        if (!CheckHorizontal(-1)) {
+            DeleteTetromino();
+            initX--;
+            DrawTetromino();
+        }
+    }
+    //KeyCode 39 is for right arrow key
     else if(key.keyCode === 39){
         console.log("Right key is pressed");
         direction = DIRECTION.RIGHT;
-        DeleteTetromino();
-        initX++;
-        
-        DrawTetromino();
-    }//KeyCode 40 is for down arrow key
+        if (!CheckHorizontal(1)) {
+            DeleteTetromino();
+            initX++;
+            DrawTetromino();
+        }
+    }
+    //KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //If the tetromino hasn't hit the floow yet, then move down.
         if(!HitTheBottom()){
@@ -241,7 +246,7 @@ function HitTheBottom(){
 /**
  * Check if the space to the side of any component of the tetromino in a given direction is an invalid/occupied space
  * 
- * @param {*} xMove the value of X coordinates the block is being checked to move. A value of -1 represents a left shift while a value of 1 represents a right shift
+ * @param {*} xMove the value of X coordinates the block is being checked to move. A value of -1 represents a left shift while a value of 1 represents a right shift by one unit
  * 
  * @returns boolean that represents whether there is an obstruction preventing the motion of the tetromino in the given direction
  * 
@@ -255,8 +260,9 @@ function CheckHorizontal(xMove) {
         let checkX = curTetromino[i][0] + initX + xMove;
         let checkY = curTetromino[i][1] + initY;
 
-        // if the location being checked for collision is beyond the right or left borders of the game board, OR the the game board contains a frozen block (value of anything but 0) at this location, the location being checked is invalid/obstructed so true should be returned
-        if( (checkX < 0) || (checkX > gArrayWidth) || (gameBoardArray[checkX][checkY] != 0) ) {
+        // if the location being checked for collision is beyond the right or left borders of the game board, OR the the game board contains a frozen block (value of anything but 0 or undefined) at this location, the location being checked is invalid/obstructed so true should be returned
+        if( (checkX < 0) || (checkX >= gArrayWidth) || (stoppedArray[checkX][checkY] != 0 && stoppedArray[checkX][checkY] != undefined) ) {
+            console.log("horizontal collision")
             return true;
         }
     }
@@ -321,6 +327,4 @@ function GetLastSquareX()
 window.setInterval(function(){
     MoveTetrominoDown();
 },1000);
-    // if no collision was found to any of the components of the current tetromino, there are no horizontal obstructions
-    return false;
-}
+
