@@ -118,18 +118,23 @@ function HandleKeyPress(key){
     if(key.keyCode === 37){
         console.log("Left key is pressed");
         direction = DIRECTION.LEFT;
-        DeleteTetromino();
-        initX--;
-        DrawTetromino();
-    }//KeyCode 39 is for right arrow key
+        if (!CheckHorizontal(-1)) {
+            DeleteTetromino();
+            initX--;
+            DrawTetromino();
+        }
+    }
+    //KeyCode 39 is for right arrow key
     else if(key.keyCode === 39){
         console.log("Right key is pressed");
         direction = DIRECTION.RIGHT;
-        DeleteTetromino();
-        initX++;
-        
-        DrawTetromino();
-    }//KeyCode 40 is for down arrow key
+        if (!CheckHorizontal(1)) {
+            DeleteTetromino();
+            initX++;
+            DrawTetromino();
+        }
+    }
+    //KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //If the tetromino hasn't hit the floow yet, then move down.
         if(!HitTheBottom()){
@@ -214,7 +219,6 @@ function HitTheBottom(){
             collision = true;
             break;
         }
-
     }
     //if we have collided add the curTetromino to the stoppedArray
     if(collision){
@@ -236,8 +240,37 @@ function HitTheBottom(){
     }
     //return collision
     return collision;
+}
+
+
+/**
+ * Check if the space to the side of any component of the tetromino in a given direction is an invalid/occupied space
+ * 
+ * @param {*} xMove the value of X coordinates the block is being checked to move. A value of -1 represents a left shift while a value of 1 represents a right shift by one unit
+ * 
+ * @returns boolean that represents whether there is an obstruction preventing the motion of the tetromino in the given direction
+ * 
+ * @example at least one component of the current tetronmino is located against the left most wall. This function returns true when called with an argument of -1
+ * @example there is a frozen block on the game board directly to the right of at least one of the components of the current tetromino. This function returns true with an argument of 1
+ */
+function CheckHorizontal(xMove) {
+    for(let i = 0; i < curTetromino.length; i++) {
+        
+        // these are the coordinates of the component of the tetromino that should be checked for collision. The relative coordinates of the shape are added to the position of the origin with xMove being added to X because we are checking for horizontal collision either to the right or left
+        let checkX = curTetromino[i][0] + initX + xMove;
+        let checkY = curTetromino[i][1] + initY;
+
+        // if the location being checked for collision is beyond the right or left borders of the game board, OR the the game board contains a frozen block (value of anything but 0 or undefined) at this location, the location being checked is invalid/obstructed so true should be returned
+        if( (checkX < 0) || (checkX >= gArrayWidth) || (stoppedArray[checkX][checkY] != 0 && stoppedArray[checkX][checkY] != undefined) ) {
+            console.log("horizontal collision")
+            return true;
+        }
+    }
+    // if no collision was found to any of the components of the current tetromino, there are no horizontal obstructions
+    return false;
 
 }
+
 //Preconditions: The player hits a key indictacting they wish to rotate the currentTetromino
 //postconditions: The x and y values of the current Tetromino are exchanged to simulate a rotation
 
