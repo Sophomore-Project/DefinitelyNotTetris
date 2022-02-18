@@ -61,21 +61,41 @@ function InitiateCanvas(){
    ctx.scale(2,2); //2x Scale
 
    //drawing a rectangle inside canvas
-   ctx.fillStyle = 'white';
+   ctx.fillStyle = 'grey';
    ctx.fillRect(0,0, canvas.width, canvas.height);
 
    //drawing stroke around rectangle
    ctx.strokeStyle = 'black';
    ctx.strokeRect(8, 8, 234, 462);
+   drawDashedPattern(ctx);
+   
+   document.addEventListener('keydown', HandleKeyPress);
 
-    document.addEventListener('keydown', HandleKeyPress);
+   //Function calls
+   CreateTetrominos();
+   CreateTetromino();
+   CoordArray();
+   DrawTetromino();
 
-    //Function calls
-    CreateTetrominos();
-    CreateTetromino();
-    CoordArray();
-    DrawTetromino();
+}
 
+//Responsible for drawing dashed lines, the coordinates are cherry picked to not draw on the overlapping coordinates of where squares will be to prevent drawing bugs
+function drawDashedPattern(ctx){
+
+    for(let i = 31; i<=446; i+=23){
+        ctx.beginPath();
+        ctx.setLineDash([1,1]);
+        ctx.moveTo(9, i);
+        ctx.lineTo(242, i);
+        ctx.stroke();
+    }
+    for(let i=33;i<219;i+=23 ){
+        ctx.beginPath();
+        ctx.setLineDash([1,1]);
+        ctx.moveTo(i, 9);
+        ctx.lineTo(i, 446+24);
+        ctx.stroke();
+    }
 }
 /*This function utilizes our coordinate array that allows to check the location of where we want to draw our Tetromino rectangles
 For example the [0],[0] spot would be x=11 pixels and y=9 pixels respectively
@@ -155,7 +175,7 @@ function DeleteTetromino(){
         gameBoardArray[x][y] = 0;
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'grey';
         ctx.fillRect(coorX, coorY, 21, 21);
     }
 }
