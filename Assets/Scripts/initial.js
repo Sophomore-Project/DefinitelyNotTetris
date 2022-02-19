@@ -347,7 +347,8 @@ function DrawRotatedTetromino(Flippedarray){
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        //places a 1 in this spot to identify that there is a rectangle in this exact spot
+       //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
+       //aka nothing happens if a collision would happen
         if(gameBoardArray[x][y] == 1){
             curTetromino = Flippedarray;
             console.log("collision detected!");
