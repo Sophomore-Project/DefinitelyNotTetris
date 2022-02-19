@@ -317,7 +317,7 @@ function RotateTetromino()
     // and Try to draw the new Tetromino rotation
     try{
         curTetromino = newRotation;
-        DrawTetromino();
+        DrawRotatedTetromino(curTetrominoBU);
     }  
     //sometimes drawing the Tetromino may now work, such as an out of bounds. In which case the rotation does not work
     catch (e){ 
@@ -341,7 +341,36 @@ function GetLastSquareX()
     }
     return lastX;
 }
+function DrawRotatedTetromino(Flippedarray){
+    //console.log("Current Tetromino length is = " + curTetromino[0][0]);
+   
+    for (let i = 0; i < curTetromino.length ; i++){        
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+        //places a 1 in this spot to identify that there is a rectangle in this exact spot
+        if(gameBoardArray[x][y] == 1){
+            curTetromino = Flippedarray;
+            console.log("collision detected!");
+        }
 
+    }
+    for (let i = 0; i < curTetromino.length ; i++){        
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+        //places a 1 in this spot to identify that there is a rectangle in this exact spot
+        gameBoardArray[x][y] = 1;
+     //   console.log(coordinateArray[x][y]);
+        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        
+        //Canvas context editor
+        //console.log(curTetrominoColor);
+        ctx.fillStyle = curTetrominoColor;
+        ctx.fillRect(coorX,coorY, 21, 21);
+
+    }
+}
 
 //moves the tetromino down every second
 window.setInterval(function(){
