@@ -128,6 +128,7 @@ function DrawTetromino(){
 function MoveTetrominoDown(){
     if(!HitTheBottom()){
         direction = DIRECTION.DOWN;
+        chances = 0;
         DeleteTetromino();
         initY++;
         DrawTetromino();
@@ -374,6 +375,65 @@ function DrawRotatedTetromino(Flippedarray){
 }
 
 //moves the tetromino down every second
-window.setInterval(function(){
-    MoveTetrominoDown();
-},1000);
+lastflag = false;
+//moves the tetromino down every second
+let lastTime = 0;
+let dropCounter=0;
+function update(time = 0) {
+    const deltaTime = time - lastTime;
+
+    dropCounter += deltaTime;
+    if (dropCounter > ActiveTimer) {
+     //  console.log("Drop"+dropCounter);
+      // console.log("Active"+ ActiveTimer);
+        MoveTetrominoDown();
+       //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
+            LastChanceChecker();
+                
+        dropCounter=0;
+    }
+let bottomflag = false;
+    lastTime = time;
+    let BottomY=0;
+    for(let i = 0; i < curTetromino.length; i++){//if there is going to be  nothing at the bottom of the Tetromino
+                                                    //at any point, the time goes back to normal
+
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+        if(BottomY<y){//the block at the bottom will be used to determine if the next drop would lead to a collision
+            BottomY = y;
+            
+        }
+        if(gameBoardArray[x][BottomY+2]===1||(y>17)){
+bottomflag = true;
+break;
+        }
+    }
+if(bottomflag==false){//if there is no detected would-be collision, time goes back to normal
+    ActiveTimer = levelTimer;
+}
+    requestAnimationFrame(update);//this function should go on forever
+}
+update();
+let chances = 0;
+function LastChanceChecker(){
+    if(chances < 1){//this is to prevent abuse (going left and right repeatly)
+    for(let i = 0; i < curTetromino.length; i++){
+
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+      
+        //if the type of the stoppedArray is string, indicate we have a collision and cement it
+        if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
+            ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
+            chances++;
+            //console.log("Time expanded");
+          
+        
+           break;
+        }
+        
+       
+    }
+}
+}
