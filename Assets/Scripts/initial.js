@@ -5,7 +5,7 @@ let gArrayWidth = 10; //10 blocks going across the game board
 let initX = 4; //Tetromino's spawn in the 4th x Array spot
 let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
-let ActiveTimer; //the timer that is used to move the tetromino down. This frequetly changes.
+let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
