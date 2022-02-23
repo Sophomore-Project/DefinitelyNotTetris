@@ -4,6 +4,8 @@ let gArrayHeight = 20; //20 squares going down
 let gArrayWidth = 10; //10 blocks going across the game board
 let initX = 4; //Tetromino's spawn in the 4th x Array spot
 let initY = 0; // And 0'th array spot
+let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
+let ActiveTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
@@ -423,7 +425,7 @@ function LastChanceChecker(){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
       
-        //if the type of the stoppedArray is string, indicate we have a collision and cement it
+        
         if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
             ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
             chances++;
