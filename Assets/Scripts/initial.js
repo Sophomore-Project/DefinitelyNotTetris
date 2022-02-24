@@ -7,6 +7,7 @@ let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
+let collisionflag = false;
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
@@ -110,10 +111,11 @@ Cycling through current Tetromino identifies the current shape by cycling throug
 */
 function DrawTetromino(){
     //console.log("Current Tetromino length is = " + curTetromino[0][0]);
+    BottomChecker();
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        console.log(coordinateArray[x][y]);
+       // console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
@@ -143,6 +145,7 @@ function MoveTetrominoDown(){
     } else {
         direction = DIRECTION.DOWN;
         chances = 0;
+        dropCounter=0;
         DeleteTetromino();
         initY++;
         DrawTetromino();
@@ -245,6 +248,7 @@ function CreateTetromino(){
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
     curTetromino = tetrominos[randomTetromino];
     curTetrominoColor = tetrominoColors[randomTetromino];
+    ActiveTimer = levelTimer;
     //identifies a unique color for each shape
 }
 
@@ -421,12 +425,13 @@ function DrawRotatedTetromino(Flippedarray){
     }
 }
 
-//moves the tetromino down every second
-lastflag = false;
+
 //moves the tetromino down every second
 let lastTime = 0;
 let dropCounter=0;
 function update(time = 0) {
+  
+  
     const deltaTime = time - lastTime;
 
     dropCounter += deltaTime;
@@ -436,51 +441,108 @@ function update(time = 0) {
         MoveTetrominoDown();
        //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
             LastChanceChecker();
-                
-        dropCounter=0;
+               
+        
     }
-let bottomflag = false;
+   
     lastTime = time;
-    let BottomY=0;
-    for(let i = 0; i < curTetromino.length; i++){//if there is going to be  nothing at the bottom of the Tetromino
-                                                    //at any point, the time goes back to normal
+    
 
-        let x = curTetromino[i][0] + initX;
-        let y = curTetromino[i][1] + initY;
-        if(BottomY<y){//the block at the bottom will be used to determine if the next drop would lead to a collision
-            BottomY = y;
-            
-        }
-        if(gameBoardArray[x][BottomY+2]===1||(y>17)){
-bottomflag = true;
-break;
-        }
-    }
-if(bottomflag==false){//if there is no detected would-be collision, time goes back to normal
-    ActiveTimer = levelTimer;
-}
-    requestAnimationFrame(update);//this function should go on forever
+    requestAnimationFrame(update);//this function will add around 16-17 to time for 60 frames per second.
 }
 update();
 let chances = 0;
 function LastChanceChecker(){
+    let BottomY = 0;
+  
+    let bottomxvalues = [];
     if(chances < 1){//this is to prevent abuse (going left and right repeatly)
     for(let i = 0; i < curTetromino.length; i++){
 
-        let x = curTetromino[i][0] + initX;
+       
         let y = curTetromino[i][1] + initY;
-      
-        
-        if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
-            ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
-            chances++;
-            //console.log("Time expanded");
-          
-        
-           break;
+     
+    if(BottomY<y){
+        BottomY = y;//look for the blocks that have the highest y value
+    }
+           
         }
+       let u= 0;
+        for(let i = 0; i<curTetromino.length;i++){
+            x = curTetromino[i][0] + initX;
+            y = curTetromino[i][1] + initY;
+            if(BottomY === y){
+            //    console.log("new X value added");
+                bottomxvalues[u] = x;//add the x values that have the highest y value to an array
+                u++;
+            }
+        }
+      //  console.log(bottomxvalues);
+
+for(let i=0;i<bottomxvalues.length;i++){
+ //   console.log(bottomxvalues[i]);
+    if(gameBoardArray[bottomxvalues[i]][BottomY+2]==1){
+       // console.log("collision Inbound");
+        chances++;//detects if any of the highest y blocks are about to collide, if a collision is [y+2] away, add extra time
+        ActiveTimer = 2*levelTimer;
+    }
+}
+
+      
+
+    }
         
        
     }
+
+
+function BottomChecker(){
+//everytime drawTetromino occurs, this function occurs to check to see if extratime is still reuired
+BottomY = 0;
+bottomxvalues = [];
+for(let i = 0; i < curTetromino.length; i++){
+
+       
+    let y = curTetromino[i][1] + initY;
+ 
+if(BottomY<y){
+    BottomY = y;//finds the highest yvalue
+}
+       
+    }
+    u= 0;
+    for(let i = 0; i<curTetromino.length;i++){
+        x = curTetromino[i][0] + initX;
+        y = curTetromino[i][1] + initY;
+        if(BottomY === y){
+        //    console.log("new X value added");
+            bottomxvalues[u] = x;//finds the x values that have the highest yvalues
+            u++;
+        }
+    }
+  //  console.log(bottomxvalues);
+
+for(let i=0;i<bottomxvalues.length;i++){
+
+if(gameBoardArray[bottomxvalues[i]][BottomY+2]==1){
+    console.log("collision Inbound");
+    collisionflag = true;//if a collision is still inbound, the timer remains heightened
+    console.log(collisionflag);
+    break;
+    
+}
+if(collisionflag === false){
+    ActiveTimer = levelTimer; //if there is no collision inbound, the time goes back to normal
+   
+}
+
+
+
+}
+if(BottomY == 18){
+    ActiveTimer = 2 * levelTimer;//if the lowest y value = 18, the space just above the bottom of the board, time is increased again
+}
+if(collisionflag){
+    collisionflag = false;
 }
 }
