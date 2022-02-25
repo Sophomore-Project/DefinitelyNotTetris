@@ -73,6 +73,9 @@ function InitiateCanvas(){
 
     document.addEventListener('keydown', HandleKeyPress);
 
+    //drawing the score rectangle
+    ctx.strokeRect(300, 107, 161, 24);
+
     //Function calls
     CreateTetrominos();
     CreateTetromino();
