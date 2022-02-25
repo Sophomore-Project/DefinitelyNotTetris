@@ -73,6 +73,7 @@ function InitiateCanvas(){
 
     document.addEventListener('keydown', HandleKeyPress);
 
+    ctx.setLineDash([]);
     //drawing the score rectangle and lettering
     ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
