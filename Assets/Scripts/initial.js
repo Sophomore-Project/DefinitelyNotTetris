@@ -74,10 +74,10 @@ function InitiateCanvas(){
     document.addEventListener('keydown', HandleKeyPress);
 
     //drawing the score rectangle and lettering
-    //ctx.strokeRect(315, 70, 151, 50 );
+    ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 98);
+    ctx.fillText("SCORE:", 315, 88);
 
     //Drawing level rectangle and lettering
     ctx.strokeRect(315, 12, 151, 50 );
@@ -221,6 +221,9 @@ function HandleKeyPress(key){
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
+    }
+    else if(key.keyCode == 32){
+        console.log("space pressed");
     }
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
