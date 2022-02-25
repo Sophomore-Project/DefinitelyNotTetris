@@ -917,7 +917,6 @@ function update(time = 0) {
         dropCounter = 0;
        //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
     }
-   
     lastTime = time;
     
     
