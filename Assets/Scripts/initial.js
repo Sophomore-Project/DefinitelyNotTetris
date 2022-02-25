@@ -73,8 +73,17 @@ function InitiateCanvas(){
 
     document.addEventListener('keydown', HandleKeyPress);
 
-    //drawing the score rectangle
-    ctx.strokeRect(300, 107, 161, 24);
+    //drawing the score rectangle and lettering
+    //ctx.strokeRect(315, 70, 151, 50 );
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText("SCORE:", 315, 98);
+
+    //Drawing level rectangle and lettering
+    ctx.strokeRect(315, 12, 151, 50 );
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText("LEVEL:", 315, 28);
 
     //Function calls
     CreateTetrominos();
