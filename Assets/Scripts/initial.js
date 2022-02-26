@@ -218,8 +218,12 @@ function HandleKeyPress(key){
     //KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //Attempt to move the tetromino down
+        if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+            FreezeTetromino()
+        }else{
         MoveTetrominoDown();
     }
+}
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
@@ -464,7 +468,7 @@ function update(time = 0) {
         ActiveTimer = 1 * levelTimer;
         dropCounter = 0;
        //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
-        //LastChanceChecker();
+        
                
        
     }
@@ -472,12 +476,12 @@ function update(time = 0) {
     lastTime = time;
     
     
-    requestAnimationFrame(update);//this function should go on forever
+    requestAnimationFrame(update);//this function will add about 16 to time, a frame, constantly.
 
 }
 update();
 function FreezeTimer(){//this function with freezeflag acts as a floodgate. As in, this function only happens once when the tetromino collides
-    if(freezeflag){
+    if(freezeflag){//having this floodgate is to prevent currentTetromino to freeze twice
 freezeflag = false;
     setTimeout(FreezeTetromino,5000);
 
