@@ -17,7 +17,8 @@ let tetrominos = [];
 let tetrominoColors = ['purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
-
+//This is a variable to stop holding being called more than once
+let recentHold;
 //stoppedArray is where all the no longer moving pieces of the game will be stored
 let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
@@ -222,12 +223,15 @@ function HandleKeyPress(key){
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
+        DrawTetromino();
     }
     else if(key.keyCode == 32){
         console.log("space pressed");
+        //holdTetromino();
     }
-    else if(key.keycode == 16){
+    else if(key.keyCode == 16){
         holdTetromino();
+        console.log("Shift pressed");
     }
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
@@ -290,6 +294,10 @@ function CreateTetromino(){
     // choose a new tetromino and draw it on the board
     CreateTetromino();
     DrawTetromino();
+
+    //when a piece is frozen, it will indicate that a new piece has been placed,
+    //meaning that the user hasn't held it yet.
+    recentHold = false;
 }
 
 
@@ -384,6 +392,7 @@ function RotateTetromino(){
     try{
         curTetromino = newRotation;
         DrawRotatedTetromino(curTetrominoBU);
+        //DrawTetromino();
 
     }  
     //sometimes drawing the Tetromino may now work, such as an out of bounds. In which case the rotation does not work
@@ -470,23 +479,49 @@ function update(time = 0) {
 }
 update();
 
+//Current Held tetromino and the corresponding tetromino color
+let curHold;
+let curHoldColor;
 
-let curHold = [];
+//function for holding the tetromino
 function holdTetromino(){
+    //Temporary tetromino and corresponding color
     let tempTetromino;
+    let tempColor;
+    
+    
+
+    //if there isn't anything being held, hold the current tetromino and color, and generate 
+    //a new one
+    while(!recentHold){
+        DeleteTetromino();
+        DeleteTetromino();
     if(curHold == null){
         curHold = curTetromino;
+        curHoldColor = curTetrominoColor;
+        DeleteTetromino();
+        initX = 4;
+        initY = 0;
         CreateTetromino();
+        
         DrawTetromino();
     }
+    //if there is a held tetromino, swap the current tetromino with the held one, making sure
+    //they keep their respective color
     else{
         tempTetromino = curHold;
         curHold = curTetromino;
         curTetromino = tempTetromino;
+        tempColor = curHoldColor;
+        curHoldColor = curTetrominoColor;
+        curTetrominoColor = tempColor;
+        DeleteTetromino();
+        initX = 4;
+        initY = 0;
+        DrawTetromino();
     }
-
+    
+    recentHold = true;
+    }
 }
 
-
-
-update();
