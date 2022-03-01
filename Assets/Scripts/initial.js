@@ -440,7 +440,6 @@ function DrawRotatedTetromino(Flippedarray){
     }
 }
 
-
 //moves the tetromino down every second
 let lastTime = 0;
 let dropCounter=0;
@@ -468,21 +467,9 @@ function update(time = 0) {
     
     requestAnimationFrame(update);//this function should go on forever
 
-        let x = curTetromino[i][0] + initX;
-        let y = curTetromino[i][1] + initY;
-      
-        
-        if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
-            ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
-            chances++;
-            //console.log("Time expanded");
-          
-        
-           break;
-        }
-        
-       
-    }
+}
+update();
+
 
 let curHold = [];
 function holdTetromino(){
@@ -491,13 +478,11 @@ function holdTetromino(){
         curHold = curTetromino;
         CreateTetromino();
         DrawTetromino();
-        break;
     }
     else{
         tempTetromino = curHold;
         curHold = curTetromino;
         curTetromino = tempTetromino;
-        break;
     }
 
 }
