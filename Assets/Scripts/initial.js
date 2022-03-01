@@ -426,10 +426,10 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
        //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
        //aka nothing happens if a collision would happen
-        if(stoppedArray[x][y] != 0){
-            curTetromino = Flippedarray;
-            console.log("collision detected!");
-        }
+       if(stoppedArray[x][y] > 0||x>9||x<0){
+        curTetromino = Flippedarray;
+        console.log(stoppedArray[x][y]);
+    }
 
     }
     for (let i = 0; i < curTetromino.length ; i++){        
