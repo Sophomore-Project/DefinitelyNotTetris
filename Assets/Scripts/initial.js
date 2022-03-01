@@ -226,6 +226,9 @@ function HandleKeyPress(key){
     else if(key.keyCode == 32){
         console.log("space pressed");
     }
+    else if(key.keycode == 16){
+        holdTetromino();
+    }
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
 function DeleteTetromino(){
@@ -465,5 +468,40 @@ function update(time = 0) {
     
     requestAnimationFrame(update);//this function should go on forever
 
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+      
+        
+        if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
+            ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
+            chances++;
+            //console.log("Time expanded");
+          
+        
+           break;
+        }
+        
+       
+    }
+
+let curHold = [];
+function holdTetromino(){
+    let tempTetromino;
+    if(curHold == null){
+        curHold = curTetromino;
+        CreateTetromino();
+        DrawTetromino();
+        break;
+    }
+    else{
+        tempTetromino = curHold;
+        curHold = curTetromino;
+        curTetromino = tempTetromino;
+        break;
+    }
+
 }
+
+
+
 update();
