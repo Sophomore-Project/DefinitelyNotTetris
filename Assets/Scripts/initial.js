@@ -7,7 +7,8 @@ let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
-
+let freezeflag = true;
+let FdropCounter=0;
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
 let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; 
@@ -73,6 +74,19 @@ function InitiateCanvas(){
 
     document.addEventListener('keydown', HandleKeyPress);
 
+    ctx.setLineDash([]);
+    //drawing the score rectangle and lettering
+    ctx.strokeRect(315, 70, 151, 50 );
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText("SCORE:", 315, 88);
+
+    //Drawing level rectangle and lettering
+    ctx.strokeRect(315, 12, 151, 50 );
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText("LEVEL:", 315, 28);
+
     //Function calls
     CreateTetrominos();
     CreateTetromino();
@@ -113,7 +127,7 @@ function DrawTetromino(){
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        console.log(coordinateArray[x][y]);
+       // console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
@@ -139,10 +153,10 @@ function DrawTetromino(){
 function MoveTetrominoDown(){
     // If there is vertical collision, freeze the tetromino. Otherwise, move down
     if (CheckVertical()) {
-        FreezeTetromino();
+        FreezeTimer();
     } else {
         direction = DIRECTION.DOWN;
-        chances = 0;
+      
         DeleteTetromino();
         initY++;
         DrawTetromino();
@@ -204,11 +218,18 @@ function HandleKeyPress(key){
     //KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //Attempt to move the tetromino down
+        if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+            FreezeTetromino()
+        }else{
         MoveTetrominoDown();
     }
+}
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
+    }
+    else if(key.keyCode == 32){
+        console.log("spacebar");
     }
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
@@ -255,8 +276,12 @@ function CreateTetromino(){
  * 
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
+let flag1 = 0;
  function FreezeTetromino() {
+     
     // append the current tetromino to the stoppedArray
+    
+   if(CheckVertical()){
     for (let i = 0; i < curTetromino.length; i++) {
         stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = 1; // this value will need to change in the future based on color
     }
@@ -271,7 +296,11 @@ function CreateTetromino(){
     // choose a new tetromino and draw it on the board
     CreateTetromino();
     DrawTetromino();
+    freezeflag = true;
+    flag1 = 0;
 }
+ }
+
 
 
 /**
@@ -342,8 +371,7 @@ function CheckHorizontal(xMove) {
 //Preconditions: The player hits a key indictacting they wish to rotate the currentTetromino
 //postconditions: The x and y values of the current Tetromino are exchanged to simulate a rotation
 
-function RotateTetromino()
-{
+function RotateTetromino(){
     let newRotation = new Array();//the function will use this to replace curTetromino
     let tetrominoCopy = curTetromino; //a copy of the currentTetromino. we're using a copy to prevent errors
     let curTetrominoBU;//this will carry the origin Tetramino. We will call this if there is an error
@@ -366,6 +394,7 @@ function RotateTetromino()
     try{
         curTetromino = newRotation;
         DrawRotatedTetromino(curTetrominoBU);
+
     }  
     //sometimes drawing the Tetromino may now work, such as an out of bounds. In which case the rotation does not work
     catch (e){ 
@@ -397,17 +426,17 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
        //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
        //aka nothing happens if a collision would happen
-        if(gameBoardArray[x][y] == 1){
-            curTetromino = Flippedarray;
-            console.log("collision detected!");
-        }
+       if(stoppedArray[x][y] > 0||x>9||x<0){
+        curTetromino = Flippedarray;
+        console.log(stoppedArray[x][y]);
+    }
 
     }
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
-        gameBoardArray[x][y] = 1;
+       // gameBoardArray[x][y] = 1;
      //   console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
@@ -421,66 +450,41 @@ function DrawRotatedTetromino(Flippedarray){
     }
 }
 
-//moves the tetromino down every second
-lastflag = false;
+
 //moves the tetromino down every second
 let lastTime = 0;
 let dropCounter=0;
 function update(time = 0) {
+  
+  
     const deltaTime = time - lastTime;
 
     dropCounter += deltaTime;
+    
     if (dropCounter > ActiveTimer) {
      //  console.log("Drop"+dropCounter);
       // console.log("Active"+ ActiveTimer);
         MoveTetrominoDown();
+        ActiveTimer = 1 * levelTimer;
+        dropCounter = 0;
        //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
-            LastChanceChecker();
-                
-        dropCounter=0;
-    }
-let bottomflag = false;
-    lastTime = time;
-    let BottomY=0;
-    for(let i = 0; i < curTetromino.length; i++){//if there is going to be  nothing at the bottom of the Tetromino
-                                                    //at any point, the time goes back to normal
-
-        let x = curTetromino[i][0] + initX;
-        let y = curTetromino[i][1] + initY;
-        if(BottomY<y){//the block at the bottom will be used to determine if the next drop would lead to a collision
-            BottomY = y;
-            
-        }
-        if(gameBoardArray[x][BottomY+2]===1||(y>17)){
-bottomflag = true;
-break;
-        }
-    }
-if(bottomflag==false){//if there is no detected would-be collision, time goes back to normal
-    ActiveTimer = levelTimer;
-}
-    requestAnimationFrame(update);//this function should go on forever
-}
-update();
-let chances = 0;
-function LastChanceChecker(){
-    if(chances < 1){//this is to prevent abuse (going left and right repeatly)
-    for(let i = 0; i < curTetromino.length; i++){
-
-        let x = curTetromino[i][0] + initX;
-        let y = curTetromino[i][1] + initY;
-      
         
-        if(gameBoardArray[x][y+2]===1||(y>17)){//If the next Tetromino were to make the Tetramino next to a vertical collision,
-            ActiveTimer = 2*levelTimer;       // extra time is given to the player before the next drop
-            chances++;
-            //console.log("Time expanded");
-          
-        
-           break;
-        }
-        
+               
        
     }
+   
+    lastTime = time;
+    
+    
+    requestAnimationFrame(update);//this function will add about 16 to time, a frame, constantly.
+
+}
+update();
+function FreezeTimer(){//this function with freezeflag acts as a floodgate. As in, this function only happens once when the tetromino collides
+    if(freezeflag){//having this floodgate is to prevent currentTetromino to freeze twice
+freezeflag = false;
+    setTimeout(FreezeTetromino,5000);
+
 }
 }
+
