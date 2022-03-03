@@ -15,6 +15,7 @@ let curHold;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 
+
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
 
@@ -96,6 +97,10 @@ function InitiateCanvas(){
     ctx.fillStyle = 'grey';
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
+   //drawing stroke around rectangle
+   ctx.strokeStyle = 'black';
+   ctx.strokeRect(8, 8, 234, 462);
+   drawDashedPattern(ctx);
     //Draws the Gameboard
     ctx.strokeStyle = 'black';
     ctx.strokeRect(8, 8, 234, 462);
@@ -336,15 +341,57 @@ function CreateTetromino(){
     //This portion retrieves, the first spot in the array from next Tetromino's and makes it the current Tetromino, afterwards, places shifts the array and adds a new random Tetromino
     placeholder = nextTetrominos.shift();
     curTetromino = tetrominos[placeholder];
-    curTetrominoColor = tetrominoColors[placeholder+1];
+    curTetrominoColor = tetrominoColors[placeholder];
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
-    curTetromino = tetrominos[randomTetromino];
-    //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
-    curTetrominoColor = tetrominoColors [randomTetromino+1];
-    //identifies a unique color for each shape
     nextTetrominos.push(randomTetromino);
     //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
     previewNext();   
+}
+
+function previewNext(){
+    //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
+    for(let row = 0; row<10; row++){
+        for(let col = 0; col<4; col++){
+            let x = prevCoordArray[col][row].x;
+            let y = prevCoordArray[col][row].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(x, y, 21 ,21)
+        }
+    }
+    //Placeholder identifies which tetromino we should be working with by retrieving the value from the nextTetromino's
+    //prevY is to identify where to place the placeholder tetromino
+    //coorX and coorY is to get the coordinates for those said tetromino's
+    let nextTetromino;
+    let nextTetrominoColor;
+    let placeholder;
+    let prevY = 0;
+    let coorX = 0;
+    let coorY = 0;
+    //This has to go on a nested loop, because we're trying to use the same logic of draw tetromino for each tetromino within the nextTetromino array
+    //The first loop loops through each tetromino
+    for(let i = 0; i<5; i++){
+        let x = 0, y = 0;
+        placeholder = nextTetrominos[i];
+        nextTetromino = tetrominos[placeholder];
+        nextTetrominoColor = tetrominoColors[placeholder];
+
+        //This portion of the code follows the same logic as Draw Tetromino
+        //It first retrieves the row and coloumns that have a 1 for the placeholder tetromino
+        //the Y value is incremented by +2 array coordinate array spots to identify where it will be placed within the "preview next" panel
+        for(let j = 0; j < nextTetromino.length; j++){
+            x = nextTetromino[j][0];
+            y = nextTetromino[j][1] + prevY;
+            
+            coorX = prevCoordArray[x][y].x;
+            coorY = prevCoordArray[x][y].y;
+            
+
+            ctx.fillStyle = nextTetrominoColor;
+            ctx.fillRect(coorX, coorY, 21, 21);
+        }
+
+       prevY+=2;
+    }
 }
 
 function previewNext(){
@@ -664,6 +711,7 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
        
+        gameBoardArray[x][y] = 1;
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
