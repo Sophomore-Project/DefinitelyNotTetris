@@ -56,20 +56,21 @@ function CoordArray(){ //creating a coordinate Array
 }
 
 function InitiateCanvas(){
-   canvas = document.getElementById('canvas');
-   ctx = canvas.getContext('2d');
-   canvas.width = 936; //total width of 936 pixels
-   canvas.height = 956; //total height of 956 pixels
-   ctx.scale(2,2); //2x Scale
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = 936; //total width of 936 pixels
+    canvas.height = 956; //total height of 956 pixels
+    ctx.scale(2,2); //2x Scale
 
-   //drawing a rectangle inside canvas
-   ctx.fillStyle = 'grey';
-   ctx.fillRect(0,0, canvas.width, canvas.height);
+    //drawing a rectangle inside canvas
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(0,0, canvas.width, canvas.height);
 
-   //drawing stroke around rectangle
-   ctx.strokeStyle = 'black';
-   ctx.strokeRect(8, 8, 234, 462);
-   drawDashedPattern(ctx);
+    //drawing stroke around rectangle
+    ctx.strokeStyle = 'black';
+    ctx.strokeRect(8, 8, 234, 462);
+    drawDashedPattern(ctx);
+    drawPreviewPanel();
 
     document.addEventListener('keydown', HandleKeyPress);
 
@@ -91,7 +92,22 @@ function InitiateCanvas(){
     CreateTetromino();
     CoordArray();
     DrawTetromino();
-
+    
+}
+//Creates the Panel which previews next tetromino's that will spawn
+function drawPreviewPanel(){
+    ctx.fillStyle = 'white';
+    ctx.fillText('Next Tetrominos', 255, 235);
+    ctx.setLineDash([]);
+    ctx.strokeRect(244, 238, 92, 232);
+    for(let i = 284; i<=446; i+=46){
+        ctx.beginPath();
+        ctx.setLineDash([1,1]);
+        ctx.moveTo(244, i);
+        ctx.lineTo(336, i);
+        ctx.stroke();
+    }
+    
 }
 
 //Responsible for drawing dashed lines, the coordinates are cherry picked to not draw on the overlapping coordinates of where squares will be to prevent drawing bugs
@@ -222,7 +238,7 @@ function HandleKeyPress(key){
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
-    }
+    }//Keycode 32 is for space key used for hard drop
     else if(key.keyCode == 32){
         console.log("space pressed");
     }
