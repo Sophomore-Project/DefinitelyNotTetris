@@ -48,3 +48,141 @@ body {
     padding-top: 100px;
     margin-bottom: 25px;
 }
+.hero-btn.blue-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.blue-btn:hover{
+    border: 1px solid black;
+    background: red;
+    color: black;
+}
+.hero-btn.blue-btn::after{
+    background: black;
+}
+.hero-btn.blue-btn::before{
+    background: black;
+}.hero-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+    border: 1px solid #fff;
+    padding: 25px 34px;
+    font-size: 30px;
+    background: red;
+    position: relative;
+    margin: 10px;
+    font-family:cursive;
+    width: 500px;
+    transition: 1s;
+}
+
+.hero-btn:hover{
+    border: 1px solid #f44336;
+    background: #f44336;
+}
+.hero-btn.green-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.green-btn:hover{
+    border: 1px solid black;
+    background: green;
+    color: black;
+}
+.hero-btn.green-btn::after{
+    background: black;
+}
+.hero-btn.green-btn::before{
+    background: black;
+}
+.hero-btn.yellow-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.yellow-btn:hover{
+    border: 1px solid black;
+    background: yellow;
+    color: black;
+}
+.hero-btn.yellow-btn::after{
+    background: black;
+}
+.hero-btn.yellow-btn::before{
+    background: black;
+}
+.hero-btn.pink-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.pink-btn:hover{
+    border: 1px solid black;
+    background: pink;
+    color: black;
+}
+.hero-btn.pink-btn::after{
+    background: black;
+}
+.hero-btn.pink-btn::before{
+    background: black;
+}
+.hero-btn.button5-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.button5-btn:hover{
+    border: 1px solid black;
+    background: #ec2bbc;
+    color: black;
+}
+.hero-btn.button5-btn::after{
+    background: black;
+}
+.hero-btn.button5-btn::before{
+    background: black;
+}
+.hero-btn.button6-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
+
+.hero-btn.button6-btn:hover{
+    border: 1px solid black;
+    background: #f18d09;
+    color: black;
+}
+.hero-btn.button6-btn::after{
+    background: black;
+}
+.hero-btn.button6-btn::before{
+    background: black;
+}
+.hero-btn.button7-btn:hover{
+    border: 1px solid black;
+    background: #c836f4;
+    color: black;
+    cursor: pointer;
+    
+}
+.hero-btn.button7-btn::after{
+    background: black;
+}
+.hero-btn.button7-btn::before{
+    background: black;
+}
+.hero-btn.button7-btn{
+    border: 1px solid #f44336;
+    background: blue;
+    color: black;
+}
