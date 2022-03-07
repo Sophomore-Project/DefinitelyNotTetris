@@ -205,28 +205,31 @@ function MoveTetrominoHorizontal(xMove) {
 function HandleKeyPress(key){
     //KeyCode 37 is for left arrow key
     if(key.keyCode === 37){
-        console.log("Left key is pressed");
+       // console.log("Left key is pressed");
         // Attempt to move the tetromino 1 unit to the left
         MoveTetrominoHorizontal(-moveConstant)
     }
     //KeyCode 39 is for right arrow key
     else if(key.keyCode === 39){
-        console.log("Right key is pressed");
+      //  console.log("Right key is pressed");
         // Attempt to move the tetromino 1 unit to the right
         MoveTetrominoHorizontal(moveConstant);
     }
     //KeyCode 40 is for down arrow key
     else if(key.keyCode == 40){
         //Attempt to move the tetromino down
-        if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
-            FreezeTetromino()
+        if(freezeflag == false){
+            FreezeTetromino();
         }else{
         MoveTetrominoDown();
+        }
     }
-}
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
+        console.log(freezeflag);
+        if(freezeflag == true){
         RotateTetromino();
+        }
     }
     else if(key.keyCode == 32){
         console.log("spacebar");
@@ -280,7 +283,7 @@ let flag1 = 0;
  function FreezeTetromino() {
      
     // append the current tetromino to the stoppedArray
-    
+    if(freezeflag==false){
    if(CheckVertical()){
     for (let i = 0; i < curTetromino.length; i++) {
         stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = 1; // this value will need to change in the future based on color
@@ -296,10 +299,12 @@ let flag1 = 0;
     // choose a new tetromino and draw it on the board
     CreateTetromino();
     DrawTetromino();
-    freezeflag = true;
+    
     flag1 = 0;
 }
+freezeflag = true;
  }
+}
 
 
 
@@ -426,10 +431,11 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
        //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
        //aka nothing happens if a collision would happen
-       if(stoppedArray[x][y] > 0||x>9||x<0){
-        curTetromino = Flippedarray;
-        console.log(stoppedArray[x][y]);
-    }
+      
+        if(stoppedArray[x][y] > 0||x>9||x<0){
+            curTetromino = Flippedarray;
+         //   console.log(stoppedArray[x][y]);
+        }
 
     }
     for (let i = 0; i < curTetromino.length ; i++){        
@@ -468,7 +474,7 @@ function update(time = 0) {
         ActiveTimer = 1 * levelTimer;
         dropCounter = 0;
        //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
-        
+     
                
        
     }
@@ -476,16 +482,19 @@ function update(time = 0) {
     lastTime = time;
     
     
-    requestAnimationFrame(update);//this function will add about 16 to time, a frame, constantly.
+    requestAnimationFrame(update);//this function should go on forever
 
 }
 update();
-function FreezeTimer(){//this function with freezeflag acts as a floodgate. As in, this function only happens once when the tetromino collides
-    if(freezeflag){//having this floodgate is to prevent currentTetromino to freeze twice
+function FreezeTimer(){
+    console.log(freezeflag);
+    if(freezeflag){
 freezeflag = false;
-    setTimeout(FreezeTetromino,5000);
+    setTimeout(FreezeTetromino,2000);
 
 }
 }
+
+
 
 
