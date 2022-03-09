@@ -265,8 +265,8 @@ function HandleKeyPress(key){
         DrawTetromino();
     }
     else if(key.keyCode == 32){
-        console.log("space pressed");
-        //holdTetromino();
+        //console.log("space pressed");
+        hardDrop();
     }
     else if(key.keyCode == 16){
         holdTetromino();
@@ -410,7 +410,7 @@ function previewNext(){
  * @example there are no frozen blocks or the below the game board one space below any of the components of the current tetromino. This function returns false
  * 
  */
- function CheckVertical() {
+function CheckVertical() {
 
     // iterate through each component of the current tetromino to check for collision below. Since the current tetromino has not been pushed to gameBoardArray, any components of the tetromino directly below will not count for collision 
     // example: iterating on the top left component of a square tetromino [0,0] will not consider the component directly below [0,1] in terms of collision since only the gameBoardArray is being compared
@@ -699,4 +699,11 @@ function DrawHeldTetromino(heldColor){
 function deleteHeldTetromino(){
     ctx.fillStyle = 'grey';
     ctx.fillRect(250, 26, 56, 56);
+}
+
+function hardDrop(){
+    //Loop through moveTetrominoDown() function, until vertical collision is detected
+    while(!CheckVertical()){
+        MoveTetrominoDown();
+    }
 }
