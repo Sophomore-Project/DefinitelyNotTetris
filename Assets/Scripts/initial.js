@@ -7,20 +7,19 @@ let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
+
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
 let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; 
-let frozenColor = 0;
-let frozenColorNumber=0;
+
 //Stores all the tetromino shape combination
 let tetrominos = [];
-let tetrominoColors = ['purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
+let tetrominoColors = ['purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
-let gameBoardArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
 
 //stoppedArray is where all the no longer moving pieces of the game will be stored
-let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(-1));
+let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
 let DIRECTION = {
     IDLE: 0,
@@ -114,9 +113,6 @@ function DrawTetromino(){
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-
-        gameBoardArray[x][y] = 1;
-
         console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
@@ -220,9 +216,6 @@ function DeleteTetromino(){
     for(let i = 0; i<curTetromino.length; i++){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-
-        gameBoardArray[x][y] = 0;
-
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
         ctx.fillStyle = 'grey';
@@ -245,7 +238,6 @@ function CreateTetrominos(){
     tetrominos.push([[1,0], [2,0], [0,1], [1,1]]);
     // Pushes Z shape array into our Tetrominos array
     tetrominos.push([[0,0], [1,0], [1,1], [2,1]]);
-    
 }
 
 function CreateTetromino(){
@@ -254,7 +246,6 @@ function CreateTetromino(){
     curTetromino = tetrominos[randomTetromino];
     curTetrominoColor = tetrominoColors[randomTetromino];
     //identifies a unique color for each shape
-
 }
 
 
@@ -264,130 +255,24 @@ function CreateTetromino(){
  * 
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
-//  function FreezeTetromino() {
-//     // append the current tetromino to the stoppedArray
-//     for (let i = 0; i < curTetromino.length; i++) {
-//         if(curTetrominoColor == 'purple'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 1; // this value will need to change in the future based on color
-//         }else if(curTetrominoColor == 'cyan'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 2;
-//         }else if(curTetrominoColor == 'blue'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 3;
-//         }else if(curTetrominoColor == 'yellow'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 4;
-//         }else if(curTetrominoColor == 'orange'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 5;
-//         }else if(curTetrominoColor == 'green'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 6;
-//         }else if(curTetrominoColor == 'red'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 7;
-//         }else if(curTetrominoColor == 'grey'){
-//             stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColor = 0;
-//         }
-//         //numberToColor(frozenColor);
-//     }
-    
-//     // reset initX and initY to the top of the board
-//     initX = 4;
-//     initY = 0;
-//     //set direction to idle so it doesn't move
-//     direction = DIRECTION.IDLE;
-// CheckForCompletedRows();
-//     // choose a new tetromino and draw it on the board
-//     CreateTetromino();
-//     DrawTetromino();
-// }
-function FreezeTetromino() {
-    let frozenColorNumber2;
+ function FreezeTetromino() {
     // append the current tetromino to the stoppedArray
     for (let i = 0; i < curTetromino.length; i++) {
-    stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = frozenColorNumber2 = tetrominoColors.indexOf(curTetrominoColor); // this value will need to change in the future based on color
-        numberToColor(frozenColorNumber2);
+        stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = 1; // this value will need to change in the future based on color
     }
+    
     
     // reset initX and initY to the top of the board
     initX = 4;
     initY = 0;
     //set direction to idle so it doesn't move
     direction = DIRECTION.IDLE;
-CheckForCompletedRows();
+
     // choose a new tetromino and draw it on the board
     CreateTetromino();
     DrawTetromino();
 }
-// function frozenColor2(){
-   
-//     switch(curTetrominoColor){
-//         case 'grey':
-//             frozenColorNumber = 0;
-//             break;
-//         case 'purple':
-//             frozenColorNumber = 1;
-//             break;
-//         case 'cyan':
-//             frozenColorNumber =2;
-//             break;
-//         case 'blue':
-//             frozenColorNumber =3;
-//             break;
-//         case 'yellow':
-//             frozenColorNumber =4;
-//             break;
-//         case 'orange':
-//             frozenColorNumber =5;
-//             break;
-//         case 'green': 
-//         frozenColorNumber =6;
-//             break;
-//         case 'red': 
-//         frozenColorNumber =7;
-//     }
-// numberToColor(frozenColorNumber);
 
-// }
-function numberToColor(frozenColorNumber2){
-
-    if (frozenColorNumber2 == 0){
-        frozenColorString = 'purple';
-    }else if(frozenColorNumber2 == 1){
-        frozenColorString = 'cyan';
-    }else if(frozenColorNumber2 == 2){
-        frozenColorString = 'blue';
-    }else if(frozenColorNumber2 == 3){
-        frozenColorString = 'yellow';
-    }else if(frozenColorNumber2 == 4){
-        frozenColorString = 'orange';
-    }else if(frozenColorNumber2 == 5){
-        frozenColorString = 'green';
-    }else if(frozenColorNumber2 == 6){
-        frozenColorString = 'red';
-    }else {
-        frozenColorString = 'grey';
-    }
-console.log(frozenColorString);
-}
-// function numberToColor(frozenColorNumber){
-
-//     if (frozenColorNumber == 1){
-//         frozenColorString = 'purple';
-//     }else if(frozenColorNumber == 2){
-//         frozenColorString = 'cyan';
-//     }else if(frozenColorNumber == 3){
-//         frozenColorString = 'blue';
-//     }else if(frozenColorNumber == 4){
-//         frozenColorString = 'yellow';
-//     }else if(frozenColorNumber == 5){
-//         frozenColorString = 'orange';
-//     }else if(frozenColorNumber == 6){
-//         frozenColorString = 'green';
-//     }else if(frozenColorNumber == 7){
-//         frozenColorString = 'red';
-//         console.log(frozenColorString);
-//     }else if(frozenColorNumber == 0){
-//         frozenColorString = 'grey';
-//     }
-
-// }
 
 /**
  * Check if the spaces directly below any component of the current tetromino are invalid/occupied spaces
@@ -410,20 +295,13 @@ console.log(frozenColorString);
         let checkY = curTetromino[i][1] + initY + 1;
 
         // if the current tetromino is at the bottom of the game board, OR the the game board contains a frozen block (value of anything but 0 or undefined) at the location we are checking, the location being checked is invalid/obstructed so true should be returned
-        if ( (checkY) >= gArrayHeight  || (stoppedArray[checkX][checkY] != -1 && stoppedArray[checkX][checkY] != undefined)) {
+        if ( (checkY) >= gArrayHeight || (stoppedArray[checkX][checkY] != 0 && stoppedArray[checkX][checkY] != undefined) ) {
             console.log("vertical collision")
-            CheckForCompletedRows();
-
             return true;
-        
-
         }
     }
     // if no collision was found below any of the components of the current tetromino, there are no vertical obstructions
-    CheckForCompletedRows();
-
     return false;
-
 }
 
 
@@ -460,116 +338,6 @@ function CheckHorizontal(xMove) {
     return false;
 
 }
-
-function CheckForCompletedRows(){
-    //number of full rows that will be deleted
-    let rowsToDelete = 0;
-    //row that deletion starts at
-    let startOfDeletion = 0;
-    for(let y = 0; y < gArrayHeight; y++){
-        let completed = true;
-        for(let x = 0; x < gArrayWidth; x++){
-            //saves value of stopped array at coords and saves to square var
-            let square = stoppedArray[x][y];
-            //if there is nothing in a square of a row, the row is incomplete
-            if(square === -1 || (typeof square === 'undefined')){
-                completed = false;
-                break;
-            }
-        }
-
-        if (completed){
-            //finds first line that is complete, y, saves it at startOfDeletion 
-            if(startOfDeletion === 0) startOfDeletion = y;
-            rowsToDelete++;
-            //loop through a completed row
-            for(let i = 0; i < gArrayWidth; i++){
-                //clears completed cells from arrays
-                stoppedArray[i][y] = 0;
-            //    gameBoardArray[i][y] = 0;
-                //get coordinates of filled row
-                let coorX = coordinateArray[i][y].x;
-                let coorY = coordinateArray[i][y].y;
-                //fills completed row with grey, erasing them 
-                ctx.fillStyle = 'grey';
-                ctx.fillRect(coorX, coorY, 21, 21);
-
-            }
-        }
-
-}
-//scoring
-if (rowsToDelete > 0){
-    //score += 10;
-    //ctx.fillStyle = 'white';
-    //ctx.fillRect(310, 109, 140, 19);
-    //ctx.fillStyle = 'black';
-    //ctx.fillText(score.toString(), 310, 127);
-    MoveAllRowsDown(rowsToDelete, startOfDeletion);
-    }
-}
-
-
-    function MoveAllRowsDown(rowsToDelete, startOfDeletion){
-    for(var i = startOfDeletion-1; i >= 0; i--){
-        for(var x = 0; x < gArrayWidth; x++){
-            var y2 = i + rowsToDelete;
-            var square = stoppedArray[x][i];
-            var nextSquare = stoppedArray[x][y2];
-            if(typeof square === 'string'){
-                nextSquare = square;
-                //gameBoardArray[x][y2] = 1;
-                stoppedArray[x][y2] = square;
-                let coorX = coordinateArray[x][y2].x;
-                let coorY = coordinateArray[x][y2].y;
-                ctx.fillStyle = numberToColor(frozenColorNumber);
-                ctx.fillRect(coorX, coorY, 21, 21);
-                
-                square = 0;
-
-                coorX = coordinateArray[x][i].x;
-                coorY = coordinateArray[x][i].y;
-                ctx.fillStyle = 'grey';
-                ctx.fillRect(coorX, coorY, 21, 21);
-               // gameBoardArray[x][i] = 0;
-                stoppedArray[x][i] = 0;
-                }
-        }
-    }
-}
-
-//     function MoveAllRowsDown(rowsToDelete, startOfDeletion){
-//     for(var i = startOfDeletion-1; i <= 0; i--){
-//         for(var x = 0; x < gArrayWidth; x++){
-//             var y2 = i + rowsToDelete;
-//             var square = stoppedArray[x][i];
-//             var nextSquare = stoppedArray[x][y2];
-//             if(typeof square === 'string'){
-//                 nextSquare = square;
-//                 gameBoardArray[x][y2] = 1;
-//                 stoppedArray[x][y2] = square;
-//                 let coorX = coordinateArray[x][y2].x;
-//                 let coorY = coordinateArray[x][y2].y;
-//                 ctx.fillStyle = nextSquare;
-//                 ctx.fillRect(coorX, coorY, 21, 21);
-                
-//                 square = 0;
-
-//                 coorX = coordinateArray[x][i].x;
-//                 coorY = coordinateArray[x][i].y;
-//                 ctx.fillStyle = 'blue';
-//                 ctx.fillRect(coorX, coorY, 21, 21);
-//                 gameBoardArray[x][i] = 0;
-//                 stoppedArray[x][i] = 0;
-//                 }
-//         }
-//     }
-// }
-
-
-
-
-
 
 //Preconditions: The player hits a key indictacting they wish to rotate the currentTetromino
 //postconditions: The x and y values of the current Tetromino are exchanged to simulate a rotation
@@ -629,7 +397,7 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
        //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
        //aka nothing happens if a collision would happen
-        if(stoppedArray[x][y] >0||x>9||x<0 ){
+        if(gameBoardArray[x][y] == 1){
             curTetromino = Flippedarray;
             console.log("collision detected!");
         }
@@ -678,42 +446,8 @@ function update(time = 0) {
    
     lastTime = time;
     
-    CheckForCompletedRows();
-
+    
     requestAnimationFrame(update);//this function should go on forever
+
 }
-
-
 update();
-
-
-
-// function frozenColor2(){
-//     switch(curTetrominoColor){
-//         case 0:
-//             'white' = 0;
-//             break;
-//         case 1:
-//             'purple' = 1;
-//             break;
-//         case 2:
-//             'cyan'  = 2;
-//             break;
-//         case 3:
-//             'blue' = 3;
-//             break;
-//         case 4:
-//             'yellow' = 4;
-//             break;
-//         case 5:
-//             'orange' = 5;
-//             break;
-//         case 6: 
-//             'green' = 6;
-//             break;
-//         case 7: 
-//             'red' = 7;
-//     }
-
-
-// }
