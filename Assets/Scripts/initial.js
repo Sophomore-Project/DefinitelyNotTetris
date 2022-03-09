@@ -20,10 +20,11 @@ let curTetromino = [[1,0], [0,1], [1,1], [2,1]];
 
 //Stores all the tetromino shape combination
 let tetrominos = [];
-let tetrominoColors = ['purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
+let tetrominoColors = ['purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
-
+//This is a variable to stop holding being called more than once
+let recentHold;
 //stoppedArray is where all the no longer moving pieces of the game will be stored
 let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
@@ -105,6 +106,13 @@ function InitiateCanvas(){
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
     ctx.fillText("LEVEL:", 315, 28);
+
+    //Drawing box for the hold
+    ctx.strokeRect(248, 25, 62, 62);
+    ctx.fillStyle = 'white';
+    ctx.font = '18px Times New Roman';
+    ctx.fillText("Hold", 260, 20);
+    
 
     //Function calls
     fillPrevCoordArray();
@@ -254,8 +262,15 @@ function HandleKeyPress(key){
     //KeyCode 38 is for up arrowkey
     else if(key.keyCode == 38){
         RotateTetromino();
-    }//Keycode 32 is for space key used for hard drop
+        DrawTetromino();
+    }
     else if(key.keyCode == 32){
+        console.log("space pressed");
+        //holdTetromino();
+    }
+    else if(key.keyCode == 16){
+        holdTetromino();
+        console.log("Shift pressed");
     }
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
@@ -378,6 +393,10 @@ function previewNext(){
     // choose a new tetromino and draw it on the board
     CreateTetromino();
     DrawTetromino();
+
+    //when a piece is frozen, it will indicate that a new piece has been placed,
+    //meaning that the user hasn't held it yet.
+    recentHold = false;
 }
 
 
@@ -472,6 +491,7 @@ function RotateTetromino(){
     try{
         curTetromino = newRotation;
         DrawRotatedTetromino(curTetrominoBU);
+        //DrawTetromino();
 
     }  
     //sometimes drawing the Tetromino may now work, such as an out of bounds. In which case the rotation does not work
@@ -552,3 +572,131 @@ function update(time = 0) {
 
 }
 update();
+
+//Current Held tetromino and the corresponding tetromino color
+let curHold;
+let curHoldColor;
+
+//function for holding the tetromino
+function holdTetromino(){
+    //Temporary tetromino and corresponding color
+    let tempTetromino;
+    let tempColor;
+    
+    
+
+    //if there isn't anything being held, hold the current tetromino and color, and generate 
+    //a new one
+    while(!recentHold){
+        DeleteTetromino();
+        DeleteTetromino();
+    if(curHold == null){
+        curHold = curTetromino;
+        curHoldColor = curTetrominoColor;
+        DeleteTetromino();
+        initX = 4;
+        initY = 0;
+        CreateTetromino();
+        
+        DrawTetromino();
+    }
+    //if there is a held tetromino, swap the current tetromino with the held one, making sure
+    //they keep their respective color
+    else{
+        tempTetromino = curHold;
+        curHold = curTetromino;
+        curTetromino = tempTetromino;
+        tempColor = curHoldColor;
+        curHoldColor = curTetrominoColor;
+        curTetrominoColor = tempColor;
+        DeleteTetromino();
+        initX = 4;
+        initY = 0;
+        DrawTetromino();
+    }
+    
+    recentHold = true;
+    }
+    DrawHeldTetromino(curHoldColor);
+    
+}
+
+//This function draws tetrominos based on whats being held at the moment
+function DrawHeldTetromino(heldColor){
+    //for pieces with 3 cubes length wise, 259 is left, 272 is middle, 285 is right
+    //for pieces with 2 cubes in height, 41 is up, 54 is down
+    
+    let tempFuncColor = heldColor;
+    //If the held color is blue, it draws the J tetromino, which is also blue
+    if(heldColor == "blue"){
+        //clears the box before drawing the J tetromino
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 41, 12,12);
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    }
+    //If the held color is orange, draws the L tetromino, which is the orange one
+    else if(heldColor == "orange"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(285, 41, 12,12);
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    }
+    //If the held color is green, draws the S tetromino, which is the green one
+    else if(heldColor == "green"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(285, 41, 12,12);
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(272, 41, 12,12);
+    }
+    //if the held color is red, draws the Z tetromino, which is the red one
+    else if(heldColor == "red"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 41, 12,12);
+        ctx.fillRect(272, 41, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    }
+    //IF the held color is cyan, it draws the I piece, which is the cyan one
+    else if(heldColor == "cyan"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(253, 47, 12,12);
+        ctx.fillRect(266, 47, 12,12);
+        ctx.fillRect(279, 47, 12,12);
+        ctx.fillRect(292, 47, 12,12);
+    }
+    //if the held color is yellow, it draws the Square piece, which is the yellow one
+    else if(heldColor == "yellow"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(266, 41, 12,12);
+        ctx.fillRect(279, 41, 12,12);
+        ctx.fillRect(279, 54, 12,12);
+        ctx.fillRect(266, 54, 12,12);
+    }
+    //If the held color is purple, it draws the T piece, which is the purple one
+    else if(heldColor == "purple"){
+        deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 41, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    }
+
+}
+
+//This function creates a brand new grey square where the hold box is on the main screen, so that
+//it clears that area for the newest held tetromino
+function deleteHeldTetromino(){
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(250, 26, 56, 56);
+}
