@@ -8,6 +8,12 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 
+//Coordinate solution for previewed tetrominos
+let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
+
+//Creates an array to hold the next Tetrominos
+let nextTetrominos = [];
+
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
 let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; 
@@ -48,29 +54,43 @@ function CoordArray(){ //creating a coordinate Array
     for(let y = 9; y <= 446; y+=23){
          for(let x = 11; x<= 218; x+=23){
              coordinateArray[i][j] = new Coordinates(x,y);
-             //console.log(i + ":" + j + " = " + coordinateArray[i][j].x + ":" + coordinateArray[i][j].y);
              i++;
          }
          j++;
          i=0;
     }
 }
+//Creates the coordinate array for the preview next tetromino's panel
+function fillPrevCoordArray(){
+    let i = 0, j = 0;
+    for(let y = 239; y <= 446; y+=23){
+        for(let x = 245; x<= 314; x+=23){
+            
+            prevCoordArray[i][j] = new Coordinates(x,y);
+            i++;
+        }
+        j++;
+        i=0;
+    }
+    
+}
 
 function InitiateCanvas(){
-   canvas = document.getElementById('canvas');
-   ctx = canvas.getContext('2d');
-   canvas.width = 936; //total width of 936 pixels
-   canvas.height = 956; //total height of 956 pixels
-   ctx.scale(2,2); //2x Scale
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = 936; //total width of 936 pixels
+    canvas.height = 956; //total height of 956 pixels
+    ctx.scale(2,2); //2x Scale
 
-   //drawing a rectangle inside canvas
-   ctx.fillStyle = 'grey';
-   ctx.fillRect(0,0, canvas.width, canvas.height);
+    //drawing a rectangle inside canvas
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(0,0, canvas.width, canvas.height);
 
-   //drawing stroke around rectangle
-   ctx.strokeStyle = 'black';
-   ctx.strokeRect(8, 8, 234, 462);
-   drawDashedPattern(ctx);
+    //Draws the Gameboard
+    ctx.strokeStyle = 'black';
+    ctx.strokeRect(8, 8, 234, 462);
+    drawDashedPattern(ctx);
+    drawPreviewPanel();
 
     document.addEventListener('keydown', HandleKeyPress);
 
@@ -95,11 +115,27 @@ function InitiateCanvas(){
     
 
     //Function calls
+    fillPrevCoordArray();
     CreateTetrominos();
     CreateTetromino();
     CoordArray();
     DrawTetromino();
-
+    
+}
+//Creates the Panel which previews next tetromino's that will spawn
+function drawPreviewPanel(){
+    ctx.fillStyle = 'white';
+    ctx.fillText('Next Tetrominos', 255, 235);
+    ctx.setLineDash([]);
+    ctx.strokeRect(244, 238, 92, 232);
+    for(let i = 284; i<=446; i+=46){
+        ctx.beginPath();
+        ctx.setLineDash([1,1]);
+        ctx.moveTo(244, i);
+        ctx.lineTo(336, i);
+        ctx.stroke();
+    }
+    
 }
 
 //Responsible for drawing dashed lines, the coordinates are cherry picked to not draw on the overlapping coordinates of where squares will be to prevent drawing bugs
@@ -134,13 +170,11 @@ function DrawTetromino(){
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
         
         //Canvas context editor
-        //console.log(curTetrominoColor);
         ctx.fillStyle = curTetrominoColor;
         ctx.fillRect(coorX,coorY, 21, 21);
 
@@ -212,13 +246,11 @@ function MoveTetrominoHorizontal(xMove) {
 function HandleKeyPress(key){
     //KeyCode 37 is for left arrow key
     if(key.keyCode === 37){
-        console.log("Left key is pressed");
         // Attempt to move the tetromino 1 unit to the left
         MoveTetrominoHorizontal(-moveConstant)
     }
     //KeyCode 39 is for right arrow key
     else if(key.keyCode === 39){
-        console.log("Right key is pressed");
         // Attempt to move the tetromino 1 unit to the right
         MoveTetrominoHorizontal(moveConstant);
     }
@@ -271,11 +303,71 @@ function CreateTetrominos(){
 }
 
 function CreateTetromino(){
-    //Retrieves a random tetromino from the tetrominos array which we initialized within CreateTetrominos method
+    
+    //Placeholder variable stands for the "current tetromino" being worked on. Since within this function, there will 5 to work with. We can't used the global variable "curTetromino"
+    //This value holds from 0-6
+    let placeholder;
+    //This if statement only runs once to initialize the preview next tetromino
+    if(nextTetrominos.length == 0){
+        for(let i = 0; i<5; i++){
+            let randomTetromino = Math.floor(Math.random() * tetrominos.length);
+            nextTetrominos.push(randomTetromino);
+        }
+    }
+    //This portion retrieves, the first spot in the array from next Tetromino's and makes it the current Tetromino, afterwards, places shifts the array and adds a new random Tetromino
+    placeholder = nextTetrominos.shift();
+    curTetromino = tetrominos[placeholder];
+    curTetrominoColor = tetrominoColors[placeholder];
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
-    curTetromino = tetrominos[randomTetromino];
-    curTetrominoColor = tetrominoColors[randomTetromino];
-    //identifies a unique color for each shape
+    nextTetrominos.push(randomTetromino);
+    //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
+    previewNext();   
+}
+
+function previewNext(){
+    //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
+    for(let row = 0; row<10; row++){
+        for(let col = 0; col<4; col++){
+            let x = prevCoordArray[col][row].x;
+            let y = prevCoordArray[col][row].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(x, y, 21 ,21)
+        }
+    }
+    //Placeholder identifies which tetromino we should be working with by retrieving the value from the nextTetromino's
+    //prevY is to identify where to place the placeholder tetromino
+    //coorX and coorY is to get the coordinates for those said tetromino's
+    let nextTetromino;
+    let nextTetrominoColor;
+    let placeholder;
+    let prevY = 0;
+    let coorX = 0;
+    let coorY = 0;
+    //This has to go on a nested loop, because we're trying to use the same logic of draw tetromino for each tetromino within the nextTetromino array
+    //The first loop loops through each tetromino
+    for(let i = 0; i<5; i++){
+        let x = 0, y = 0;
+        placeholder = nextTetrominos[i];
+        nextTetromino = tetrominos[placeholder];
+        nextTetrominoColor = tetrominoColors[placeholder];
+
+        //This portion of the code follows the same logic as Draw Tetromino
+        //It first retrieves the row and coloumns that have a 1 for the placeholder tetromino
+        //the Y value is incremented by +2 array coordinate array spots to identify where it will be placed within the "preview next" panel
+        for(let j = 0; j < nextTetromino.length; j++){
+            x = nextTetromino[j][0];
+            y = nextTetromino[j][1] + prevY;
+            
+            coorX = prevCoordArray[x][y].x;
+            coorY = prevCoordArray[x][y].y;
+            
+
+            ctx.fillStyle = nextTetrominoColor;
+            ctx.fillRect(coorX, coorY, 21, 21);
+        }
+
+       prevY+=2;
+    }
 }
 
 
@@ -330,7 +422,7 @@ function CheckVertical() {
 
         // if the current tetromino is at the bottom of the game board, OR the the game board contains a frozen block (value of anything but 0 or undefined) at the location we are checking, the location being checked is invalid/obstructed so true should be returned
         if ( (checkY) >= gArrayHeight || (stoppedArray[checkX][checkY] != 0 && stoppedArray[checkX][checkY] != undefined) ) {
-            console.log("vertical collision")
+            //console.log("vertical collision")
             return true;
         }
     }
@@ -434,7 +526,6 @@ function DrawRotatedTetromino(Flippedarray){
        //aka nothing happens if a collision would happen
         if(gameBoardArray[x][y] == 1){
             curTetromino = Flippedarray;
-            console.log("collision detected!");
         }
 
     }
@@ -443,13 +534,11 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
         gameBoardArray[x][y] = 1;
-     //   console.log(coordinateArray[x][y]);
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
         
         //Canvas context editor
-        //console.log(curTetrominoColor);
         ctx.fillStyle = curTetrominoColor;
         ctx.fillRect(coorX,coorY, 21, 21);
 
@@ -467,8 +556,6 @@ function update(time = 0) {
     dropCounter += deltaTime;
     
     if (dropCounter > ActiveTimer) {
-     //  console.log("Drop"+dropCounter);
-      // console.log("Active"+ ActiveTimer);
         MoveTetrominoDown();
         ActiveTimer = 1 * levelTimer;
         dropCounter = 0;
