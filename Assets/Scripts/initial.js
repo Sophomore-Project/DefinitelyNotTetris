@@ -723,5 +723,6 @@ function hardDrop(){
     while(!CheckVertical()){
         MoveTetrominoDown();
     }
+    freezeflag = false;
     FreezeTetromino();
 }
