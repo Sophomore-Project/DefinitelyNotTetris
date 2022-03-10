@@ -7,6 +7,7 @@ let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
+let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
@@ -14,7 +15,10 @@ let curTetromino = [[1,0], [0,1], [1,1], [2,1]];
 
 //Stores all the tetromino shape combination
 let tetrominos = [];
-let tetrominoColors = ['purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
+
+//added null at index 0 so that a frozen square being added to the stopped array never takes a value 0, accomplished by 
+//adding +1 in createTetromino(),the function looks like this --> curTetrominoColor = tetrominoColors [randomTetromino+1];  
+let tetrominoColors = [null, 'purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
 
@@ -244,11 +248,10 @@ function CreateTetromino(){
     //Retrieves a random tetromino from the tetrominos array which we initialized within CreateTetrominos method
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
     curTetromino = tetrominos[randomTetromino];
-    curTetrominoColor = tetrominoColors[randomTetromino];
+    //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
+    curTetrominoColor = tetrominoColors [randomTetromino+1];
     //identifies a unique color for each shape
 }
-
-
 
 /**
  * Freeze the current tetromino on the game board and spawn a new one at the top of the board
@@ -256,18 +259,10 @@ function CreateTetromino(){
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
  function FreezeTetromino() {
-     let firstNonGreyColor
-    // append the current tetromino to the stoppedArray
+    // append the current tetromino to the stoppedArray, assigning it a number based on what color it is via indexing the tetrominoColor array
     for (let i = 0; i < curTetromino.length; i++) {
-        stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = 1; // this value will need to change in the future based on color
-    }
-    
-    /**
-     * if (rowCleared)
-     * }else{
-     * }
-     * 
-     */
+        stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor);
+        }
     // reset initX and initY to the top of the board
     initX = 4;
     initY = 0;
@@ -278,83 +273,102 @@ function CreateTetromino(){
     CreateTetromino();
     DrawTetromino();
 }
-function rowCleared(){
-    console.log("Row cleared function is called");
-//function will return true  if every column is greater than 0
-//else false
-var counter = 0;
-for(let y = 0; y<gArrayHeight; y++){
-    for (let x= 0; x< gArrayWidth;x++){
-        if(stoppedArray[x] > 0)
-        counter++
-        console.log("counter is "+ counter);
-        if(counter == 10)
-            console.log("row is full");
+//function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
+function numberToColor(squareColorNumber){
+    if (squareColorNumber == 1){
+        frozenColorString = 'purple';
+    }else if(squareColorNumber == 2){
+        frozenColorString = 'cyan';
+    }else if(squareColorNumber == 3){
+        frozenColorString = 'blue';
+    }else if(squareColorNumber == 4){
+        frozenColorString = 'yellow';
+    }else if(squareColorNumber == 5){
+        frozenColorString = 'orange';
+    }else if(squareColorNumber == 6){
+        frozenColorString = 'green';
+    }else if(squareColorNumber == 7){
+        frozenColorString = 'red';
+    }else {
+        frozenColorString = 'grey';
     }
-    counter = 0;
+console.log(frozenColorString);
 }
-}
-
+//function that checks if rows are completed 
 function CheckForCompletedRows(){
     let rowsToDelete = 0;
     let startOfDeletion = 0;
+    //starting at y=0, the top of the canvas, going until the bottom of the canvas is reached 
     for(let y = 0; y < gArrayHeight; y++){
         let completed = true;
+        //starting at the left most column, going until the right edge of the canvas is reached
         for(let x = 0; x < gArrayWidth; x++){
+            //assigns the number value (pertaining to color) of the current square in the stoppedArray that is being looked at to variable square
             let square = stoppedArray[x][y];
+            //if a single square in a row is empty, i.e. it has a value of 0, the row cannot be complete, so break out of that row and move down to the next one 
             if(square === 0 || (typeof square === 'undefined')){
                 completed = false;
                 break;
             }
         }
-
+        //gets here if every square in a row has a value other than 0, meaning it is not empty
         if (completed){
+            //starting from top going down, startOfDeletion is the first completed row that has to be deleted
             if(startOfDeletion === 0) startOfDeletion = y;
+            //increments rowsToDelete for each row that is completed 
             rowsToDelete++;
             for(let i = 0; i < gArrayWidth; i++){
+                //sets all stoppedArray values in this completed row back to zero
                 stoppedArray[i][y] = 0;
-                gameboardArray[i][i] = 0;
+                //makes the row disappear 
                 let coorX = coordinateArray[i][y].x;
                 let coorY = coordinateArray[i][y].y;
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = 'grey';
                 ctx.fillRect(coorX, coorY, 21, 21);
-
             }
         }
-
 }
-
+//if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
+//increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
 if (rowsToDelete > 0){
     // score += 10;
-    // ctx.fillStyle = 'white';
+    // ctx.fillStyle = 'grey';
     // ctx.fillRect(310, 109, 140, 19);
     // ctx.fillStyle = 'black';
     // ctx.fillText(score.toString(), 310, 127);
     MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
-
+//function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
     function MoveAllRowsDown(rowsToDelete, startOfDeletion){
+        //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
     for(var i = startOfDeletion-1; i >= 0; i--){
         for(var x = 0; x < gArrayWidth; x++){
+            //y2 is the row that the incomplete row will be 'moved to' when the completed rows are removed
             var y2 = i + rowsToDelete;
+            //assigns the stoppedArray value (pertaining to color) of the incomplete row's squares to variable square, so they can be recreated on the lines that were just completed and removed 
             var square = stoppedArray[x][i];
-            var nextSquare = stoppedArray[x][y2];
-            if(typeof square === 'string'){
-                nextSquare = square;
-                gameBoardArray[x][y2] = 1;
+            //targets the squares of the newly completed and cleared rows so that they can be filled with the above incomplete square's colors
+            var squareColorNumber = stoppedArray[x][y2];
+            //targets squares that are not emptpy
+            if(square != 0){
+                //assigns the number value, relating to color, of the square that is to be copied to the square that is being pasted to 
+                squareColorNumber = square;
+                //passes the value of squareColorNumber to numberToColor function which returns the corresponding color to that value (the color of the square that is being 'moved down')
+                numberToColor(squareColorNumber);
+                //appends the numberical value of the above square to its new location in the stoppedArray
                 stoppedArray[x][y2] = square;
+                //fills the newly completed and emptied rows with the color of the above incomplete rows, simulting moving those rows down
                 let coorX = coordinateArray[x][y2].x;
                 let coorY = coordinateArray[x][y2].y;
-                ctx.fillStyle = nextSquare;
+                ctx.fillStyle = frozenColorString;
                 ctx.fillRect(coorX, coorY, 21, 21);
-                
+                //erases the the original location of the rows that were just moved down, both visually, and in the stoppedArray
                 square = 0;
-                gameBoardArray[x][i] = 0;
                 stoppedArray[x][i] = 0;
                 coorX = coordinateArray[x][i].x;
                 coorY = coordinateArray[x][i].y;
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = 'grey';
                 ctx.fillRect(coorX, coorY, 21, 21);
                 }
         }
@@ -388,7 +402,6 @@ if (rowsToDelete > 0){
             return true;
         }
         CheckForCompletedRows();
-
     }
     // if no collision was found below any of the components of the current tetromino, there are no vertical obstructions
     return false;
