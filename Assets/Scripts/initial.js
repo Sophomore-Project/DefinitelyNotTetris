@@ -413,19 +413,13 @@ function previewNext(){
 }
 
 /**
- * The conditions for losing are
- *      newly spawned block overlapping an already frozen block and there isn't room down and to the right or left.
- *      newly spawned blocks that go have a vertical height of 1 should be pushed into the ceiling
+ * The conditions for losing are that a newly spawned block is overlapping an already frozen block and there isn't room for it to be pushed vertically.
  * 
- * 
- * this function should be called when the tetromino is spawned in overlapping a frozen tetromino and can't be pushed up to avoid it.
+ * this function should be called when the conditions for losing are met after attempting to push the tetromino up
  */
 function GameOver() {
-
     gameOver = true;
     console.log("GAME OVER");
-    
-
 }
 
 /**
@@ -508,11 +502,11 @@ function FreezeTetromino() {
             //set direction to idle so it doesn't move
             direction = DIRECTION.IDLE;
 
-            
+            // choose a new tetromino and draw it on the board
+            CreateTetromino();
+
             // only attempt to draw the tetromino if the game is still going on (!gameOver)
             if (!gameOver) {
-                // choose a new tetromino and draw it on the board
-                CreateTetromino();
                 // choose a new tetromino and draw it on the board
                 DrawTetromino();
             }
