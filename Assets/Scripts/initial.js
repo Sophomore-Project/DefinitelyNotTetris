@@ -30,7 +30,7 @@ let tetrominos = [];
 
 //added null at index 0 so that a frozen square being added to the stopped array never takes a value 0, accomplished by 
 //adding +1 in createTetromino(),the function looks like this --> curTetrominoColor = tetrominoColors [randomTetromino+1];  
-let tetrominoColors = [null, 'purple', 'cyan', 'blue', ' yellow', 'orange', 'green' , 'red'];
+let tetrominoColors = [null, 'purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
 //This is a variable to stop holding being called more than once
