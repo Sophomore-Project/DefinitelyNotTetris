@@ -423,7 +423,7 @@ function GameOver() {
 }
 
 /**
- * Attempts to pushes the current tetromino up into the ceiling. If there is no free space to be pushed, the game should end.
+ * Attempts to pushes the current newly spawned tetromino up into the ceiling. If there is no free space to be pushed, the game should end.
  * 
  * @postconditions the current tetromino is pushed into the ceiling if there are blocks in the way so only one layer is showing at the top of the screen. The game ends if this is not possible
  */
