@@ -79,6 +79,8 @@ body {
     font-family:cursive;
     width: 500px;
     transition: 1s;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
    
 
 }
