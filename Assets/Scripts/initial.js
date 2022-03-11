@@ -7,16 +7,13 @@ let initY = 0; // And 0'th array spot
 let levelTimer = 1000; //the unadjusted time that is used as a reference for ActiveTimer. When the level increases, this should decrease.
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
-<<<<<<< HEAD
 let freezeflag = true;
-let FdropCounter=0;
+
 
 //Current Held tetromino and the corresponding tetromino color
 let curHold;
 let curHoldColor;
-=======
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
->>>>>>> 6fbc0c0dfd3816db910280dd6ceacbe949322fe6
 
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
@@ -398,13 +395,12 @@ function previewNext(){
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
  function FreezeTetromino() {
-<<<<<<< HEAD
      
     // append the current tetromino to the stoppedArray
     if(freezeflag==false){
         if(CheckVertical()){
             for (let i = 0; i < curTetromino.length; i++) {
-                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = 1; // this value will need to change in the future based on color
+                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor);
             }
 
 
@@ -424,25 +420,6 @@ function previewNext(){
         }
     freezeflag = true;
     }
-=======
-    // append the current tetromino to the stoppedArray, assigning it a number based on what color it is via indexing the tetrominoColor array
-    for (let i = 0; i < curTetromino.length; i++) {
-        stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor);
-        }
-    // reset initX and initY to the top of the board
-    initX = 4;
-    initY = 0;
-    //set direction to idle so it doesn't move
-    direction = DIRECTION.IDLE;
-
-    // choose a new tetromino and draw it on the board
-    CreateTetromino();
-    DrawTetromino();
-
-    //when a piece is frozen, it will indicate that a new piece has been placed,
-    //meaning that the user hasn't held it yet.
-    recentHold = false;
->>>>>>> 6fbc0c0dfd3816db910280dd6ceacbe949322fe6
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
@@ -671,10 +648,6 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
        //check through the array to see if a collision would happen. If it would happen, the backup array would be used instead.
        //aka nothing happens if a collision would happen
-<<<<<<< HEAD
-      
-=======
->>>>>>> 6fbc0c0dfd3816db910280dd6ceacbe949322fe6
         if(stoppedArray[x][y] > 0||x>9||x<0){
             curTetromino = Flippedarray;
         }
@@ -684,11 +657,7 @@ function DrawRotatedTetromino(Flippedarray){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
-<<<<<<< HEAD
-        
-=======
        
->>>>>>> 6fbc0c0dfd3816db910280dd6ceacbe949322fe6
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
