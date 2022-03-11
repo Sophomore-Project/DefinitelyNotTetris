@@ -72,7 +72,9 @@ body {
     padding: 25px 34px;
     font-size: 30px;
     background: red;
- 
+ margin-left: auto;
+ margin-right: auto;
+ text-align: center;
     margin: 10px;
     font-family:cursive;
     width: 500px;
