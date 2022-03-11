@@ -79,7 +79,7 @@ body {
     transition: 1s;
     margin-left: auto;
     margin-right: auto;
-    
+
 }
 
 .hero-btn:hover{
@@ -171,20 +171,20 @@ body {
 .hero-btn.button6-btn::before{
     background: black;
 }
-.hero-btn.button7-btn:hover{
+.button.button7-btn:hover{
     border: 1px solid black;
     background: #c836f4;
     color: black;
     cursor: pointer;
     
 }
-.hero-btn.button7-btn::after{
+.button.button7-btn::after{
     background: black;
 }
-.hero-btn.button7-btn::before{
+.button.button7-btn::before{
     background: black;
 }
-.hero-btn.button7-btn{
+.button.button7-btn{
     border: 1px solid #f44336;
     background: blue;
     color: black;
