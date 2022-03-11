@@ -443,18 +443,18 @@ function PushTetrominoUp() {
 
             // if lowestY is 0, this means that the current tetromino is a flat block. If there are any blocks at the top of the screen in the way of any components, there is overlap, so end the game. 
             if (lowestY == 0) {
-                if (stoppedArray[x][y] == 1) {
+                if (stoppedArray[x][y] >= 1) {
                     GameOver();
                     return;
                 }
-            } else if (stoppedArray[x][y-1] == 1) { // if the newly spawned tetromino is not flat and collides with a block at the top of the screen when pushed up, the game should end
+            } else if (stoppedArray[x][y-1] >= 1) { // if the newly spawned tetromino is not flat and collides with a block at the top of the screen when pushed up, the game should end
                 console.log("OVERLAP IN SPAWNING TETROMINO");
                 GameOver();
                 return;
             }
 
             // if any of the blocks at the bottom of the tetromino overlap with a frozen block, it should attempt to be pushed upward 
-            if (stoppedArray[x][y] == 1) {
+            if (stoppedArray[x][y] >= 1) {
                 canMove = true;
             }
         }
