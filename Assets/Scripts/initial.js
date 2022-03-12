@@ -336,6 +336,7 @@ function CreateTetromino(){
         for(let i = 0; i<5; i++){
             let randomTetromino = Math.floor(Math.random() * tetrominos.length);
             nextTetrominos.push(randomTetromino);
+            // console.log(nextTetrominos);
         }
     }
     //This portion retrieves, the first spot in the array from next Tetromino's and makes it the current Tetromino, afterwards, places shifts the array and adds a new random Tetromino
@@ -343,9 +344,15 @@ function CreateTetromino(){
     curTetromino = tetrominos[placeholder];
     curTetrominoColor = tetrominoColors[placeholder];
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
+    curTetromino = tetrominos[placeholder];
+    //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
+    curTetrominoColor = tetrominoColors[placeholder+1];
+    //identifies a unique color for each shape
+    // nextTetrominos.push(placeholder);
     nextTetrominos.push(randomTetromino);
     //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
     previewNext();   
+    
 }
 
 function previewNext(){
@@ -436,6 +443,7 @@ function previewNext(){
             ctx.fillRect(coorX, coorY, 21, 21);
         }
 
+        //console.log(nextTetromino);
        prevY+=2;
     }
 }
