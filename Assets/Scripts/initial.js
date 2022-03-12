@@ -284,6 +284,7 @@ function HandleKeyPress(key){
         console.log(freezeflag);
         if(freezeflag == true){
         RotateTetromino();
+        DrawTetromino();
         }
     }
     else if(key.keyCode == 32){
