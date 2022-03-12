@@ -480,6 +480,7 @@ let flag1 = 0;
         }
     freezeflag = true;
     }
+    CheckForCompletedRows();
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
@@ -535,21 +536,21 @@ function CheckForCompletedRows(){
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
-}
+    }
 //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
 //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
-if (rowsToDelete > 0){
+    if (rowsToDelete > 0){
     // score += 10;
     // ctx.fillStyle = 'grey';
     // ctx.fillRect(310, 109, 140, 19);
     // ctx.fillStyle = 'black';
     // ctx.fillText(score.toString(), 310, 127);
-    MoveAllRowsDown(rowsToDelete, startOfDeletion);
+        MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
 //function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
-    function MoveAllRowsDown(rowsToDelete, startOfDeletion){
-        //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
+function MoveAllRowsDown(rowsToDelete, startOfDeletion){
+    //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
     for(var i = startOfDeletion-1; i >= 0; i--){
         for(var x = 0; x < gArrayWidth; x++){
             //y2 is the row that the incomplete row will be 'moved to' when the completed rows are removed
@@ -578,7 +579,7 @@ if (rowsToDelete > 0){
                 coorY = coordinateArray[x][i].y;
                 ctx.fillStyle = 'grey';
                 ctx.fillRect(coorX, coorY, 21, 21);
-                }
+            }
         }
     }
 }
