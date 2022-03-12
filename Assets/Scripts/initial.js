@@ -806,6 +806,18 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
     
 
 
+function scoreKeeper(currScore){
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText(currScore, 400, 28);
+     
+   
+
+           
+}
+
 
 /**
  * Check if the spaces directly below any component of the current tetromino are invalid/occupied spaces
