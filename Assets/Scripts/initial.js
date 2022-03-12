@@ -189,8 +189,72 @@ function DrawTetromino(){
         ctx.fillRect(coorX,coorY, 21, 21);
 
     }
+
+    DrawGhost();
 }
 
+
+function DrawGhost() {
+    
+    let ghostDistance = FindGhost();
+
+    for (let i = 0; i < curTetromino.length ; i++){        
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY + ghostDistance;
+        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        
+        ctx.fillStyle = curTetrominoColor;
+        ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
+        ctx.fillRect(coorX,coorY, 21, 21);
+        ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
+
+    }
+    
+
+}
+
+function DeleteGhost() {
+
+    let ghostDistance = FindGhost();
+
+    for(let i = 0; i<curTetromino.length; i++){
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY + ghostDistance;
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        ctx.fillStyle = 'grey';
+        ctx.fillRect(coorX, coorY, 21, 21);
+    }
+
+}
+
+function FindGhost() {
+    // iterate to the bottom or the topmost tetromino, basically CheckVertical but with less stuff
+    let foundCollision = false;
+    let ghostDistance = 0;
+
+    while (!foundCollision) {
+
+        for(let i = 0; i < curTetromino.length; i++) {
+            let checkX = curTetromino[i][0] + initX;
+            let checkY = curTetromino[i][1] + initY + 1 + ghostDistance;
+
+            if ( (checkY) >= gArrayHeight || (stoppedArray[checkX][checkY] != 0 && stoppedArray[checkX][checkY] != undefined) ) {
+                //console.log("ghost location " + ghostDistance + " down");
+                foundCollision = true;
+                break;
+            }
+        }
+
+        if (!foundCollision) {ghostDistance++};
+    }
+
+    //return 0;
+
+    return ghostDistance;
+}
 
 
 /**
@@ -294,6 +358,8 @@ function HandleKeyPress(key){
 }
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
 function DeleteTetromino(){
+    DeleteGhost();
+    
     for(let i = 0; i<curTetromino.length; i++){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
