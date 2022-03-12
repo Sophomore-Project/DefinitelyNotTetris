@@ -522,7 +522,6 @@ function previewNext(){
  */
 let flag1 = 0;
  function FreezeTetromino() {
-     
     // append the current tetromino to the stoppedArray
     if(freezeflag==false){
         if(CheckVertical()){
@@ -538,6 +537,7 @@ let flag1 = 0;
         direction = DIRECTION.IDLE;
 
         // choose a new tetromino and draw it on the board
+        CheckForCompletedRows();
         CreateTetromino();
         DrawTetromino();
 
@@ -547,7 +547,6 @@ let flag1 = 0;
         }
     freezeflag = true;
     }
-    CheckForCompletedRows();
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
@@ -787,7 +786,6 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
        
-        gameBoardArray[x][y] = 1;
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
