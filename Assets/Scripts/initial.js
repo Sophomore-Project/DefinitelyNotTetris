@@ -8,6 +8,7 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let freezeflag = true;
+let currScore = 0; //starts the score at 0
 
 
 //Current Held tetromino and the corresponding tetromino color
@@ -119,6 +120,8 @@ function InitiateCanvas(){
     ctx.font = '21px Times New Roman';
     ctx.fillText("SCORE:", 315, 88);
 
+    
+
     //Drawing level rectangle and lettering
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
@@ -138,7 +141,6 @@ function InitiateCanvas(){
     CreateTetromino();
     CoordArray();
     DrawTetromino();
-    
 }
 //Creates the Panel which previews next tetromino's that will spawn
 function drawPreviewPanel(){
@@ -207,6 +209,8 @@ function DrawTetromino(){
         
 
     }
+
+    DrawGhost();
 }
 
 
@@ -560,7 +564,7 @@ function GameOver() {
  * 
  * @postconditions the current tetromino is pushed into the ceiling if there are blocks in the way so only one layer is showing at the top of the screen. The game ends if this is not possible
  */
- function PushTetrominoUp() {
+function PushTetrominoUp() {
 
     // find the lowest y value of the current tetromino. This ensures that only the lowest value is checked for an occupied space and the tetromino isn't pushed up twice
     let lowestY = 0;
@@ -612,6 +616,52 @@ function GameOver() {
     }
 }
 
+function previewNext(){
+    //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
+    for(let row = 0; row<10; row++){
+        for(let col = 0; col<4; col++){
+            let x = prevCoordArray[col][row].x;
+            let y = prevCoordArray[col][row].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(x, y, 21 ,21)
+        }
+    }
+    //Placeholder identifies which tetromino we should be working with by retrieving the value from the nextTetromino's
+    //prevY is to identify where to place the placeholder tetromino
+    //coorX and coorY is to get the coordinates for those said tetromino's
+    let nextTetromino;
+    let nextTetrominoColor;
+    let placeholder;
+    let prevY = 0;
+    let coorX = 0;
+    let coorY = 0;
+    //This has to go on a nested loop, because we're trying to use the same logic of draw tetromino for each tetromino within the nextTetromino array
+    //The first loop loops through each tetromino
+    for(let i = 0; i<5; i++){
+        let x = 0, y = 0;
+        placeholder = nextTetrominos[i];
+        nextTetromino = tetrominos[placeholder];
+        nextTetrominoColor = tetrominoColors[placeholder+1];
+
+        //This portion of the code follows the same logic as Draw Tetromino
+        //It first retrieves the row and coloumns that have a 1 for the placeholder tetromino
+        //the Y value is incremented by +2 array coordinate array spots to identify where it will be placed within the "preview next" panel
+        for(let j = 0; j < nextTetromino.length; j++){
+            x = nextTetromino[j][0];
+            y = nextTetromino[j][1] + prevY;
+            
+            coorX = prevCoordArray[x][y].x;
+            coorY = prevCoordArray[x][y].y;
+            
+
+            ctx.fillStyle = nextTetrominoColor;
+            ctx.fillRect(coorX, coorY, 21, 21);
+        }
+
+        //console.log(nextTetromino);
+       prevY+=2;
+    }
+}
 
 /**
  * Freeze the current tetromino on the game board and spawn a new one at the top of the board
@@ -1069,3 +1119,18 @@ function hardDrop(){
     FreezeTetromino();
 }
 
+//This function creates a brand new grey square where the hold box is on the main screen, so that
+//it clears that area for the newest held tetromino
+function deleteHeldTetromino(){
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(250, 26, 56, 56);
+}
+
+function hardDrop(){
+    //Loop through moveTetrominoDown() function, until vertical collision is detected
+    while(!CheckVertical()){
+        MoveTetrominoDown();
+    }
+    freezeflag = false;
+    FreezeTetromino();
+}
