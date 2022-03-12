@@ -115,7 +115,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 88);
+    ctx.fillText("LEVEL:", 315, 88);
 
     
 
@@ -123,7 +123,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("LEVEL:", 315, 28);
+    ctx.fillText("SCORE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -598,7 +598,7 @@ function CheckForCompletedRows(){
             if(startOfDeletion === 0) startOfDeletion = y;
             //increments rowsToDelete for each row that is completed 
             rowsToDelete++;
-            currScore++;
+            currScore+=10;
             for(let i = 0; i < gArrayWidth; i++){
                 //sets all stoppedArray values in this completed row back to zero
                 stoppedArray[i][y] = 0;
@@ -665,11 +665,7 @@ function scoreKeeper(currScore){
     ctx.fillRect(390,13, 40, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText(currScore, 400, 28);
-     
-   
-
-           
+    ctx.fillText(currScore, 400, 28);         
 }
 
 
