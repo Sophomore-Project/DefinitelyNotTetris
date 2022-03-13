@@ -542,6 +542,7 @@ let flag1 = 0;
         direction = DIRECTION.IDLE;
 
         // choose a new tetromino and draw it on the board
+        CheckForCompletedRows();
         CreateTetromino();
         DrawTetromino();
 
@@ -551,7 +552,7 @@ let flag1 = 0;
         }
     freezeflag = true;
     }
-    CheckForCompletedRows();
+    
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
