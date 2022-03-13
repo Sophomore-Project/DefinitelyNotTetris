@@ -31,7 +31,7 @@ let tetrominos = [];
 
 //added null at index 0 so that a frozen square being added to the stopped array never takes a value 0, accomplished by 
 //adding +1 in createTetromino(),the function looks like this --> curTetrominoColor = tetrominoColors [randomTetromino+1];  
-let tetrominoColors = [null, 'purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
+let tetrominoColors = ['purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
 //This is a variable to stop holding being called more than once
@@ -439,7 +439,7 @@ function CreateTetromino(){
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
     curTetromino = tetrominos[placeholder];
     //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
-    curTetrominoColor = tetrominoColors[placeholder+1];
+    curTetrominoColor = tetrominoColors[placeholder];
     //identifies a unique color for each shape
     // nextTetrominos.push(placeholder);
     nextTetrominos.push(randomTetromino);
@@ -523,7 +523,7 @@ function previewNext(){
         let x = 0, y = 0;
         placeholder = nextTetrominos[i];
         nextTetromino = tetrominos[placeholder];
-        nextTetrominoColor = tetrominoColors[placeholder+1];
+        nextTetrominoColor = tetrominoColors[placeholder];
 
         //This portion of the code follows the same logic as Draw Tetromino
         //It first retrieves the row and coloumns that have a 1 for the placeholder tetromino
@@ -625,7 +625,7 @@ function FreezeTetromino() {
     if(freezeflag==false){
         if(CheckVertical()){
             for (let i = 0; i < curTetromino.length; i++) {
-                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor);
+                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor)+1;
             }
 
 
@@ -670,7 +670,6 @@ function numberToColor(squareColorNumber){
     }else {
         frozenColorString = 'grey';
     }
-console.log(frozenColorString);
 }
 
 //function that checks if rows are completed 
@@ -685,7 +684,7 @@ function CheckForCompletedRows(){
             //assigns the number value (pertaining to color) of the current square in the stoppedArray that is being looked at to variable square
             let square = stoppedArray[x][y];
             //if a single square in a row is empty, i.e. it has a value of 0, the row cannot be complete, so break out of that row and move down to the next one 
-            if(square === 0 || (typeof square === 'undefined')){
+            if(square === 0){
                 completed = false;
                 break;
             }
