@@ -700,6 +700,7 @@ function FreezeTetromino() {
         }
     freezeflag = true;
     }
+    
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
