@@ -344,6 +344,7 @@ function MoveTetrominoHorizontal(xMove) {
 }
 
 function HandleKeyPress(key){
+    
     if (!gameOver) { // only handle the key presses needed for game functions while the game is running
         //KeyCode 37 is for left arrow key
         if(key.keyCode === 37){
