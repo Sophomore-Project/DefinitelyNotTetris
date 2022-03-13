@@ -184,6 +184,9 @@ Cycling through current Tetromino identifies the current shape by cycling throug
 [2,1]]
 */
 function DrawTetromino(){
+    
+    DrawGhost();
+
     //console.log("Current Tetromino length is = " + curTetromino[0][0]);
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
@@ -204,26 +207,30 @@ function DrawTetromino(){
         
 
     }
-
-    DrawGhost();
 }
 
 
 function DrawGhost() {
     
+    DeleteGhost();
+
     let ghostDistance = FindGhost();
 
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY + ghostDistance;
-        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
-        let coorX = coordinateArray[x][y].x;
-        let coorY = coordinateArray[x][y].y;
-        
-        ctx.fillStyle = curTetrominoColor;
-        ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
-        ctx.fillRect(coorX,coorY, 21, 21);
-        ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
+
+        // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
+        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
+            //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+            let coorX = coordinateArray[x][y].x;
+            let coorY = coordinateArray[x][y].y;
+            
+            ctx.fillStyle = curTetrominoColor;
+            ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
+            ctx.fillRect(coorX,coorY, 21, 21);
+            ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
+        }
 
     }
     
@@ -237,10 +244,14 @@ function DeleteGhost() {
     for(let i = 0; i<curTetromino.length; i++){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY + ghostDistance;
-        let coorX = coordinateArray[x][y].x;
-        let coorY = coordinateArray[x][y].y;
-        ctx.fillStyle = 'grey';
-        ctx.fillRect(coorX, coorY, 21, 21);
+        
+        // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
+        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
+            let coorX = coordinateArray[x][y].x;
+            let coorY = coordinateArray[x][y].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(coorX, coorY, 21, 21);
+        }
     }
 
 }
@@ -544,85 +555,11 @@ function GameOver() {
 }
 
 /**
- * Attempts to pushes the current newly spawned tetromino up into the ceiling. If there is no free space to be pushed, the game should end.
- * 
- * @postconditions the current tetromino is pushed into the ceiling if there are blocks in the way so only one layer is showing at the top of the screen. The game ends if this is not possible
- */
-function PushTetrominoUp() {
-
-    // find the lowest y value of the current tetromino. This ensures that only the lowest value is checked for an occupied space and the tetromino isn't pushed up twice
-    let lowestY = 0;
-    for (let i = 0; i < curTetromino.length; i++) {
-        let y = curTetromino[i][1] + initY;
-        if (y > lowestY) {
-            lowestY = y;
-        }
-    }
-    // lowestY now holds the value of the lowest y value (highest integer value) of the current tetromino
-
-
-
-    let canMove = false;
-    for (let i = 0; i < curTetromino.length; i++) {
-        let x = curTetromino[i][0] + initX;
-        let y = curTetromino[i][1] + initY;
-
-        
-
-        // if the currently iterating 
-        if (y == lowestY) { // only check the lowest squares of the tetromino
-
-
-            // if lowestY is 0, this means that the current tetromino is a flat block. If there are any blocks at the top of the screen in the way of any components, there is overlap, so end the game. 
-            if (lowestY == 0) {
-                if (stoppedArray[x][y] >= 1) {
-                    GameOver();
-                    return;
-                }
-            } else if (stoppedArray[x][y-1] >= 1) { // if the newly spawned tetromino is not flat and collides with a block at the top of the screen when pushed up, the game should end
-                console.log("OVERLAP IN SPAWNING TETROMINO");
-                GameOver();
-                return;
-            }
-
-            // if any of the blocks at the bottom of the tetromino overlap with a frozen block, it should attempt to be pushed upward 
-            if (stoppedArray[x][y] >= 1) {
-                canMove = true;
-            }
-        }
-    }
-
-
-    // if there was any overlap at the bottom of the tetromino, push it upward. This will never run if the conditions for ending the game have been met
-    if (canMove) {
-        initY--;
-        console.log("Pushing tetromino upwards. New y : " + initY);
-    }
-}
-
-
-/**
- * The conditions for losing are
- *      newly spawned block overlapping an already frozen block and there isn't room down and to the right or left.
- *      newly spawned blocks that go have a vertical height of 1 should be pushed into the ceiling
- * 
- * 
- * this function should be called when the tetromino is spawned in overlapping a frozen tetromino and can't be pushed up to avoid it.
- */
-function GameOver() {
-
-    gameOver = true;
-    console.log("GAME OVER");
-    
-
-}
-
-/**
  * Attempts to pushes the current tetromino up into the ceiling. If there is no free space to be pushed, the game should end.
  * 
  * @postconditions the current tetromino is pushed into the ceiling if there are blocks in the way so only one layer is showing at the top of the screen. The game ends if this is not possible
  */
-function PushTetrominoUp() {
+ function PushTetrominoUp() {
 
     // find the lowest y value of the current tetromino. This ensures that only the lowest value is checked for an occupied space and the tetromino isn't pushed up twice
     let lowestY = 0;
@@ -699,10 +636,10 @@ function FreezeTetromino() {
 
             CheckForCompletedRows();
             
+            // choose the next tetromino to attempt to draw on the board
+            CreateTetromino();
             // only attempt to draw the tetromino if the game is still going on (!gameOver)
             if (!gameOver) {
-                // choose a new tetromino and draw it on the board
-                CreateTetromino();
                 DrawTetromino();
             }
 
