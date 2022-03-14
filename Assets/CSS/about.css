@@ -1,0 +1,74 @@
+body {
+    background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png");
+    background-blend-mode: multiply;    
+}
+
+.flex-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 4%;
+    border-style: solid;
+    border-color: #9B5094;
+    opacity: 100%;
+    background-color: #F7FFF7;
+
+}
+h4{
+    font-size: 23px;
+    color: #BE95C4;
+}
+h1{
+    color: #9F86C0;
+}
+.link{
+   color: #BE95C4;
+   text-decoration: none; 
+   background-color: none;
+}
+#padding-for-links{
+    padding-top: 2%;
+}
+.button {
+    display: inline;
+    border-radius: 6px;
+    background-color: #9F86C0;
+    border: none;
+    color: #FFFAFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 1%;
+    width: 20%;
+    transition: all 0.5s;
+    margin: 20px;
+    margin-left:5%;
+    margin-right: auto;
+    cursor: pointer;
+    position:relative;
+
+}
+.button span{
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+.button span:after{
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+.button:hover span{
+    padding-right: 25px;
+}
+.button:hover span:after{
+    opacity:1;
+    right: 0;
+}
