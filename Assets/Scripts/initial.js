@@ -8,8 +8,8 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let freezeflag = true;
-
-
+let totalClearedLinesUnadjusted = 0;
+let totalClearedLines = 0;
 //Current Held tetromino and the corresponding tetromino color
 let curHold;
 let curHoldColor;
@@ -90,6 +90,7 @@ function fillPrevCoordArray(){
 }
 
 function InitiateCanvas(){
+ 
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     canvas.width = 936; //total width of 936 pixels
@@ -138,6 +139,8 @@ function InitiateCanvas(){
     CreateTetromino();
     CoordArray();
     DrawTetromino();
+    currLevel=1;
+    levelKeeper();
     
 }
 //Creates the Panel which previews next tetromino's that will spawn
@@ -720,6 +723,10 @@ function CheckForCompletedRows(){
 
 //function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
 function MoveAllRowsDown(rowsToDelete, startOfDeletion){
+    totalClearedLinesUnadjusted=(totalClearedLinesUnadjusted  + rowsToDelete);
+    totalClearedLines = totalClearedLinesUnadjusted - 10;
+    console.log('total lines cleared ' + (totalClearedLines));
+    Level(totalClearedLines);
     //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
     for(var i = startOfDeletion-1; i >= 0; i--){
         for(var x = 0; x < gArrayWidth; x++){
@@ -753,8 +760,20 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
         }
     }
 }
-    
-
+    //This function makes the game faster depending on how man ylines have been cleared
+function Level(totalClearedLines){
+    if(totalClearedLines >=0 && totalClearedLines<10){
+        levelTimer= 1000;
+    }else if(totalClearedLines>= 10 && totalClearedLines<=29){
+        levelTimer= 750;
+    }else if(totalClearedLines>29 && totalClearedLines<=59){
+        levelTimer = 500;
+    }
+    else{
+        levelTimer=1000;
+    }
+        levelKeeper(totalClearedLines);
+}
 
 
 /**
@@ -1052,7 +1071,22 @@ function DrawHeldTetromino(heldColor){
     }
 
 }
-
+//function that keeps track of the current level of the game on the screen
+function levelKeeper(){
+    currLevel=1;
+    if(totalClearedLines<10){
+        currLevel = 1;
+    }else if(totalClearedLines >= 10 &&totalClearedLines <= 29){
+        currLevel =2;
+    }else if (totalClearedLines >29 &&totalClearedLines <= 59){
+        currLevel =3;
+    }
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText(currLevel, 400, 28);         
+}
 //This function creates a brand new grey square where the hold box is on the main screen, so that
 //it clears that area for the newest held tetromino
 function deleteHeldTetromino(){
