@@ -799,7 +799,6 @@ function CheckVertical() {
             //console.log("vertical collision")
             return true;
         }
-        //CheckForCompletedRows();
     }
     // if no collision was found below any of the components of the current tetromino, there are no vertical obstructions
     return false;
