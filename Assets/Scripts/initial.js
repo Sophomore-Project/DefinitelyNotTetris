@@ -8,6 +8,7 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let freezeflag = true;
+let currScore = 0; //starts the score at 0
 
 
 //Current Held tetromino and the corresponding tetromino color
@@ -36,9 +37,6 @@ let curTetrominoColor;
 
 //This is a variable to stop holding being called more than once
 let recentHold;
-
-let gameOver = false;
-
 //stoppedArray is where all the no longer moving pieces of the game will be stored
 let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
@@ -117,13 +115,15 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 88);
+    ctx.fillText("LEVEL:", 315, 88);
+
+    
 
     //Drawing level rectangle and lettering
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("LEVEL:", 315, 28);
+    ctx.fillText("SCORE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -138,6 +138,7 @@ function InitiateCanvas(){
     CreateTetromino();
     CoordArray();
     DrawTetromino();
+    
     
 }
 //Creates the Panel which previews next tetromino's that will spawn
@@ -184,53 +185,39 @@ Cycling through current Tetromino identifies the current shape by cycling throug
 [2,1]]
 */
 function DrawTetromino(){
-    
-    DrawGhost();
-
     //console.log("Current Tetromino length is = " + curTetromino[0][0]);
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        console.log(coordinateArray[x][y]);
+        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
         
-        // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
-        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
-            //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
-            let coorX = coordinateArray[x][y].x;
-            let coorY = coordinateArray[x][y].y;
-        
-            //Canvas context editor
-            //console.log(curTetrominoColor);
-            ctx.fillStyle = curTetrominoColor;
-            ctx.fillRect(coorX,coorY, 21, 21);
-        }
-        
+        //Canvas context editor
+        ctx.fillStyle = curTetrominoColor;
+        ctx.fillRect(coorX,coorY, 21, 21);
 
     }
+
+    DrawGhost();
 }
 
 
 function DrawGhost() {
     
-    DeleteGhost();
-
     let ghostDistance = FindGhost();
 
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY + ghostDistance;
-
-        // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
-        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
-            //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
-            let coorX = coordinateArray[x][y].x;
-            let coorY = coordinateArray[x][y].y;
-            
-            ctx.fillStyle = curTetrominoColor;
-            ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
-            ctx.fillRect(coorX,coorY, 21, 21);
-            ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
-        }
+        //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        
+        ctx.fillStyle = curTetrominoColor;
+        ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
+        ctx.fillRect(coorX,coorY, 21, 21);
+        ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
 
     }
     
@@ -244,14 +231,10 @@ function DeleteGhost() {
     for(let i = 0; i<curTetromino.length; i++){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY + ghostDistance;
-        
-        // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
-        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
-            let coorX = coordinateArray[x][y].x;
-            let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
-            ctx.fillRect(coorX, coorY, 21, 21);
-        }
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        ctx.fillStyle = 'grey';
+        ctx.fillRect(coorX, coorY, 21, 21);
     }
 
 }
@@ -344,46 +327,45 @@ function MoveTetrominoHorizontal(xMove) {
 }
 
 function HandleKeyPress(key){
-    
-    if (!gameOver) { // only handle the key presses needed for game functions while the game is running
-        //KeyCode 37 is for left arrow key
-        if(key.keyCode === 37){
-            // Attempt to move the tetromino 1 unit to the left
-            MoveTetrominoHorizontal(-moveConstant)
-        }
-        //KeyCode 39 is for right arrow key
-        else if(key.keyCode === 39){
-            // Attempt to move the tetromino 1 unit to the right
-            MoveTetrominoHorizontal(moveConstant);
-        }
-        //KeyCode 40 is for down arrow key
-        else if(key.keyCode == 40){
-            //Attempt to move the tetromino down
-            if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
-                FreezeTetromino()
-            }else{
-                MoveTetrominoDown();
-            }
-        }
-        
-        //KeyCode 38 is for up arrowkey
-        else if(key.keyCode == 38){
-            console.log(freezeflag);
-            if(freezeflag == true){
-                RotateTetromino();
-                DrawTetromino();
-            }
-        }
-        else if(key.keyCode == 32){
-            hardDrop();
-        }
-        else if(key.keyCode == 16){
-            holdTetromino();
-            console.log("Shift pressed");
+    //KeyCode 37 is for left arrow key
+    if(key.keyCode === 37){
+        // Attempt to move the tetromino 1 unit to the left
+        MoveTetrominoHorizontal(-moveConstant)
+    }
+    //KeyCode 39 is for right arrow key
+    else if(key.keyCode === 39){
+        // Attempt to move the tetromino 1 unit to the right
+        MoveTetrominoHorizontal(moveConstant);
+    }
+    //KeyCode 40 is for down arrow key
+    else if(key.keyCode == 40){
+        //Attempt to move the tetromino down
+        if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+            FreezeTetromino()
+        }else{
+        MoveTetrominoDown();
         }
     }
+    
+    //KeyCode 38 is for up arrowkey
+    else if(key.keyCode == 38){
+        console.log(freezeflag);
+        if(freezeflag == true){
+        RotateTetromino();
+        DrawTetromino();
+        }
+    }
+    else if(key.keyCode == 32){
+        hardDrop();
+    }
+    else if(key.keyCode == 16){
+        holdTetromino();
+        console.log("Shift pressed");
+    }
+    else if(key.keyCode == 32){
+        console.log("spacebar");
+    }
 }
-
 //This deletes the current location of curTetromino position to prepare for it to be move, to understand, refer to comments for DrawTetromino method
 function DeleteTetromino(){
     DeleteGhost();
@@ -391,14 +373,10 @@ function DeleteTetromino(){
     for(let i = 0; i<curTetromino.length; i++){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        
-        // only attempt to delete pieces that are inside the game board to avoid out of bounds errors
-        if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
-            let coorX = coordinateArray[x][y].x;
-            let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
-            ctx.fillRect(coorX, coorY, 21, 21);
-        }
+        let coorX = coordinateArray[x][y].x;
+        let coorY = coordinateArray[x][y].y;
+        ctx.fillStyle = 'grey';
+        ctx.fillRect(coorX, coorY, 21, 21);
     }
 }
 function CreateTetrominos(){
@@ -502,7 +480,7 @@ function previewNext(){
  * 
  * this function should be called when the conditions for losing are met after attempting to push the tetromino up
  */
-function GameOver() {
+ function GameOver() {
     gameOver = true;
     console.log("GAME OVER");
 }
@@ -564,44 +542,40 @@ function GameOver() {
     }
 }
 
-
 /**
  * Freeze the current tetromino on the game board and spawn a new one at the top of the board
  * 
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
 let flag1 = 0;
-function FreezeTetromino() {
+ function FreezeTetromino() {
      
     // append the current tetromino to the stoppedArray
     if(freezeflag==false){
         if(CheckVertical()){
             for (let i = 0; i < curTetromino.length; i++) {
-                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor)+1;
+                stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor);
             }
 
 
-            // reset initX and initY to the top of the board
-            initX = 4;
-            initY = 0;
-            //set direction to idle so it doesn't move
-            direction = DIRECTION.IDLE;
+        // reset initX and initY to the top of the board
+        initX = 4;
+        initY = 0;
+        //set direction to idle so it doesn't move
+        direction = DIRECTION.IDLE;
 
-            CheckForCompletedRows();
-            
-            // choose the next tetromino to attempt to draw on the board
-            CreateTetromino();
-            // only attempt to draw the tetromino if the game is still going on (!gameOver)
-            if (!gameOver) {
-                DrawTetromino();
-            }
+        // choose a new tetromino and draw it on the board
+        CheckForCompletedRows();
+        CreateTetromino();
+        DrawTetromino();
 
-            //when a piece is frozen, it will indicate that a new piece has been placed,
-            //meaning that the user hasn't held it yet.
-            recentHold = false;
+        //when a piece is frozen, it will indicate that a new piece has been placed,
+        //meaning that the user hasn't held it yet.
+        recentHold = false;
         }
     freezeflag = true;
     }
+    
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
@@ -622,8 +596,8 @@ function numberToColor(squareColorNumber){
     }else {
         frozenColorString = 'grey';
     }
+console.log(frozenColorString);
 }
-
 //function that checks if rows are completed 
 function CheckForCompletedRows(){
     let rowsToDelete = 0;
@@ -636,8 +610,9 @@ function CheckForCompletedRows(){
             //assigns the number value (pertaining to color) of the current square in the stoppedArray that is being looked at to variable square
             let square = stoppedArray[x][y];
             //if a single square in a row is empty, i.e. it has a value of 0, the row cannot be complete, so break out of that row and move down to the next one 
-            if(square === 0){
+            if(square === 0 || (typeof square === 'undefined')){
                 completed = false;
+                
                 break;
             }
         }
@@ -647,6 +622,7 @@ function CheckForCompletedRows(){
             if(startOfDeletion === 0) startOfDeletion = y;
             //increments rowsToDelete for each row that is completed 
             rowsToDelete++;
+            currScore+=10;
             for(let i = 0; i < gArrayWidth; i++){
                 //sets all stoppedArray values in this completed row back to zero
                 stoppedArray[i][y] = 0;
@@ -658,18 +634,19 @@ function CheckForCompletedRows(){
             }
         }
     }
-    //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
-    //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
+//if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
+//increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
     if (rowsToDelete > 0){
-        // score += 10;
-        // ctx.fillStyle = 'grey';
-        // ctx.fillRect(310, 109, 140, 19);
-        // ctx.fillStyle = 'black';
-        // ctx.fillText(score.toString(), 310, 127);
-        MoveAllRowsDown(rowsToDelete, startOfDeletion);
+    // score += 10;
+    // ctx.fillStyle = 'grey';
+    // ctx.fillRect(310, 109, 140, 19);
+    // ctx.fillStyle = 'black';
+    // ctx.fillText(score.toString(), 310, 127);
+    scoreKeeper(currScore);
+    MoveAllRowsDown(rowsToDelete, startOfDeletion);
+
     }
 }
-
 //function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
 function MoveAllRowsDown(rowsToDelete, startOfDeletion){
     //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
@@ -705,8 +682,15 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
         }
     }
 }
-    
 
+
+function scoreKeeper(currScore){
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText(currScore, 400, 28);         
+}
 
 
 /**
@@ -843,6 +827,7 @@ function DrawRotatedTetromino(Flippedarray){
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
        
+        gameBoardArray[x][y] = 1;
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
@@ -872,9 +857,7 @@ function update(time = 0) {
     lastTime = time;
     
     
-    if (!gameOver) {
-        requestAnimationFrame(update);//this function should go on forever
-    }
+    requestAnimationFrame(update);//this function should go on forever
 
 }
 function FreezeTimer(){
@@ -1019,4 +1002,3 @@ function hardDrop(){
     freezeflag = false;
     FreezeTetromino();
 }
-
