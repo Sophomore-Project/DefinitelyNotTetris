@@ -768,8 +768,11 @@ function Level(totalClearedLines){
         levelTimer= 750;
     }else if(totalClearedLines>29 && totalClearedLines<=59){
         levelTimer = 500;
-    }
-    else{
+    }else if(totalClearedLines>59 && totalClearedLines <= 99){
+        levelTimer = 350;
+    }else if(totalClearedLines >99 && totalClearedLines <= 149){
+        levelTimer = 250;
+    }else{
         levelTimer=1000;
     }
         levelKeeper(totalClearedLines);
@@ -1080,6 +1083,10 @@ function levelKeeper(){
         currLevel =2;
     }else if (totalClearedLines >29 &&totalClearedLines <= 59){
         currLevel =3;
+    }else if (totalClearedLines > 59 && totalClearedLines <=99){
+        currLevel = 4;
+    }else if (totalClearedLines >99 && totalClearedLines <= 149){
+        currLevel= 5;
     }
     ctx.fillStyle = 'grey';
     ctx.fillRect(390,13, 40, 28);  
