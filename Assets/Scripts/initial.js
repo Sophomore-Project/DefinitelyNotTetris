@@ -904,7 +904,6 @@ function holdTetromino(){
         if(curHold == null){
             curHold = curTetromino;
             curHoldColor = curTetrominoColor;
-            DeleteTetromino();
             initX = 4;
             initY = 0;
             CreateTetromino();
@@ -920,7 +919,6 @@ function holdTetromino(){
             tempColor = curHoldColor;
             curHoldColor = curTetrominoColor;
             curTetrominoColor = tempColor;
-            DeleteTetromino();
             initX = 4;
             initY = 0;
             DrawTetromino();
