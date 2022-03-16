@@ -2,7 +2,7 @@ body{
     text-align: center;
     /* background: rgb(255, 255, 255); */
     /* //remove this tag before commit  */
-    background-image: url("/Assets/Images/Background.png");
+    background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png");
 /* //uncomment below before commit */
     /* background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png") */
 
