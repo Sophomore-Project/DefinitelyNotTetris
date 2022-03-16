@@ -8,7 +8,6 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let freezeflag = true;
-let totalClearedLinesUnadjusted = 0;
 let totalClearedLines = 0;
 //Current Held tetromino and the corresponding tetromino color
 let curHold;
@@ -114,17 +113,17 @@ function InitiateCanvas(){
     document.addEventListener('keydown', HandleKeyPress);
 
     ctx.setLineDash([]);
-    //drawing the score rectangle and lettering
+    //drawing the LEVEL rectangle and lettering
     ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 88);
+    ctx.fillText("LEVEL:", 315, 88);
 
-    //Drawing level rectangle and lettering
+    //Drawing score rectangle and lettering
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("LEVEL:", 315, 28);
+    ctx.fillText("SCORE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -306,8 +305,6 @@ function MoveTetrominoDown(){
         DrawTetromino();
     }
 }
-
-
 
 /**
  * Attempt to move the current tetromino horizontally by a given amount in a given direction
@@ -687,7 +684,7 @@ function CheckForCompletedRows(){
             //assigns the number value (pertaining to color) of the current square in the stoppedArray that is being looked at to variable square
             let square = stoppedArray[x][y];
             //if a single square in a row is empty, i.e. it has a value of 0, the row cannot be complete, so break out of that row and move down to the next one 
-            if(square === 0){
+            if(square === 0 || square === undefined){
                 completed = false;
                 break;
             }
@@ -723,10 +720,8 @@ function CheckForCompletedRows(){
 
 //function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
 function MoveAllRowsDown(rowsToDelete, startOfDeletion){
-    totalClearedLinesUnadjusted=(totalClearedLinesUnadjusted  + rowsToDelete);
-    totalClearedLines = totalClearedLinesUnadjusted - 10;
-    console.log('total lines cleared ' + (totalClearedLines));
-    Level(totalClearedLines);
+    totalClearedLines=(totalClearedLines + rowsToDelete);//adds rowsToDelete to totalClearedLines, which doesn't get reset to 0 
+    Level(totalClearedLines);//calls Level function
     //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
     for(var i = startOfDeletion-1; i >= 0; i--){
         for(var x = 0; x < gArrayWidth; x++){
@@ -760,7 +755,7 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
         }
     }
 }
-    //This function makes the game faster depending on how man ylines have been cleared
+//This function makes the game faster depending on how many lines have been cleared
 function Level(totalClearedLines){
     if(totalClearedLines >=0 && totalClearedLines<10){
         levelTimer= 1000;
@@ -804,7 +799,7 @@ function CheckVertical() {
             //console.log("vertical collision")
             return true;
         }
-        CheckForCompletedRows();
+        //CheckForCompletedRows();
     }
     // if no collision was found below any of the components of the current tetromino, there are no vertical obstructions
     return false;
@@ -1088,11 +1083,12 @@ function levelKeeper(){
     }else if (totalClearedLines >99 && totalClearedLines <= 149){
         currLevel= 5;
     }
+ 
     ctx.fillStyle = 'grey';
-    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillRect(390,73, 40, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText(currLevel, 400, 28);         
+    ctx.fillText(currLevel, 400, 89);         
 }
 //This function creates a brand new grey square where the hold box is on the main screen, so that
 //it clears that area for the newest held tetromino
