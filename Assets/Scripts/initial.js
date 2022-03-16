@@ -32,7 +32,7 @@ let tetrominos = [];
 
 //added null at index 0 so that a frozen square being added to the stopped array never takes a value 0, accomplished by 
 //adding +1 in createTetromino(),the function looks like this --> curTetrominoColor = tetrominoColors [randomTetromino+1];  
-let tetrominoColors = [null, 'purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
+let tetrominoColors = ['purple', 'cyan', 'blue', 'yellow', 'orange', 'green' , 'red'];
 let curTetrominoColor;
 
 //This is a variable to stop holding being called more than once
@@ -417,10 +417,14 @@ function CreateTetromino(){
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
     curTetromino = tetrominos[placeholder];
     //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
-    curTetrominoColor = tetrominoColors[placeholder+1];
+    curTetrominoColor = tetrominoColors[placeholder];
     //identifies a unique color for each shape
     // nextTetrominos.push(placeholder);
     nextTetrominos.push(randomTetromino);
+
+    // attempt to push the newly spawned tetromino if needed
+    PushTetrominoUp();
+    
     //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
     previewNext();   
     
@@ -471,6 +475,73 @@ function previewNext(){
        prevY+=2;
     }
 }
+/**
+ * The conditions for losing are that a newly spawned block is overlapping an already frozen block and there isn't room for it to be pushed vertically.
+ * 
+ * this function should be called when the conditions for losing are met after attempting to push the tetromino up
+ */
+ function GameOver() {
+    gameOver = true;
+    console.log("GAME OVER");
+}
+
+/**
+ * Attempts to pushes the current tetromino up into the ceiling. If there is no free space to be pushed, the game should end.
+ * 
+ * @postconditions the current tetromino is pushed into the ceiling if there are blocks in the way so only one layer is showing at the top of the screen. The game ends if this is not possible
+ */
+ function PushTetrominoUp() {
+
+    // find the lowest y value of the current tetromino. This ensures that only the lowest value is checked for an occupied space and the tetromino isn't pushed up twice
+    let lowestY = 0;
+    for (let i = 0; i < curTetromino.length; i++) {
+        let y = curTetromino[i][1] + initY;
+        if (y > lowestY) {
+            lowestY = y;
+        }
+    }
+    // lowestY now holds the value of the lowest y value (highest integer value) of the current tetromino
+
+
+
+    let canMove = false;
+    for (let i = 0; i < curTetromino.length; i++) {
+        let x = curTetromino[i][0] + initX;
+        let y = curTetromino[i][1] + initY;
+
+        
+
+        // if the currently iterating 
+        if (y == lowestY) { // only check the lowest squares of the tetromino
+
+
+            // if lowestY is 0, this means that the current tetromino is a flat block. If there are any blocks at the top of the screen in the way of any components, there is overlap, so end the game. 
+            if (lowestY == 0) {
+                if (stoppedArray[x][y] >= 1) {
+                    GameOver();
+                    return;
+                }
+            } else if (stoppedArray[x][y-1] >= 1) { // if the newly spawned tetromino is not flat and collides with a block at the top of the screen when pushed up, the game should end
+                console.log("OVERLAP IN SPAWNING TETROMINO");
+                GameOver();
+                return;
+            }
+
+            // if any of the blocks at the bottom of the tetromino overlap with a frozen block, it should attempt to be pushed upward 
+            if (stoppedArray[x][y] >= 1) {
+                canMove = true;
+            }
+        }
+    }
+
+
+    // if there was any overlap at the bottom of the tetromino, push it upward. This will never run if the conditions for ending the game have been met
+    if (canMove) {
+        initY--;
+        console.log("Pushing tetromino upwards. New y : " + initY);
+    }
+}
+
 /**
  * Freeze the current tetromino on the game board and spawn a new one at the top of the board
  * 
