@@ -13,6 +13,7 @@ let totalClearedLines = 0;
 let curHold;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
+let currScore = 0;
 
 
 //Coordinate solution for previewed tetrominos
@@ -646,6 +647,7 @@ function CheckForCompletedRows(){
             //starting from top going down, startOfDeletion is the first completed row that has to be deleted
             if(startOfDeletion === 0) startOfDeletion = y;
             //increments rowsToDelete for each row that is completed 
+            currScore+=10;
             rowsToDelete++;
             for(let i = 0; i < gArrayWidth; i++){
                 //sets all stoppedArray values in this completed row back to zero
@@ -666,8 +668,17 @@ function CheckForCompletedRows(){
         // ctx.fillRect(310, 109, 140, 19);
         // ctx.fillStyle = 'black';
         // ctx.fillText(score.toString(), 310, 127);
+        scoreKeeper(currScore);
         MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
+}
+
+function scoreKeeper(currScore){
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText(currScore, 400, 28);         
 }
 
 //function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
