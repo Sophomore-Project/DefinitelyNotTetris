@@ -123,7 +123,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 28);
+    ctx.fillText("SCOR:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -205,16 +205,18 @@ function DrawTetromino(){
             //console.log(curTetrominoColor);
             ctx.fillStyle = curTetrominoColor;
             ctx.fillRect(coorX,coorY, 21, 21);
-            DrawPowerUp(coorX,coorY);
+            SpecialImage = new Image(21,21);
+            DrawPowerUp(coorX,coorY, SpecialImage);
         }
         
 
     }
-}function DrawPowerUp(drawX, drawY){
+}
+function DrawPowerUp(drawX, drawY, SpecialImage){
     
     if(curTetrominoColor=='pink'||curTetrominoColor=='black'||curTetrominoColor=='brown'||curTetrominoColor=='lime'){
         console.log("Drawing current image");
-        SpecialImage = new Image(21,21);
+        
        switch(curTetrominoColor){
             case 'pink':
             SpecialImage.src = "/DefinatelyNotTetris/Assets/Images/SlowTimeSmall.png";
