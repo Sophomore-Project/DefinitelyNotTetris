@@ -205,9 +205,32 @@ function DrawTetromino(){
             //console.log(curTetrominoColor);
             ctx.fillStyle = curTetrominoColor;
             ctx.fillRect(coorX,coorY, 21, 21);
+            DrawPowerUp(coorX,coorY);
         }
         
 
+    }
+}function DrawPowerUp(drawX, drawY){
+    
+    if(curTetrominoColor=='pink'||curTetrominoColor=='black'||curTetrominoColor=='brown'||curTetrominoColor=='lime'){
+        console.log("Drawing current image");
+        SpecialImage = new Image(21,21);
+       switch(curTetrominoColor){
+            case 'pink':
+            SpecialImage.src = "/DefinatelyNotTetris/Assets/Images/SlowTimeSmall.png";
+            break;
+            case 'black':
+            SpecialImage.src = "/DefinatelyNotTetris/Assets/Images/SmallBomb.png";
+            break;
+            case 'brown':
+            SpecialImage.src = "/DefinatelyNotTetris/Assets/Images/StarSmall.png";
+            break;
+            case 'lime':
+            SpecialImage.src = "/DefinatelyNotTetris/Assets/Images/SurpriseSmall.png";
+            break;
+       }
+        
+        ctx.drawImage(SpecialImage,drawX,drawY,21,21);
     }
 }
 
