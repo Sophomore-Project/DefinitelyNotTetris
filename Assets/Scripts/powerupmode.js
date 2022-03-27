@@ -123,7 +123,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE5:", 315, 28);
+    ctx.fillText("SCOR:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -186,14 +186,14 @@ Cycling through current Tetromino identifies the current shape by cycling throug
 [2,1]]
 */
 function DrawTetromino(){
-    
+    previewDrawNext();
     DrawGhost();
 
     //console.log("Current Tetromino length is = " + curTetromino[0][0]);
     for (let i = 0; i < curTetromino.length ; i++){        
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
-        console.log(coordinateArray[x][y]);
+       // console.log(coordinateArray[x][y]);
         
         // only continue drawing the tetromino if it is within the boundaries of the game board to prevent attempting to draw out of bounds
         if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
@@ -211,6 +211,7 @@ function DrawTetromino(){
         
 
     }
+   
 }
 function DrawPowerUp(drawX, drawY, SpecialImage){
     
@@ -219,16 +220,16 @@ function DrawPowerUp(drawX, drawY, SpecialImage){
         
        switch(curTetrominoColor){
             case 'pink':
-            SpecialImage.src = "/Assets/Images/SlowDownSmall.png";
+            SpecialImage.src = "SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "/Assets/Images/SmallBomb.png";
+            SpecialImage.src = "SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "/Assets/Images/StarSmall.png";
+            SpecialImage.src = "StarSmall.png";
             break;
             case 'lime':
-            SpecialImage.src = "/Assets/Images/SurpriseSmall.png";
+            SpecialImage.src = "SurpriseSmall.png";
             break;
        }
         
@@ -256,6 +257,8 @@ function DrawGhost() {
             ctx.fillStyle = curTetrominoColor;
             ctx.globalAlpha = 0.4; // the ghost tetromino should be mostly transparent
             ctx.fillRect(coorX,coorY, 21, 21);
+            SpecialImage = new Image(21,21);
+            DrawPowerUp(coorX,coorY, SpecialImage);
             ctx.globalAlpha = 1; // set the transparency back to 1 so that the actual tetrominos are solid
         }
 
@@ -463,23 +466,81 @@ function CreateTetromino(){
     }
     //This portion retrieves, the first spot in the array from next Tetromino's and makes it the current Tetromino, afterwards, places shifts the array and adds a new random Tetromino
     placeholder = nextTetrominos.shift();
+    
     curTetromino = tetrominos[placeholder];
     curTetrominoColor = tetrominoColors[placeholder];
     let randomTetromino = ChooseTetrominoIndex();
     curTetromino = tetrominos[placeholder];
     //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
     curTetrominoColor = tetrominoColors[placeholder];
+    DrawFirstPowerUp(tetrominoColors[placeholder]);
     //identifies a unique color for each shape
     // nextTetrominos.push(placeholder);
+    
     nextTetrominos.push(randomTetromino);
+    
 
     // attempt to push the newly spawned tetromino if needed
     PushTetrominoUp();
-    
+    DrawFirstPowerUp(tetrominoColors[placeholder]);
     //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
-    previewNext();   
+   
+    previewNext();
     
 }
+function DrawFirstPowerUp(nextColor){//this function draws the a special tetromino when the tetromino first enters the board.
+    SpecialImage = new Image(21,21);//precisely, this draws the image wherever initX and initY first appears
+    if(nextColor=='pink'||nextColor=='black'||nextColor=='brown'||nextColor=='lime'){
+        console.log("Drawing current image");
+        
+       switch(nextColor){
+            case 'pink':
+            SpecialImage.src = "SlowDownSmall.png";
+            break;
+            case 'black':
+            SpecialImage.src = "SmallBomb.png";
+            break;
+            case 'brown':
+            SpecialImage.src = "StarSmall.png";
+            break;
+            case 'lime':
+            SpecialImage.src = "SurpriseSmall.png";
+            break;
+       }
+       let coorX = coordinateArray[initX][initY].x;
+       let coorY = coordinateArray[initX][initY].y;
+
+
+        ctx.drawImage(SpecialImage,coorX,coorY,21,21);
+    }
+}
+function DrawFirstPrevPowerUp(nextColor){//this function draws the a special tetromino when the tetromino first enters the board.
+    SpecialImage = new Image(21,21);//precisely, this draws the image wherever initX and initY first appears
+    if(nextColor=='pink'||nextColor=='black'||nextColor=='brown'||nextColor=='lime'){
+        console.log("Drawing current image");
+        
+       switch(nextColor){
+            case 'pink':
+            SpecialImage.src = "SlowDownSmall.png";
+            break;
+            case 'black':
+            SpecialImage.src = "SmallBomb.png";
+            break;
+            case 'brown':
+            SpecialImage.src = "StarSmall.png";
+            break;
+            case 'lime':
+            SpecialImage.src = "SurpriseSmall.png";
+            break;
+       }
+       let coorX = prevCoordArray[0][0].x;
+       let coorY = prevCoordArray[0][0].y;
+
+
+        ctx.drawImage(SpecialImage,coorX,coorY,21,21);
+    }
+}
+
 function ChooseTetrominoIndex(){//this returns the value of the tetromino we're going to create. 91% for a normal one. 9% for a special
     let TetrominoIndex;
 let ReturnIndex;
@@ -508,7 +569,7 @@ let ReturnIndex;
     return ReturnIndex;
 }
 function PowerUpDecider(){//9% chance of rolling on the a powerupTetromino
-    console.log("Hello!");
+ //   console.log("Powerupdecided");
     let PowerUpIndex;
     PowerUpIndex = Math.floor(Math.random()*4);
     console.log("Index"+PowerUpIndex);
@@ -568,22 +629,17 @@ function previewNext(){
 
             ctx.fillStyle = nextTetrominoColor;
             ctx.fillRect(coorX, coorY, 21, 21);
+         
+           
         }
 
        prevY+=2;
     }
+   
 }
-
-function previewNext(){
+function previewDrawNext(){
     //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
-    for(let row = 0; row<10; row++){
-        for(let col = 0; col<4; col++){
-            let x = prevCoordArray[col][row].x;
-            let y = prevCoordArray[col][row].y;
-            ctx.fillStyle = 'grey';
-            ctx.fillRect(x, y, 21 ,21)
-        }
-    }
+   
     //Placeholder identifies which tetromino we should be working with by retrieving the value from the nextTetromino's
     //prevY is to identify where to place the placeholder tetromino
     //coorX and coorY is to get the coordinates for those said tetromino's
@@ -593,6 +649,7 @@ function previewNext(){
     let prevY = 0;
     let coorX = 0;
     let coorY = 0;
+    
     //This has to go on a nested loop, because we're trying to use the same logic of draw tetromino for each tetromino within the nextTetromino array
     //The first loop loops through each tetromino
     for(let i = 0; i<5; i++){
@@ -600,26 +657,46 @@ function previewNext(){
         placeholder = nextTetrominos[i];
         nextTetromino = tetrominos[placeholder];
         nextTetrominoColor = tetrominoColors[placeholder];
-
+        SpecialImage = new Image(21,21);
         //This portion of the code follows the same logic as Draw Tetromino
         //It first retrieves the row and coloumns that have a 1 for the placeholder tetromino
         //the Y value is incremented by +2 array coordinate array spots to identify where it will be placed within the "preview next" panel
         for(let j = 0; j < nextTetromino.length; j++){
             x = nextTetromino[j][0];
             y = nextTetromino[j][1] + prevY;
-            
+           
             coorX = prevCoordArray[x][y].x;
             coorY = prevCoordArray[x][y].y;
             
+            if(nextTetrominoColor=='pink'||nextTetrominoColor=='black'||nextTetrominoColor=='brown'||nextTetrominoColor=='lime'){
+                    console.log("Special detected");
+                    switch(nextTetrominoColor){
+                        case 'pink':
+                        SpecialImage.src = "SlowDownSmall.png";
+                        break;
+                        case 'black':
+                        SpecialImage.src = "SmallBomb.png";
+                        break;
+                        case 'brown':
+                        SpecialImage.src = "StarSmall.png";
+                        break;
+                        case 'lime':
+                        SpecialImage.src = "SurpriseSmall.png";
+                        break;
+                   }
+                   ctx.drawImage(SpecialImage,coorX,coorY,21,21);
 
-            ctx.fillStyle = nextTetrominoColor;
-            ctx.fillRect(coorX, coorY, 21, 21);
+            }
+           
+         
+      
         }
 
-        //console.log(nextTetromino);
        prevY+=2;
     }
 }
+
+
 
 /**
  * The conditions for losing are that a newly spawned block is overlapping an already frozen block and there isn't room for it to be pushed vertically.
@@ -715,6 +792,7 @@ function FreezeTetromino() {
             
             // choose the next tetromino to attempt to draw on the board
             CreateTetromino();
+            
             // only attempt to draw the tetromino if the game is still going on (!gameOver)
             if (!gameOver) {
                 DrawTetromino();
