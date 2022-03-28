@@ -186,7 +186,7 @@ Cycling through current Tetromino identifies the current shape by cycling throug
 [2,1]]
 */
 function DrawTetromino(){
-    previewDrawNext();
+  
     DrawGhost();
 
     //console.log("Current Tetromino length is = " + curTetromino[0][0]);
@@ -213,7 +213,7 @@ function DrawTetromino(){
     }
    
 }
-function DrawPowerUp(drawX, drawY, SpecialImage){
+function DrawPowerUp(drawX, drawY, SpecialImage){//draws the special powerup on top of the 4 special colors. Same code is used for drawing the ghost.
     
     if(curTetrominoColor=='pink'||curTetrominoColor=='black'||curTetrominoColor=='brown'||curTetrominoColor=='lime'){
         console.log("Drawing current image");
@@ -226,7 +226,7 @@ function DrawPowerUp(drawX, drawY, SpecialImage){
             SpecialImage.src = "SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "StarSmall.png";
+            SpecialImage.src = "ITime.png";
             break;
             case 'lime':
             SpecialImage.src = "SurpriseSmall.png";
@@ -486,7 +486,7 @@ function CreateTetromino(){
     //Below function is called here to make sure each time a new Tetromino is created, preview panel is also updated
    
     previewNext();
-    
+   setInterval(previewDrawNext,50);//draws the images on top of the speical colors in thr prev array. The delay is here to make sure previewdrawnext happens after previewnext
 }
 function DrawFirstPowerUp(nextColor){//this function draws the a special tetromino when the tetromino first enters the board.
     SpecialImage = new Image(21,21);//precisely, this draws the image wherever initX and initY first appears
@@ -501,7 +501,7 @@ function DrawFirstPowerUp(nextColor){//this function draws the a special tetromi
             SpecialImage.src = "SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "StarSmall.png";
+            SpecialImage.src = "ITime.png";
             break;
             case 'lime':
             SpecialImage.src = "SurpriseSmall.png";
@@ -514,32 +514,7 @@ function DrawFirstPowerUp(nextColor){//this function draws the a special tetromi
         ctx.drawImage(SpecialImage,coorX,coorY,21,21);
     }
 }
-function DrawFirstPrevPowerUp(nextColor){//this function draws the a special tetromino when the tetromino first enters the board.
-    SpecialImage = new Image(21,21);//precisely, this draws the image wherever initX and initY first appears
-    if(nextColor=='pink'||nextColor=='black'||nextColor=='brown'||nextColor=='lime'){
-        console.log("Drawing current image");
-        
-       switch(nextColor){
-            case 'pink':
-            SpecialImage.src = "SlowDownSmall.png";
-            break;
-            case 'black':
-            SpecialImage.src = "SmallBomb.png";
-            break;
-            case 'brown':
-            SpecialImage.src = "StarSmall.png";
-            break;
-            case 'lime':
-            SpecialImage.src = "SurpriseSmall.png";
-            break;
-       }
-       let coorX = prevCoordArray[0][0].x;
-       let coorY = prevCoordArray[0][0].y;
 
-
-        ctx.drawImage(SpecialImage,coorX,coorY,21,21);
-    }
-}
 
 function ChooseTetrominoIndex(){//this returns the value of the tetromino we're going to create. 91% for a normal one. 9% for a special
     let TetrominoIndex;
@@ -637,7 +612,7 @@ function previewNext(){
     }
    
 }
-function previewDrawNext(){
+function previewDrawNext(){//an almost copy/paste of preview next. However, for this function, we are only drawing the images on top of special Tetrominoes
     //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
    
     //Placeholder identifies which tetromino we should be working with by retrieving the value from the nextTetromino's
@@ -669,7 +644,7 @@ function previewDrawNext(){
             coorY = prevCoordArray[x][y].y;
             
             if(nextTetrominoColor=='pink'||nextTetrominoColor=='black'||nextTetrominoColor=='brown'||nextTetrominoColor=='lime'){
-                    console.log("Special detected");
+                   
                     switch(nextTetrominoColor){
                         case 'pink':
                         SpecialImage.src = "SlowDownSmall.png";
@@ -678,7 +653,7 @@ function previewDrawNext(){
                         SpecialImage.src = "SmallBomb.png";
                         break;
                         case 'brown':
-                        SpecialImage.src = "StarSmall.png";
+                        SpecialImage.src = "ITime.png";
                         break;
                         case 'lime':
                         SpecialImage.src = "SurpriseSmall.png";
@@ -696,6 +671,31 @@ function previewDrawNext(){
     }
 }
 
+
+
+function DrawPrevPowerUp(drawX, drawY,nextColor){
+    SpecialImage = new Image(21,21);
+    if(nextColor=='pink'||nextColor=='black'||nextColor=='brown'||nextColor=='lime'){
+       // console.log("Drawing current image");
+        
+       switch(nextColor){
+            case 'pink':
+            SpecialImage.src = "SlowDownSmall.png";
+            break;
+            case 'black':
+            SpecialImage.src = "SmallBomb.png";
+            break;
+            case 'brown':
+            SpecialImage.src = "ITime.png";
+            break;
+            case 'lime':
+            SpecialImage.src = "SurpriseSmall.png";
+            break;
+       }
+        
+        ctx.drawImage(SpecialImage,drawX,drawY,21,21);
+    }
+}
 
 
 /**
@@ -771,17 +771,32 @@ function GameOver() {
  * 
  * @postconditions all blocks of the tetromino stop having the ability to move and a new tetromino is spawned
  */
-let flag1 = 0;
+
 function FreezeTetromino() {
-     
+     SpecialIndex = curTetrominoColor;
     // append the current tetromino to the stoppedArray
     if(freezeflag==false){
         if(CheckVertical()){
+            if(tetrominoColors.indexOf(curTetrominoColor)+1<8){//if the tetromino is special, delete it immediately
             for (let i = 0; i < curTetromino.length; i++) {
                 stoppedArray[ (curTetromino[i][0]+initX) ][ (curTetromino[i][1]+initY) ] = squareColorNumber = tetrominoColors.indexOf(curTetrominoColor)+1;
             }
-
-
+        }else{
+            for(let i = 0; i<curTetromino.length; i++){
+                let x = curTetromino[i][0] + initX;
+                let y = curTetromino[i][1] + initY;
+                
+                // only attempt to delete pieces that are inside the game board to avoid out of bounds errors
+                if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
+                    let coorX = coordinateArray[x][y].x;
+                    let coorY = coordinateArray[x][y].y;
+                    ctx.fillStyle = 'grey';
+                    ctx.fillRect(coorX, coorY, 21, 21);
+                }
+        }
+        PowerUpTime(SpecialIndex);
+    }
+    
             // reset initX and initY to the top of the board
             initX = 4;
             initY = 0;
@@ -804,6 +819,26 @@ function FreezeTetromino() {
         }
     freezeflag = true;
     }
+}
+function PowerUpTime(Index){//The powerup function that will happen depends on what special color the tetromino is.
+    switch(Index){
+        case 'pink':
+        console.log("Whhyyy am I thiiinking sooo sloooow?");
+        //put the slowdown function here
+        break;
+        case 'black':
+       console.log("BoomBox boom!");
+       //put the bomb function here
+        break;
+        case 'brown':
+        console.log("I spy something starting beggining with the letter I");
+        //put the I function here
+        break;
+        case 'lime':
+        console.log("Mikayle time");
+        //put... something here
+        break;
+   }
 }
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
 function numberToColor(squareColorNumber){
@@ -1230,6 +1265,30 @@ function DrawHeldTetromino(heldColor){
         ctx.fillRect(272, 41, 12,12);
         ctx.fillRect(272, 54, 12,12);
         ctx.fillRect(285, 54, 12,12);
+    }
+    else if(heldColor=="pink"){
+        deleteHeldTetromino();
+        HeldImage = new Image(21,21);
+        HeldImage.src = "SlowDownSmall.png";
+        ctx.drawImage(HeldImage,259,54,21,21);
+    }
+    else if(heldColor=="black"){
+        deleteHeldTetromino();
+        HeldImage = new Image(21,21);
+        HeldImage.src = "SmallBomb.png";
+        ctx.drawImage(HeldImage,259,54,21,21);
+    }
+    else if(heldColor=="brown"){
+        deleteHeldTetromino();
+        HeldImage = new Image(21,21);
+        HeldImage.src = "ITime.png";
+        ctx.drawImage(HeldImage,259,54,21,21);
+    }
+    else if(HeldImage=="lime"){
+        deleteHeldTetromino();
+        HeldImage = new Image(21,21);
+        HeldImage.src = "SurpriseSmall.png";
+        ctx.drawImage(HeldImage,259,54,21,21);
     }
 
 }
