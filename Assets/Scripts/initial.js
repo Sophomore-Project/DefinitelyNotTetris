@@ -15,6 +15,9 @@ let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore = 0;
 
+var popSound = new Audio('/Assets/Audio/pop.mp3');
+
+var boopSound = new Audio('/Assets/Audio/Boop.mp3');
 
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
@@ -376,6 +379,8 @@ function HandleKeyPress(key){
             }
         }
         else if(key.keyCode == 32){
+            popSound.play();
+            popSound.playbackRate = 2.5;
             hardDrop();
         }
         else if(key.keyCode == 16){
@@ -668,7 +673,11 @@ function CheckForCompletedRows(){
         // ctx.fillRect(310, 109, 140, 19);
         // ctx.fillStyle = 'black';
         // ctx.fillText(score.toString(), 310, 127);
+        //plays boop audio for cleared line
+        boopSound.play();
+        boopSound.playbackRate = 2;
         scoreKeeper(currScore);
+        
         MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
