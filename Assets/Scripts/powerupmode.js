@@ -495,16 +495,16 @@ function DrawFirstPowerUp(nextColor){//this function draws the a special tetromi
         
        switch(nextColor){
             case 'pink':
-            SpecialImage.src = "SlowDownSmall.png";
+            SpecialImage.src = "/Assets/Images/SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "SmallBomb.png";
+            SpecialImage.src = "/Assets/Images/SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "ITime.png";
+            SpecialImage.src = "/Assets/Images/ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "SurpriseSmall.png";
+            SpecialImage.src = "/Assets/Images/SurpriseSmall.png";
             break;
        }
        let coorX = coordinateArray[initX][initY].x;
@@ -563,6 +563,19 @@ function PowerUpDecider(){//9% chance of rolling on the a powerupTetromino
     }
 }
 
+function linePowerup(){
+    for(let i = 0; i<5; i++){
+        console.log(nextTetrominos[i]);
+    }
+    
+    for(let i = 0; i<=5; i++){
+        // let randomTetromino = ChooseTetrominoIndex();
+        nextTetrominos[i] = 1;
+
+        console.log(nextTetrominos[i]);
+    }
+    previewDrawNext();
+}
 
 function previewNext(){
     //This loops allows us to clear the previous display of previewed tetromino's and prepares us to update it with new tetromino's
@@ -647,16 +660,16 @@ function previewDrawNext(){//an almost copy/paste of preview next. However, for 
                    
                     switch(nextTetrominoColor){
                         case 'pink':
-                        SpecialImage.src = "SlowDownSmall.png";
+                        // SpecialImage.src = "/Assets/Images/SlowDownSmall.png";
                         break;
                         case 'black':
-                        SpecialImage.src = "SmallBomb.png";
+                        // SpecialImage.src = "/Assets/Images/SmallBomb.png";
                         break;
                         case 'brown':
-                        SpecialImage.src = "ITime.png";
+                        // SpecialImage.src = "/Assets/Images/ITime.png";
                         break;
                         case 'lime':
-                        SpecialImage.src = "SurpriseSmall.png";
+                        // SpecialImage.src = "/Assets/Images/SurpriseSmall.png";
                         break;
                    }
                    ctx.drawImage(SpecialImage,coorX,coorY,21,21);
@@ -824,18 +837,22 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
     switch(Index){
         case 'pink':
         console.log("Whhyyy am I thiiinking sooo sloooow?");
+        linePowerup();
         //put the slowdown function here
         break;
         case 'black':
        console.log("BoomBox boom!");
+       linePowerup();
        //put the bomb function here
         break;
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
+        linePowerup();
         //put the I function here
         break;
         case 'lime':
         console.log("Mikayle time");
+        linePowerup();
         //put... something here
         break;
    }
@@ -1169,7 +1186,6 @@ function holdTetromino(){
         if(curHold == null){
             curHold = curTetromino;
             curHoldColor = curTetrominoColor;
-            DeleteTetromino();
             initX = 4;
             initY = 0;
             CreateTetromino();
@@ -1185,7 +1201,6 @@ function holdTetromino(){
             tempColor = curHoldColor;
             curHoldColor = curTetrominoColor;
             curTetrominoColor = tempColor;
-            DeleteTetromino();
             initX = 4;
             initY = 0;
             DrawTetromino();
