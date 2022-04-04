@@ -18,6 +18,9 @@ let frozenColorString; //variable that holds a color dependent on what value of 
 let currScore = 0;
 let currLevel;
 
+var popSound = new Audio('/Assets/Audio/pop.mp3');
+
+var boopSound = new Audio('/Assets/Audio/Boop.mp3');
 
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
@@ -390,6 +393,8 @@ function HandleKeyPress(key){
             }
         }
         else if(key.keyCode == SPACE_KEY){
+            popSound.play();
+            popSound.playbackRate = 2.5;
             hardDrop();
         }
         else if(key.keyCode == SHIFT_KEY){
@@ -980,6 +985,21 @@ function DropRowsAbove(y) {
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
+    }
+    //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
+    //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
+    if (rowsToDelete > 0){
+        // score += 10;
+        // ctx.fillStyle = 'grey';
+        // ctx.fillRect(310, 109, 140, 19);
+        // ctx.fillStyle = 'black';
+        // ctx.fillText(score.toString(), 310, 127);
+        //plays boop audio for cleared line
+        boopSound.play();
+        boopSound.playbackRate = 2;
+        scoreKeeper(currScore);
+        
+        MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
 
