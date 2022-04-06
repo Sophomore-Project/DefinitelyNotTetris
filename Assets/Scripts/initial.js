@@ -730,7 +730,28 @@ function Level(totalClearedLines){
         levelTimer = 350;
     }else if(totalClearedLines >99 && totalClearedLines <= 149){
         levelTimer = 250;
-    }else{
+    }else if(totalClearedLines >149 && totalClearedLines <= 209){
+        levelTimer = 215;
+    }else if(totalClearedLines >209 && totalClearedLines <= 279){
+        levelTimer = 200;
+    }else if(totalClearedLines >279 && totalClearedLines <= 359){
+        levelTimer = 190;
+    }else if(totalClearedLines >359 && totalClearedLines <= 449){
+        levelTimer = 185;
+    }else if(totalClearedLines >449 && totalClearedLines <= 549){
+        levelTimer=180;
+    }else if(totalClearedLines >549 && totalClearedLines <= 659){
+        levelTimer=175;
+    }else if(totalClearedLines >659 && totalClearedLines <= 779){
+        levelTimer=170;
+    }else if(totalClearedLines >779 && totalClearedLines <= 909){
+        levelTimer=165;
+    }else if(totalClearedLines >909 && totalClearedLines <= 1049){
+        levelTimer=160;
+    }else if(totalClearedLines >1049 && totalClearedLines <= 1199){
+        levelTimer=155;
+    }
+    else{
         levelTimer=1000;
     }
         levelKeeper(totalClearedLines);
@@ -1033,16 +1054,35 @@ function levelKeeper(){
     currLevel=1;
     if(totalClearedLines<10){
         currLevel = 1;
-    }else if(totalClearedLines >= 10 &&totalClearedLines <= 29){
+    }else if(totalClearedLines >=10 && totalClearedLines <= 29){
         currLevel =2;
-    }else if (totalClearedLines >29 &&totalClearedLines <= 59){
+    }else if (totalClearedLines >29 && totalClearedLines <= 59){
         currLevel =3;
-    }else if (totalClearedLines > 59 && totalClearedLines <=99){
+    }else if (totalClearedLines >59 && totalClearedLines <= 99){
         currLevel = 4;
     }else if (totalClearedLines >99 && totalClearedLines <= 149){
         currLevel= 5;
+    }else if(totalClearedLines >149 && totalClearedLines <= 209){
+        currlevel=6;
+    }else if(totalClearedLines >209 && totalClearedLines <= 279){
+        currlevel=7;
+    }else if(totalClearedLines >279 && totalClearedLines <= 359){
+        currlevel=8;
+    }else if(totalClearedLines >359 && totalClearedLines <= 449){
+        currlevel=9;
+    }else if(totalClearedLines >449 && totalClearedLines <= 549){
+        currLevel=10;
+    }else if(totalClearedLines >549 && totalClearedLines <= 659){
+        currLevel=11;
+    }else if(totalClearedLines >659 && totalClearedLines <= 779){
+        currLevel=12;
+    }else if(totalClearedLines >779 && totalClearedLines <= 909){
+        currLevel=13;
+    }else if(totalClearedLines >909 && totalClearedLines <= 1049){
+        currLevel=14;
+    }else if(totalClearedLines >1049 && totalClearedLines <= 1199){
+        currLevel=15;
     }
- 
     ctx.fillStyle = 'grey';
     ctx.fillRect(390,73, 40, 28);  
     ctx.fillStyle = 'white';
