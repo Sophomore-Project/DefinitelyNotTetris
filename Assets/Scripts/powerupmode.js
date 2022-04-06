@@ -220,16 +220,16 @@ function DrawPowerUp(drawX, drawY, SpecialImage){//draws the special powerup on 
         
        switch(curTetrominoColor){
             case 'pink':
-            SpecialImage.src = "SlowDownSmall.png";
+            SpecialImage.src = "Images/SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "SmallBomb.png";
+            SpecialImage.src = "Images/SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "ITime.png";
+            SpecialImage.src = "Images/ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "SurpriseSmall.png";
+            SpecialImage.src = "Images/SurpriseSmall.png";
             break;
        }
         
@@ -495,16 +495,16 @@ function DrawFirstPowerUp(nextColor){//this function draws the a special tetromi
         
        switch(nextColor){
             case 'pink':
-            SpecialImage.src = "SlowDownSmall.png";
+            SpecialImage.src = "Images/SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "SmallBomb.png";
+            SpecialImage.src = "Images/SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "ITime.png";
+            SpecialImage.src = "Images/ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "SurpriseSmall.png";
+            SpecialImage.src = "Images/SurpriseSmall.png";
             break;
        }
        let coorX = coordinateArray[initX][initY].x;
@@ -647,16 +647,16 @@ function previewDrawNext(){//an almost copy/paste of preview next. However, for 
                    
                     switch(nextTetrominoColor){
                         case 'pink':
-                        SpecialImage.src = "SlowDownSmall.png";
+                        SpecialImage.src = "Images/StarSmall.png";
                         break;
                         case 'black':
-                        SpecialImage.src = "SmallBomb.png";
+                        SpecialImage.src = "Images/SmallBomb.png";
                         break;
                         case 'brown':
-                        SpecialImage.src = "ITime.png";
+                        SpecialImage.src = "Images/ITime.png";
                         break;
                         case 'lime':
-                        SpecialImage.src = "SurpriseSmall.png";
+                        SpecialImage.src = "Images/Surprise.png";
                         break;
                    }
                    ctx.drawImage(SpecialImage,coorX,coorY,21,21);
@@ -820,6 +820,7 @@ function FreezeTetromino() {
     freezeflag = true;
     }
 }
+
 function PowerUpTime(Index){//The powerup function that will happen depends on what special color the tetromino is.
     switch(Index){
         case 'pink':
