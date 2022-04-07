@@ -1269,24 +1269,32 @@ function DrawHeldTetromino(heldColor){
     }
     else if(heldColor=="pink"){
         deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 54, 12,12);
         HeldImage = new Image(21,21);
         HeldImage.src = "SlowDownSmall.png";
         ctx.drawImage(HeldImage,259,54,21,21);
     }
     else if(heldColor=="black"){
         deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 54, 12,12);
         HeldImage = new Image(21,21);
         HeldImage.src = "SmallBomb.png";
         ctx.drawImage(HeldImage,259,54,21,21);
     }
     else if(heldColor=="brown"){
         deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 54, 12,12);
         HeldImage = new Image(21,21);
         HeldImage.src = "ITime.png";
         ctx.drawImage(HeldImage,259,54,21,21);
     }
     else if(HeldImage=="lime"){
         deleteHeldTetromino();
+        ctx.fillStyle = tempFuncColor;
+        ctx.fillRect(259, 54, 12,12);
         HeldImage = new Image(21,21);
         HeldImage.src = "SurpriseSmall.png";
         ctx.drawImage(HeldImage,259,54,21,21);
