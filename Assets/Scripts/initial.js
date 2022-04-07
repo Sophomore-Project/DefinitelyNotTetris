@@ -647,7 +647,7 @@ function CheckForCompletedRows(){
             //starting from top going down, startOfDeletion is the first completed row that has to be deleted
             if(startOfDeletion === 0) startOfDeletion = y;
             //increments rowsToDelete for each row that is completed 
-            currScore+=10;
+           
             rowsToDelete++;
             for(let i = 0; i < gArrayWidth; i++){
                 //sets all stoppedArray values in this completed row back to zero
@@ -663,19 +663,30 @@ function CheckForCompletedRows(){
     //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
     //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
     if (rowsToDelete > 0){
-        // score += 10;
-        // ctx.fillStyle = 'grey';
-        // ctx.fillRect(310, 109, 140, 19);
-        // ctx.fillStyle = 'black';
-        // ctx.fillText(score.toString(), 310, 127);
+        ScoreGiver(rowsToDelete);
         scoreKeeper(currScore);
         MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
-
+function ScoreGiver(rowsToDelete){
+    switch(rowsToDelete){
+        case 1:
+            currScore += 10;
+            break;
+        case 2:
+            currScore += 30;
+            break;
+        case 3:
+            currScore += 50;
+            break;
+        case 4:
+            currScore += 80;
+            break;
+    }
+}
 function scoreKeeper(currScore){
     ctx.fillStyle = 'grey';
-    ctx.fillRect(390,13, 40, 28);  
+    ctx.fillRect(390,13, 60, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
     ctx.fillText(currScore, 400, 28);         
