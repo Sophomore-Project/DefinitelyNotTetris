@@ -401,7 +401,7 @@ function HandleKeyPress(key){
         else if (key.which == ESCAPE_KEY) {
             Pause();
         } else if (key.which == 69) { // <- REMOVE THIS LATER ON. It is for debugging only
-            SelectColor();
+            //SelectColor();
         }
     } else {
         if (key.which == ESCAPE_KEY || key.which == ENTER_KEY) { // the escape and enter keys should function the same way when game over or pause screen is showing
