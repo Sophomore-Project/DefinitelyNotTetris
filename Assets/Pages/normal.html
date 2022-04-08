@@ -5,12 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/DefinitelyNotTetris/Assets/CSS/normalMode.css">
+    <link rel="stylesheet" href="../CSS/normalMode.css">
     
     <title>Tetris-NormalMode</title>
 </head>
     <body>
         <canvas id="canvas"></canvas>
-        <script src="/DefinitelyNotTetris/Assets/Scripts/initial.js"></script>
+        <div id="game_over-lay">
+            <span><p id="game_over_message">Game Over</p></span>
+            <div class="buttonwrapper">
+                <a id="try_again" onclick="Restart()" class="btn hover-effect">Try Again</a>
+                <span></span>
+                <div><a id="exit" onclick="Exit()" class="btn hover-effect">Exit</a></div>
+            </div>
+        </div>
+
+
+        <div id="pause_overlay">
+            <span><p id="pause_message">Pain & Suffering</p></span>
+            <div class="buttonwrapper">
+                <a id="continue" onclick="Unpause()" class="btn hover-effect">Continue Suffering</a>
+                <a id="restart" onclick="Restart()" class="btn hover-effect">Restart</a>
+                <span></span>
+                <div><a id="exit" onclick="Exit()" class="btn hover-effect">Escape the Pain</a></div>
+            </div>
+            
+        </div>
+        
+
+        <script src="../Scripts/initial.js"></script>
     </body>
 </html>
