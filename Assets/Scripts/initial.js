@@ -684,7 +684,7 @@ function UpdateColors() {
         }
     }
     previewNext();
-    DrawHeldTetromino2(heldTetrominoVal);
+    DrawHeldTetromino(heldTetrominoVal);
     DeleteTetromino();
     DrawTetromino();
 }
@@ -824,21 +824,21 @@ function CheckForCompletedRows() {
 
 function ScoreGiver(rowsCleared) {
     // The increase in score depends on the number of rows cleared out
-    // BASE: one row cleared = 40 points, two rows cleared = 100, three rows cleared = 300, 4 rows cleared = 1200
-    // LEVEL 10+: one = 80, two = 200, three = 600, four = 2400 
-    // LEVEL 20+: one = 120, two = 300, thrww = 900, four = 3600
+    // BASE: one row cleared = 10 points, two rows cleared = 25, three rows cleared = 75, 4 rows cleared = 300
+    // LEVEL 10+: one = 20, two = 50, three = 150, four = 600 
+    // LEVEL 20+: one = 30, two = 75, three = 225, four = 900
     switch(rowsCleared) {
         case 1:
-            currScore += 40 * (Math.floor(currLevel/10)+1); // every 10 levels, the score for each line doubles
+            currScore += 10 * (Math.floor(currLevel/10)+1); // every 10 levels, the score for each line is multiplied by an increasing factor
             break;
         case 2: 
-            currScore += 100 * (Math.floor(currLevel/10)+1);
+            currScore += 25 * (Math.floor(currLevel/10)+1);
             break;
         case 3:
-            currScore += 300 * (Math.floor(currLevel/10)+1);
+            currScore += 75 * (Math.floor(currLevel/10)+1);
             break;
         case 4:
-            currScore += 1200 * (Math.floor(currLevel/10)+1);
+            currScore += 300 * (Math.floor(currLevel/10)+1);
             break;
     }
 }
@@ -1233,18 +1233,11 @@ function HoldTetromino(){
 
 //This function draws tetrominos based on whats being held at the moment
 function DrawHeldTetromino(heldTetrominoVal) {
-    //let tetrominoVal = 0;
+   //for pieces with 3 cubes length wise, 259 is left, 272 is middle, 285 is right
+    //for pieces with 2 cubes in height, 41 is up, 54 is down
+   
     deleteHeldTetromino();
-    /* for (tetrominoVal; tetrominoVal < tetrominos.length; tetrominoVal++) {
-        if (curTetromino == tetrominos[tetrominoVal]) {
-            ctx.fillStyle = tetrominoColors[tetrominoVal];
-            break;
-        }
-    } */
-    ctx.fillStyle = tetrominoColors[heldTetrominoVal];
-    //console.log(tetrominoColors[tetrominoVal]);
-    
-    console.log(heldTetrominoVal);
+    ctx.fillStyle = tetrominoColors[heldTetrominoVal]; // set the color to the color associated with heldTetrominoVal
 
     if (heldTetrominoVal == 0) {
         console.log("T");
