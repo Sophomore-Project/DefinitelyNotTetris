@@ -8,10 +8,12 @@ let levelTimer = 1000; //the unadjusted time that is used as a reference for Act
 let ActiveTimer = levelTimer; //the timer that is used to move the tetromino down. This frequetly changes.
 let coordinateArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0)); //this creates a multi dimensional array
 let freezeflag = true;
+
 let totalClearedLines = 0;
 //Current Held tetromino and the corresponding tetromino color
 let curHold;
 let curHoldColor;
+let heldTetrominoVal;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore = 0;
 
@@ -25,6 +27,7 @@ let nextTetrominos = [];
 //this is our first tetromino, it would be the coordinates on a grid, 1 position over 0 down
 //The curTetromino is currently set as a T shape, indicating that there is a value of "1" where a square would be drawn
 let curTetromino = [[1,0], [0,1], [1,1], [2,1]]; 
+let curTetrominoVal; // stores the numerical value corresponding to the current tetromino (based on the tetrominos array)
 
 //Stores all the tetromino shape combination
 let tetrominos = [];
@@ -38,6 +41,8 @@ let curTetrominoColor;
 let recentHold;
 
 let gameOver = false;
+let gameOverComplete = false;
+let pause = false;
 
 //stoppedArray is where all the no longer moving pieces of the game will be stored
 let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
@@ -345,20 +350,28 @@ function MoveTetrominoHorizontal(xMove) {
 }
 
 function HandleKeyPress(key){
-    
-    if (!gameOver) { // only handle the key presses needed for game functions while the game is running
+    let ESCAPE_KEY = 27;
+    let ENTER_KEY = 13;
+    let LEFT_ARROW = 37;
+    let RIGHT_ARROW = 39
+    let DOWN_ARROW = 40;
+    let UP_ARROW = 38;
+    let SPACE_KEY = 32;
+    let SHIFT_KEY = 16;
+
+    if (!gameOver && !pause) { // only handle the key presses needed for game functions while the game is running
         //KeyCode 37 is for left arrow key
-        if(key.keyCode === 37){
+        if(key.keyCode === LEFT_ARROW){
             // Attempt to move the tetromino 1 unit to the left
             MoveTetrominoHorizontal(-moveConstant)
         }
         //KeyCode 39 is for right arrow key
-        else if(key.keyCode === 39){
+        else if(key.keyCode === RIGHT_ARROW){
             // Attempt to move the tetromino 1 unit to the right
             MoveTetrominoHorizontal(moveConstant);
         }
         //KeyCode 40 is for down arrow key
-        else if(key.keyCode == 40){
+        else if(key.keyCode == DOWN_ARROW){
             //Attempt to move the tetromino down
             if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
                 FreezeTetromino()
@@ -368,19 +381,36 @@ function HandleKeyPress(key){
         }
         
         //KeyCode 38 is for up arrowkey
-        else if(key.keyCode == 38){
+        else if(key.keyCode == UP_ARROW){
             console.log(freezeflag);
             if(freezeflag == true){
                 RotateTetromino();
                 DrawTetromino();
             }
         }
-        else if(key.keyCode == 32){
+        else if(key.keyCode == SPACE_KEY){
             hardDrop();
         }
-        else if(key.keyCode == 16){
-            holdTetromino();
+        else if(key.keyCode == SHIFT_KEY){
+            HoldTetromino();
             console.log("Shift pressed");
+        }
+
+        // Pause
+        // keycode 27 is for the escape key
+        else if (key.which == ESCAPE_KEY) {
+            Pause();
+        } else if (key.which == 69) { // <- REMOVE THIS LATER ON. It is for debugging only
+            SelectColor();
+        }
+    } else {
+        if (key.which == ESCAPE_KEY || key.which == ENTER_KEY) { // the escape and enter keys should function the same way when game over or pause screen is showing
+            if (pause) { // if the game is paused and the escape or enter key is pressed, then unpause the game
+                Unpause();
+            }
+            if (gameOverComplete) { // if the game is over and the escape or enter key is pressed, start a new game
+                Restart();
+            }
         }
     }
 }
@@ -439,6 +469,7 @@ function CreateTetromino(){
     curTetrominoColor = tetrominoColors[placeholder];
     let randomTetromino = Math.floor(Math.random() * tetrominos.length);
     curTetromino = tetrominos[placeholder];
+    curTetrominoVal = placeholder;
     //+1 to avoid null in 0 index of tetrominoColors when creating tetromino and selecting color 
     curTetrominoColor = tetrominoColors[placeholder];
     //identifies a unique color for each shape
@@ -498,14 +529,170 @@ function previewNext(){
        prevY+=2;
     }
 }
+
+// Shows the pause screen and plays the pause animation
+function Pause() {
+    pauseMessages = ['never gonna give you up...','sometimes u just need to give up.','try harder this time.','ur doing ok...','maybe if u stop pausing u\'ll do better.','try not to give up.','maybe you can do it this time.','take a break now. suffer later :)', 'cry.','go do ur homework.','stop procrastinating.','i\'ll wait','ur doing great sweetie','ur doing fine.','&#128580;','&#129485;&#8205;&#9794;&#65039;','&#128579;','&#129300;','&#128134;'];
+    
+    message = pauseMessages[Math.floor(Math.random() * pauseMessages.length)];
+    document.getElementById("pause_message").innerHTML = message;
+    console.log("pause message: " + message);
+
+    console.log("game paused");
+    document.getElementById("pause_overlay").style.display = "block";
+    pause = true;
+
+    clearInterval(pulseID);
+    PulseAnimation(document.getElementById("pause_message"))
+}
+
+function Unpause() {
+    console.log("game unpaused");
+    document.getElementById("pause_overlay").style.display = "none";
+    pause = false;
+    clearInterval(pulseID);
+    update();
+}
+
+
 /**
  * The conditions for losing are that a newly spawned block is overlapping an already frozen block and there isn't room for it to be pushed vertically.
  * 
  * this function should be called when the conditions for losing are met after attempting to push the tetromino up
  */
-function GameOver() {
+ function GameOver() {
+    
+    if (pause) { // it is possible to pause the game at the same time as the game ends, in this case the game should immediately unpause and the game over animation should continue
+        Unpause();
+    }
+    
     gameOver = true;
+    gameOverComplete = false; // implies the game over animation is still ongoing
     console.log("GAME OVER");
+
+    // game over animation
+    let y = 0;
+    let finalDelay = 6; // this variable makes the final overlay take a bit of extra time to show up after the animation
+    let gameOverAnimation = setInterval(GameOverAnimation, 50);
+    function GameOverAnimation() {
+        if (y >= gArrayHeight) {
+            if (finalDelay > 0) {
+                finalDelay--;
+            } else {
+                clearInterval(gameOverAnimation);
+                // display the overlay over the game
+                document.getElementById("game_over-lay").style.display = "block";
+
+                // Determine the message that will show on the game over screen
+                let winMessageArray = ['wow ur not incompetent!', 'could be better', 'meh', 'not the worst i\'ve seen', 'i\'ve seen better.', 'u did okay today.', 'about average.'];
+                let loseMessageArray = ['hah loser.', 'F.', 'noob.', 'u suck.', 'git gud.', 'nerd.', 'idiot.', 'just play better.', 'my cat could do better.', 'cry.', 'lol bad.', 'eat s**t.', 'ur iq is -50', 'ur a gold mine of stupidity.', 'u have a few screws loose.']; // eat salt
+                let message = '';
+                // if score > SOME_VALUE => win
+                let win = false; // THIS IS FOR TESTING PURPOSES ONLY
+                if (win) {
+                    message = winMessageArray[Math.floor(Math.random() * winMessageArray.length)];
+                } else {
+                    message = loseMessageArray[Math.floor(Math.random() * loseMessageArray.length)];
+                }
+                
+                document.getElementById("game_over_message").innerHTML = message;
+                document.getElementById("exit").innerHTML = 'Rage Quit';
+                document.getElementById("try_again").innerHTML = 'Pointlessly Try Again';
+
+                gameOverComplete = true;
+                
+                clearInterval(pulseID);
+                PulseAnimation(document.getElementById("game_over_message")); 
+            }
+        } else {
+            for (let x = 0; x <= gArrayWidth; x++) {
+                if (stoppedArray[x][y] > 0) {
+                    let coorX = coordinateArray[x][y].x;
+                    let coorY = coordinateArray[x][y].y;
+
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(coorX,coorY, 21, 21);
+                }
+            }
+            y++;
+        }
+    }
+}
+
+let pulseID; // this variable allows the animation/interval to be cleared whenever the game is unpaused to ensure the animation doesn't continue or overlap with another animation
+function PulseAnimation(messageID) {
+    let maxSize = 600;
+    let x = 0;
+    let rotMax = 2.5;
+    let size = maxSize;
+    let rotation = 0;
+    
+    // choose a random starting direction for both the rotation and the size, separate from one another. positive direction => growing/clockwise, negative => shrinking/counterclockwise
+    let rotDirection = 1 - (2*Math.floor(Math.random()*2)); // 1 - (0 or 2) produces 1 or -1
+    let sizDirection = 1 - (2*Math.floor(Math.random()*2));
+
+    // set the messageID attributes to their starting positions
+    messageID.setAttribute('style',"font-size: " + size/5 + "px;\ntransform: rotate(" + rotation + "deg);");
+
+    pulseID = setInterval(Animate, 50);
+
+    function Animate() {
+        
+        size = sizDirection * (maxSize/30) * Math.sin(x/10)+maxSize;
+        rotation = rotDirection * (rotMax) * Math.sin(x/25);
+        x++;
+        
+        messageID.setAttribute('style',"font-size: " + size/5 + "px;\ntransform: rotate(" + rotation + "deg);");
+        
+    }
+}
+    
+
+function Restart() {
+    console.log("restarting");
+    setTimeout(function(){
+        window.location.reload();
+    });
+}
+
+function Exit() {
+    location.href='/index.html'; // THIS NEEDS TO BE FIXED
+}
+
+// iterates through the entire stoppedArray and redraws all the colors from the updated tetrominoColors
+function UpdateColors() {
+    
+    // update curTetrominoColor to the color corresponding to the number value of the curTetromino 
+    for (let i = 0; i < tetrominos.length; i++) {
+        if (curTetromino == tetrominos[i]) {
+            curTetrominoColor = tetrominoColors[i];
+        }
+    }
+    
+    curTetrominoColor = tetrominoColors[curTetrominoVal];
+    curHoldColor = tetrominoColors[heldTetrominoVal];
+    
+    for (let x = 0; x <= gArrayWidth; x++) {
+        for (let y = 0; y <= gArrayHeight; y++) {
+            if (stoppedArray[x][y] > 0) {
+                let coorX = coordinateArray[x][y].x;
+                let coorY = coordinateArray[x][y].y;
+
+                ctx.fillStyle = NumberToColor(stoppedArray[x][y]);
+                ctx.fillRect(coorX,coorY, 21, 21);
+            }
+        }
+    }
+    previewNext();
+    DrawHeldTetromino2(heldTetrominoVal);
+    DeleteTetromino();
+    DrawTetromino();
+}
+
+function SelectColor() {
+    tetrominoColors = ['blue', 'cornflowerblue', 'cyan', 'darkcyan', 'teal', 'aqua', 'navy'];
+    
+    UpdateColors();
 }
 
 /**
@@ -592,8 +779,8 @@ function FreezeTetromino() {
             
             // choose the next tetromino to attempt to draw on the board
             CreateTetromino();
-            // only attempt to draw the tetromino if the game is still going on (!gameOver)
-            if (!gameOver) {
+            // only attempt to draw the tetromino on the board if the game is still going on (!gameOver)
+            if (!gameOver && !pause) {
                 DrawTetromino();
             }
 
@@ -604,76 +791,199 @@ function FreezeTetromino() {
     freezeflag = true;
     }
 }
+
 //function that looks at what value a square in the stopped array has and returns a string with the corresponding color of that square, so that when a completed row is removed, that row can be filled with the color of the square above it  
-function numberToColor(squareColorNumber){
-    if (squareColorNumber == 1){
-        frozenColorString = 'purple';
-    }else if(squareColorNumber == 2){
-        frozenColorString = 'cyan';
-    }else if(squareColorNumber == 3){
-        frozenColorString = 'blue';
-    }else if(squareColorNumber == 4){
-        frozenColorString = 'yellow';
-    }else if(squareColorNumber == 5){
-        frozenColorString = 'orange';
-    }else if(squareColorNumber == 6){
-        frozenColorString = 'green';
-    }else if(squareColorNumber == 7){
-        frozenColorString = 'red';
-    }else {
-        frozenColorString = 'grey';
+function NumberToColor(squareColorNumber) {
+    if (squareColorNumber >= 1 && squareColorNumber <= 7) {
+        return tetrominoColors[squareColorNumber-1];
+    } else {
+        return 'grey';
     }
 }
 
-//function that checks if rows are completed 
-function CheckForCompletedRows(){
-    let rowsToDelete = 0;
-    let startOfDeletion = 0;
-    //starting at y=0, the top of the canvas, going until the bottom of the canvas is reached 
-    for(let y = 0; y < gArrayHeight; y++){
-        let completed = true;
-        //starting at the left most column, going until the right edge of the canvas is reached
-        for(let x = 0; x < gArrayWidth; x++){
-            //assigns the number value (pertaining to color) of the current square in the stoppedArray that is being looked at to variable square
-            let square = stoppedArray[x][y];
-            //if a single square in a row is empty, i.e. it has a value of 0, the row cannot be complete, so break out of that row and move down to the next one 
-            if(square === 0 || square === undefined){
-                completed = false;
-                break;
+// checks every row to see if there are any completed/fully filled rows
+function CheckForCompletedRows() {
+    let completedRows = 0; // count the total number of rows that are completed
+    let animationType = Math.floor(4*Math.random()); // this is only used for the ClearRow function, but should be a constant for each time it is called so it is set before the for loop
+
+    for (let y = 0; y < gArrayHeight; y++) {
+        let x = 0;
+        while(x < gArrayWidth && stoppedArray[x][y] != 0 && stoppedArray[x][y] != undefined) {x++;} // iterate through the entire row, incrementing x and stopping of there are any blank squares 
+        // if there were no blank squares, x will be equal to the total width
+        if (x == gArrayWidth) {
+            completedRows++;
+            ClearRow(y, animationType); // clear the row at y with the animation type specified above
+        }
+    }
+
+    // once all rows that need to be cleared have been cleared, update the score value and on screen
+
+    ScoreGiver(completedRows);
+    ScoreKeeper(currScore);
+}
+
+function ScoreGiver(rowsCleared) {
+    // The increase in score depends on the number of rows cleared out
+    // BASE: one row cleared = 40 points, two rows cleared = 100, three rows cleared = 300, 4 rows cleared = 1200
+    // LEVEL 10+: one = 80, two = 200, three = 600, four = 2400 
+    // LEVEL 20+: one = 120, two = 300, thrww = 900, four = 3600
+    switch(rowsCleared) {
+        case 1:
+            currScore += 40 * (Math.floor(currLevel/10)+1); // every 10 levels, the score for each line doubles
+            break;
+        case 2: 
+            currScore += 100 * (Math.floor(currLevel/10)+1);
+            break;
+        case 3:
+            currScore += 300 * (Math.floor(currLevel/10)+1);
+            break;
+        case 4:
+            currScore += 1200 * (Math.floor(currLevel/10)+1);
+            break;
+    }
+}
+
+
+let animations = 0; // the number of animations currently playing
+let clearedAnimations = 0; // the number of animations that have been cleared out so far
+/**
+ * Clears out the row at the specified y position, playing a random animation
+ * 
+ * @param y - the y position of the row to be cleared out
+ * @param animationType - the 'type' of animation for this clear effect - can be any value from 0 (left to right), 1 (right to left), 2 (center out), 3 (outsides in)
+ */
+function ClearRow(y, animationType) {
+    animations++;
+    pause = true;
+    let i = 0;
+    // there are 4 separate clearAnimation variables because there may be multiple lines being cleared out at once, and these are handles as separate animations, so to avoid overlap there are 4
+    let clearAnimation1;
+    let clearAnimation2;
+    let clearAnimation3;
+    let clearAnimation4;
+    // determine which animation to play based on the current value of animations. As it increments, the next clearAnimation variable will be used
+    switch(animations) {
+        case 1:
+            clearAnimation1 = setInterval(AnimateClear, 40);
+            break;
+        case 2:
+            clearAnimation2 = setInterval(AnimateClear, 40);
+            break;
+        case 3:
+            clearAnimation3 = setInterval(AnimateClear, 40);
+            break;
+        case 4:
+            clearAnimation4 = setInterval(AnimateClear, 40);
+            break;
+    }
+
+    // Plays an animation to visualize the tetrominos being cleared out from a full line
+    function AnimateClear() {
+        // once i = gArrayWidth, all squares have been cleared out because each iteration clears out 1 block
+        if (i < gArrayWidth) {
+            let x;
+
+            // set the next x position to be cleared based on the animation type and current iteration value
+            switch(animationType) {
+                case 0: // left to right
+                    x = i;
+                    break;
+                case 1: // right to left
+                    x = gArrayWidth-1-i;
+                    break;
+                case 2: // inside out
+                    x = Math.floor(gArrayWidth/2)+Math.floor(i/2); // start from the center offset one unit to the right
+                    if (stoppedArray[x][y] == 0) { // if the center to the right block is already cleared out, remove the centermost to the left block
+                        x = Math.floor(gArrayWidth/2)-1-Math.floor(i/2); // remove the centermost from the left block.
+                    }
+                    break;
+                case 3: // outside in
+                    x = Math.floor(i/2); // start from the left (i/2 because it should clear one to the right every other time)
+                    if (stoppedArray[x][y] == 0) { // if the left side block is already removed, remove the right side block
+                        x = Math.floor(gArrayWidth)-1-Math.floor(i/2); // remove the next block furthest to the right
+                    }
+                    break;
+            }
+
+            stoppedArray[x][y] = 0;
+            let coorX = coordinateArray[x][y].x;
+            let coorY = coordinateArray[x][y].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(coorX, coorY, 21, 21);
+            i++;
+        } else { // occurs when all blocks have been cleared out in this animation
+            pause = false;
+
+            // switch case to clear out the current animation ONLY
+            // the clearedAnimations variable holds the number of animations that have been cleared so far, the 0th clearedAnimation will always be clearAnimation1, the 1st always being clearedAnimation2, and so on because of the order the need to be cleared.
+            switch(clearedAnimations) {
+                case 0:
+                    clearInterval(clearAnimation1);
+                    break;
+                case 1:
+                    clearInterval(clearAnimation2);
+                    break;
+                case 2:
+                    clearInterval(clearAnimation3);
+                    break;
+                case 3:
+                    clearInterval(clearAnimation4);
+                    break;
+            }
+
+            // DropRowsAbove has to be called before DrawTetromino at the end of the animation. Otherwise the ghost piece is drawn before the pieces move down causing it to stay above the actually frozen blocks
+            DropRowsAbove(y); // this should be run for every row being cleared
+            clearedAnimations++;
+
+            // if the number of animations cleared is equal to the total number of animations needed, all animations have played out, so reset values and resume gameplay
+            if (animations == clearedAnimations) {
+                clearedAnimations = 0;
+                animations = 0;
+                DrawTetromino(); // draw the current tetromino because calling the update function will only update it once it has moved down
+                update(); // 'unpauses' the game
             }
         }
-        //gets here if every square in a row has a value other than 0, meaning it is not empty
-        if (completed){
-            //starting from top going down, startOfDeletion is the first completed row that has to be deleted
-            if(startOfDeletion === 0) startOfDeletion = y;
-            //increments rowsToDelete for each row that is completed 
-            currScore+=10;
-            rowsToDelete++;
-            for(let i = 0; i < gArrayWidth; i++){
-                //sets all stoppedArray values in this completed row back to zero
-                stoppedArray[i][y] = 0;
-                //makes the row disappear 
-                let coorX = coordinateArray[i][y].x;
-                let coorY = coordinateArray[i][y].y;
+    }
+}
+
+/**
+ * Drops all blocks above the specified row by one position vertically
+ * 
+ * @param y - the y position that specifies the row that all blocks above it should move down from
+ * 
+ * @example - there are blocks above y=6 and DropRowsAbove(6) is called. all blocks at row 5 (above) shouold be moved to row 6, all blocks at row 4 should be moved to 5, and so on. 
+ */
+function DropRowsAbove(y) {
+    console.log("dropping rows above y=" + y);
+    y--;  // start at the row above the one being cleared, since the one being cleared doesn't need to be moved down
+    // repeat for every y value from y to 0 inclusive starting at y and moving up (0 is the top of the board)
+    for (y; y >= 0; y--) {
+        for (let x = 0; x < gArrayWidth; x++) {
+            var tetrominoVal = stoppedArray[x][y];
+            //targets squares that are not empty
+            if(tetrominoVal != 0) {
+                
+                // set the value of the square below the current iterating y position down 1 and draw it as the color of the square at x,y
+                ctx.fillStyle = NumberToColor(tetrominoVal);
+                stoppedArray[x][y+1] = tetrominoVal;
+                let coorX = coordinateArray[x][y+1].x;
+                let coorY = coordinateArray[x][y+1].y;
+                ctx.fillRect(coorX, coorY, 21, 21);
+    
+                // since the old block has been moved down from this position, set it to 0 and fill it in as grey
+                stoppedArray[x][y] = 0;
+                coorX = coordinateArray[x][y].x;
+                coorY = coordinateArray[x][y].y;
                 ctx.fillStyle = 'grey';
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
     }
-    //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
-    //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
-    if (rowsToDelete > 0){
-        // score += 10;
-        // ctx.fillStyle = 'grey';
-        // ctx.fillRect(310, 109, 140, 19);
-        // ctx.fillStyle = 'black';
-        // ctx.fillText(score.toString(), 310, 127);
-        scoreKeeper(currScore);
-        MoveAllRowsDown(rowsToDelete, startOfDeletion);
-    }
 }
 
-function scoreKeeper(currScore){
+
+
+function ScoreKeeper(currScore){
     ctx.fillStyle = 'grey';
     ctx.fillRect(390,13, 40, 28);  
     ctx.fillStyle = 'white';
@@ -681,43 +991,7 @@ function scoreKeeper(currScore){
     ctx.fillText(currScore, 400, 28);         
 }
 
-//function that moves the rows down, replacing the squares in the rows that where just completed and deleted, with the squares that are above those lines
-function MoveAllRowsDown(rowsToDelete, startOfDeletion){
-    totalClearedLines=(totalClearedLines + rowsToDelete);//adds rowsToDelete to totalClearedLines, which doesn't get reset to 0 
-    Level(totalClearedLines);//calls Level function
-    //loops that get the stoppedArray values (pertaining to color) of the squares of the incomplete rows starting at the row just above the top most completed row,the leftmost square, and looping until the top of the canvas is reached
-    for(var i = startOfDeletion-1; i >= 0; i--){
-        for(var x = 0; x < gArrayWidth; x++){
-            //y2 is the row that the incomplete row will be 'moved to' when the completed rows are removed
-            var y2 = i + rowsToDelete;
-            //assigns the stoppedArray value (pertaining to color) of the incomplete row's squares to variable square, so they can be recreated on the lines that were just completed and removed 
-            var square = stoppedArray[x][i];
-            //targets the squares of the newly completed and cleared rows so that they can be filled with the above incomplete square's colors
-            var squareColorNumber = stoppedArray[x][y2];
-            //targets squares that are not emptpy
-            if(square != 0){
-                //assigns the number value, relating to color, of the square that is to be copied to the square that is being pasted to 
-                squareColorNumber = square;
-                //passes the value of squareColorNumber to numberToColor function which returns the corresponding color to that value (the color of the square that is being 'moved down')
-                numberToColor(squareColorNumber);
-                //appends the numberical value of the above square to its new location in the stoppedArray
-                stoppedArray[x][y2] = square;
-                //fills the newly completed and emptied rows with the color of the above incomplete rows, simulting moving those rows down
-                let coorX = coordinateArray[x][y2].x;
-                let coorY = coordinateArray[x][y2].y;
-                ctx.fillStyle = frozenColorString;
-                ctx.fillRect(coorX, coorY, 21, 21);
-                //erases the the original location of the rows that were just moved down, both visually, and in the stoppedArray
-                square = 0;
-                stoppedArray[x][i] = 0;
-                coorX = coordinateArray[x][i].x;
-                coorY = coordinateArray[x][i].y;
-                ctx.fillStyle = 'grey';
-                ctx.fillRect(coorX, coorY, 21, 21);
-            }
-        }
-    }
-}
+
 //This function makes the game faster depending on how many lines have been cleared
 function Level(totalClearedLines){
     if(totalClearedLines >=0 && totalClearedLines<10){
@@ -899,7 +1173,7 @@ function update(time = 0) {
     lastTime = time;
     
     
-    if (!gameOver) {
+    if (!gameOver && !pause) {
         requestAnimationFrame(update);//this function should go on forever
     }
 
@@ -916,26 +1190,24 @@ update();
 
 
 //function for holding the tetromino
-function holdTetromino(){
+function HoldTetromino(){
     //Temporary tetromino and corresponding color
     let tempTetromino;
     let tempColor;
+    let tempTetrominoVal;
     
-    
-
     //if there isn't anything being held, hold the current tetromino and color, and generate 
     //a new one
     while(!recentHold){
         DeleteTetromino();
         DeleteTetromino();
+        initX = 4;
+        initY = 0;
         if(curHold == null){
             curHold = curTetromino;
             curHoldColor = curTetrominoColor;
-            initX = 4;
-            initY = 0;
+            heldTetrominoVal = curTetrominoVal; // the value of the held tetromino needs to be saved because a new value will be generated with CreateTetromino()
             CreateTetromino();
-            
-            DrawTetromino();
         }
         //if there is a held tetromino, swap the current tetromino with the held one, making sure
         //they keep their respective color
@@ -946,88 +1218,79 @@ function holdTetromino(){
             tempColor = curHoldColor;
             curHoldColor = curTetrominoColor;
             curTetrominoColor = tempColor;
-            initX = 4;
-            initY = 0;
-            DrawTetromino();
+            
+            tempTetrominoVal = curTetrominoVal;
+            heldTetrominoVal = curTetrominoVal;
+            curTetrominoVal = tempTetrominoVal;
         }
         recentHold = true;
     }
-    DrawHeldTetromino(curHoldColor);
+    DrawTetromino();
+    DrawHeldTetromino(heldTetrominoVal);
+    DrawTetromino();
     
 }
 
 //This function draws tetrominos based on whats being held at the moment
-function DrawHeldTetromino(heldColor){
-    //for pieces with 3 cubes length wise, 259 is left, 272 is middle, 285 is right
-    //for pieces with 2 cubes in height, 41 is up, 54 is down
+function DrawHeldTetromino(heldTetrominoVal) {
+    //let tetrominoVal = 0;
+    deleteHeldTetromino();
+    /* for (tetrominoVal; tetrominoVal < tetrominos.length; tetrominoVal++) {
+        if (curTetromino == tetrominos[tetrominoVal]) {
+            ctx.fillStyle = tetrominoColors[tetrominoVal];
+            break;
+        }
+    } */
+    ctx.fillStyle = tetrominoColors[heldTetrominoVal];
+    //console.log(tetrominoColors[tetrominoVal]);
     
-    let tempFuncColor = heldColor;
-    //If the held color is blue, it draws the J tetromino, which is also blue
-    if(heldColor == "blue"){
-        //clears the box before drawing the J tetromino
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
-        ctx.fillRect(259, 41, 12,12);
+    console.log(heldTetrominoVal);
+
+    if (heldTetrominoVal == 0) {
+        console.log("T");
         ctx.fillRect(259, 54, 12,12);
-        ctx.fillRect(272, 54, 12,12);
-        ctx.fillRect(285, 54, 12,12);
-    }
-    //If the held color is orange, draws the L tetromino, which is the orange one
-    else if(heldColor == "orange"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
-        ctx.fillRect(285, 41, 12,12);
-        ctx.fillRect(259, 54, 12,12);
-        ctx.fillRect(272, 54, 12,12);
-        ctx.fillRect(285, 54, 12,12);
-    }
-    //If the held color is green, draws the S tetromino, which is the green one
-    else if(heldColor == "green"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
-        ctx.fillRect(285, 41, 12,12);
-        ctx.fillRect(259, 54, 12,12);
-        ctx.fillRect(272, 54, 12,12);
-        ctx.fillRect(272, 41, 12,12);
-    }
-    //if the held color is red, draws the Z tetromino, which is the red one
-    else if(heldColor == "red"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
-        ctx.fillRect(259, 41, 12,12);
         ctx.fillRect(272, 41, 12,12);
         ctx.fillRect(272, 54, 12,12);
         ctx.fillRect(285, 54, 12,12);
-    }
-    //IF the held color is cyan, it draws the I piece, which is the cyan one
-    else if(heldColor == "cyan"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
+    } else if (heldTetrominoVal == 1) {
+        console.log("I");
         ctx.fillRect(253, 47, 12,12);
         ctx.fillRect(266, 47, 12,12);
         ctx.fillRect(279, 47, 12,12);
         ctx.fillRect(292, 47, 12,12);
-    }
-    //if the held color is yellow, it draws the Square piece, which is the yellow one
-    else if(heldColor == "yellow"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
+    } else if (heldTetrominoVal == 2) {
+        console.log("J");
+        ctx.fillRect(259, 41, 12,12);
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    } else if (heldTetrominoVal == 3) {
+        console.log("Square");
         ctx.fillRect(266, 41, 12,12);
         ctx.fillRect(279, 41, 12,12);
         ctx.fillRect(279, 54, 12,12);
         ctx.fillRect(266, 54, 12,12);
-    }
-    //If the held color is purple, it draws the T piece, which is the purple one
-    else if(heldColor == "purple"){
-        deleteHeldTetromino();
-        ctx.fillStyle = tempFuncColor;
+    } else if (heldTetrominoVal == 4) {
+        console.log("L");
+        ctx.fillRect(285, 41, 12,12);
         ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(285, 54, 12,12);
+    } else if (heldTetrominoVal == 5) {
+        console.log("S");
+        ctx.fillRect(285, 41, 12,12);
+        ctx.fillRect(259, 54, 12,12);
+        ctx.fillRect(272, 54, 12,12);
+        ctx.fillRect(272, 41, 12,12);
+    } else if (heldTetrominoVal == 6) {
+        console.log("Z");
+        ctx.fillRect(259, 41, 12,12);
         ctx.fillRect(272, 41, 12,12);
         ctx.fillRect(272, 54, 12,12);
         ctx.fillRect(285, 54, 12,12);
     }
-
 }
+
 //function that keeps track of the current level of the game on the screen
 function levelKeeper(){
     currLevel=1;
