@@ -14,12 +14,9 @@ let curHold;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore =0;
-<<<<<<< HEAD
 let slowedTime =false;
-=======
 let MikayleTime = false;
 
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
 
@@ -871,49 +868,27 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
     switch(Index){
         case 'pink':
         console.log("Whhyyy am I thiiinking sooo sloooow?");
-<<<<<<< HEAD
         //crazyKeys();
         slowTimePowerUp();
-=======
-        
-        crazyKeys();
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
 
         case 'black':
        console.log("BoomBox boom!");
-<<<<<<< HEAD
-       //crazyKeys();
-       slowTimePowerUp();
-       //put the bomb function here
-=======
+
        
-       crazyKeys();
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
 
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
-<<<<<<< HEAD
-        //crazyKeys();
-        slowTimePowerUp();
-        //put the I function here
-=======
+        linePowerup();
+
        
-        crazyKeys();
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
 
         case 'lime':
         console.log("Mikayle time");
-<<<<<<< HEAD
-        //crazyKeys();
-        slowTimePowerUp();
-        //put... something here
-=======
-       
+
         crazyKeys();
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
    }
 }
@@ -1393,13 +1368,13 @@ function levelKeeper(){
     currLevel=1;
     if(totalClearedLines<10){
         currLevel = 1;
-    }else if(totalClearedLines >= 10 &&totalClearedLines <= 29){
+    }else if(totalClearedLines >= 10 && totalClearedLines <= 29){
         currLevel =2;
-    }else if (totalClearedLines >29 &&totalClearedLines <= 59){
+    }else if (totalClearedLines > 29 && totalClearedLines <= 59){
         currLevel =3;
     }else if (totalClearedLines > 59 && totalClearedLines <=99){
         currLevel = 4;
-    }else if (totalClearedLines >99 && totalClearedLines <= 149){
+    }else if (totalClearedLines > 99 && totalClearedLines <= 149){
         currLevel= 5;
     }
  
@@ -1426,7 +1401,6 @@ function hardDrop(){
 }
 //powerup stuff will go here
 
-<<<<<<< HEAD
 //power-up that slows the time by setting the current speed to x.5 of what it was
 function slowTimePowerUp(){
         //boolean of whether time is slowed or not
@@ -1442,12 +1416,13 @@ function stopSlowTime(){
     slowedTime=false;
     console.log("time is unslowed");
     Level();
-=======
+}
+
 function linePowerup(){
     for(let i = 0; i<5; i++){
         console.log(nextTetrominos[i]);
     }
-    
+
     for(let i = 0; i<=5; i++){
         // let randomTetromino = ChooseTetrominoIndex();
         nextTetrominos[i] = 1;
@@ -1455,5 +1430,4 @@ function linePowerup(){
         console.log(nextTetrominos[i]);
     }
     previewDrawNext();
->>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
 }
