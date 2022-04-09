@@ -131,6 +131,12 @@ function InitiateCanvas(){
     ctx.fillStyle = 'white';
     ctx.font = '18px Times New Roman';
     ctx.fillText("Hold", 260, 20);
+
+    //drawing it for timer
+    ctx.strokeRect(315, 12, 151, 50 );
+    ctx.fillStyle = 'white';
+    ctx.font = '21px Times New Roman';
+    ctx.fillText("TIMER:", 315, 138);
     
 
     //Function calls

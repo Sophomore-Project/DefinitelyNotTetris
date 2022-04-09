@@ -825,18 +825,22 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
     switch(Index){
         case 'pink':
         console.log("Whhyyy am I thiiinking sooo sloooow?");
+        crazyKeys();
         //put the slowdown function here
         break;
         case 'black':
        console.log("BoomBox boom!");
+       crazyKeys();
        //put the bomb function here
         break;
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
+        crazyKeys();
         //put the I function here
         break;
         case 'lime':
         console.log("Mikayle time");
+        crazyKeys();
         //put... something here
         break;
    }
@@ -861,6 +865,51 @@ function numberToColor(squareColorNumber){
         frozenColorString = 'grey';
     }
 }
+
+
+
+ function crazyKeys(key){
+   
+    if (!gameOver) { // only handle the key presses needed for game functions while the game is running
+        //when you hit the right key(39) it will move left
+        if(key.keyCode === 39){
+            MoveTetrominoHorizontal(-moveConstant)
+        }
+        //when you hit the left key(37) it will move right
+        else if(key.keyCode === 37){
+            MoveTetrominoHorizontal(moveConstant);
+        }
+        //when you hit up arrow 38 it will go down
+        else if(key.keyCode == 38){
+            //Attempt to move the tetromino down
+            if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+                FreezeTetromino()
+            }else{
+                MoveTetrominoDown();
+            }
+        }
+         //when you hit down 40 it will go up
+         else if(key.keyCode == 40){
+            console.log(freezeflag);
+            if(freezeflag == true){
+                RotateTetromino();
+                DrawTetromino();
+            }
+        }
+        //when shift is pressed it will drop
+        else if(key.keyCode == 16){
+            hardDrop();
+        }
+        //when space is presses it will hold
+
+        else if(key.keyCode == 32){
+            holdTetromino();
+            console.log("Shift pressed");
+        }
+    }
+    
+    }
+ 
 
 //function that checks if rows are completed 
 function CheckForCompletedRows(){
