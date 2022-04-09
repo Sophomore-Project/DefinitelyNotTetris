@@ -11,6 +11,28 @@
 </head>
     <body>
         <canvas id="canvas"></canvas>
+        <div id="game_over-lay">
+            <span><p id="game_over_message">Game Over</p></span>
+            <div class="buttonwrapper">
+                <a id="try_again" onclick="Restart()" class="btn hover-effect">Try Again</a>
+                <span></span>
+                <div><a id="exit" onclick="Exit()" class="btn hover-effect">Exit</a></div>
+            </div>
+        </div>
+
+
+        <div id="pause_overlay">
+            <span><p id="pause_message">Pain & Suffering</p></span>
+            <div class="buttonwrapper">
+                <a id="continue" onclick="Unpause()" class="btn hover-effect">Continue Suffering</a>
+                <a id="restart" onclick="Restart()" class="btn hover-effect">Restart</a>
+                <span></span>
+                <div><a id="exit" onclick="Exit()" class="btn hover-effect">Escape the Pain</a></div>
+            </div>
+            
+        </div>
+        
+
         <script src="/DefinitelyNotTetris/Assets/Scripts/initial.js"></script>
     </body>
 </html>
