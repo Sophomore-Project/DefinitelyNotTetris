@@ -1166,7 +1166,7 @@ function DrawRotatedTetromino(Flippedarray){
         let x = curTetromino[i][0] + initX;
         let y = curTetromino[i][1] + initY;
         //places a 1 in this spot to identify that there is a rectangle in this exact spot
-       
+    
         //Converts the x and y values into coorX and coorY from our coordinateArray to represent them in pixels rather than array spots
         let coorX = coordinateArray[x][y].x;
         let coorY = coordinateArray[x][y].y;
