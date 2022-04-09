@@ -866,26 +866,27 @@ function FreezeTetromino() {
 function PowerUpTime(Index){//The powerup function that will happen depends on what special color the tetromino is.
     switch(Index){
         case 'pink':
+            //james
         console.log("Whhyyy am I thiiinking sooo sloooow?");
         
-        crazyKeys();
+        
         break;
 
         case 'black':
+            //mesud
        console.log("BoomBox boom!");
        
        crazyKeys();
         break;
 
         case 'brown':
+            //majeed
         console.log("I spy something starting beggining with the letter I");
-       
-        crazyKeys();
+        linePowerup();
         break;
 
         case 'lime':
         console.log("Mikayle time");
-       
         crazyKeys();
         break;
    }
