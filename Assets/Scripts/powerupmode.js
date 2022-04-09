@@ -911,18 +911,14 @@ function numberToColor(squareColorNumber){
     }
 }
 
-
-
     function crazyKeys(){  
-        if (MikayleTime == false){
-            MikayleTime = true;
-        }
-        else{
-            MikayleTime = false;
-        }
-   
+       MikayleTime = true;
+       setTimeout(noMoreMikayleTime, 15000);
+       clearTimeout();
     }
- 
+    function noMoreMikayleTime(){
+        MikayleTime = false;
+    }
 
     //function that checks if rows are completed 
     function CheckForCompletedRows(){
