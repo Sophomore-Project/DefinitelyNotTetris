@@ -14,7 +14,7 @@ let curHold;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore =0;
-
+let slowedTime =false;
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
 
@@ -647,16 +647,16 @@ function previewDrawNext(){//an almost copy/paste of preview next. However, for 
                    
                     switch(nextTetrominoColor){
                         case 'pink':
-                        SpecialImage.src = "Images/StarSmall.png";
+                        //SpecialImage.src = "Images/StarSmall.png";
                         break;
                         case 'black':
-                        SpecialImage.src = "Images/SmallBomb.png";
+                       // SpecialImage.src = "Images/SmallBomb.png";
                         break;
                         case 'brown':
-                        SpecialImage.src = "Images/ITime.png";
+                        //SpecialImage.src = "Images/ITime.png";
                         break;
                         case 'lime':
-                        SpecialImage.src = "Images/Surprise.png";
+                       // SpecialImage.src = "Images/Surprise.png";
                         break;
                    }
                    ctx.drawImage(SpecialImage,coorX,coorY,21,21);
@@ -680,16 +680,16 @@ function DrawPrevPowerUp(drawX, drawY,nextColor){
         
        switch(nextColor){
             case 'pink':
-            SpecialImage.src = "SlowDownSmall.png";
+           // SpecialImage.src = "SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "SmallBomb.png";
+           // SpecialImage.src = "SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "ITime.png";
+           // SpecialImage.src = "ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "SurpriseSmall.png";
+          // SpecialImage.src = "SurpriseSmall.png";
             break;
        }
         
@@ -825,22 +825,25 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
     switch(Index){
         case 'pink':
         console.log("Whhyyy am I thiiinking sooo sloooow?");
-        crazyKeys();
-        //put the slowdown function here
+        //crazyKeys();
+        slowTimePowerUp();
         break;
         case 'black':
        console.log("BoomBox boom!");
-       crazyKeys();
+       //crazyKeys();
+       slowTimePowerUp();
        //put the bomb function here
         break;
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
-        crazyKeys();
+        //crazyKeys();
+        slowTimePowerUp();
         //put the I function here
         break;
         case 'lime':
         console.log("Mikayle time");
-        crazyKeys();
+        //crazyKeys();
+        slowTimePowerUp();
         //put... something here
         break;
    }
@@ -1007,17 +1010,19 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
 }
 //This function makes the game faster depending on how many lines have been cleared
 function Level(totalClearedLines){
-    if(totalClearedLines >=0 && totalClearedLines<10){
+    if(slowedTime ==true){
+        levelTimer=5000;
+    }else if(totalClearedLines >=0 && totalClearedLines<10 && slowedTime == false){
         levelTimer= 1000;
-    }else if(totalClearedLines>= 10 && totalClearedLines<=29){
+    }else if(totalClearedLines>= 10 && totalClearedLines<=29 && slowedTime == false){
         levelTimer= 750;
-    }else if(totalClearedLines>29 && totalClearedLines<=59){
+    }else if(totalClearedLines>29 && totalClearedLines<=59 && slowedTime == false){
         levelTimer = 500;
-    }else if(totalClearedLines>59 && totalClearedLines <= 99){
+    }else if(totalClearedLines>59 && totalClearedLines <= 99 && slowedTime == false){
         levelTimer = 350;
-    }else if(totalClearedLines >99 && totalClearedLines <= 149){
+    }else if(totalClearedLines >99 && totalClearedLines <= 149 && slowedTime == false){
         levelTimer = 250;
-    }else{
+    }else if (slowedTime == false){
         levelTimer=1000;
     }
         levelKeeper(totalClearedLines);
@@ -1388,3 +1393,19 @@ function hardDrop(){
 }
 //powerup stuff will go here
 
+//power-up that slows the time by setting the current speed to x.5 of what it was
+function slowTimePowerUp(){
+        //boolean of whether time is slowed or not
+        slowedTime = true;
+        levelTimer=levelTimer *2;
+        console.log("Level Timer set as " + levelTimer);
+        //after 15 seconds, call function that returns the speed to what it should be
+        setTimeout(stopSlowTime,15000);
+        clearTimeout();
+        }
+//function that undoes time slow down 
+function stopSlowTime(){
+    slowedTime=false;
+    console.log("time is unslowed");
+    Level();
+}
