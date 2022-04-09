@@ -14,7 +14,12 @@ let curHold;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore =0;
+<<<<<<< HEAD
 let slowedTime =false;
+=======
+let MikayleTime = false;
+
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
 
@@ -372,43 +377,84 @@ function MoveTetrominoHorizontal(xMove) {
 }
 
 function HandleKeyPress(key){
+    if (MikayleTime == true){
+        if (!gameOver) { // only handle the key presses needed for game functions while the game is running
+            //when you hit the right key(39) it will move left
+            if(key.keyCode === 39){
+                MoveTetrominoHorizontal(-moveConstant)
+            }
+            //when you hit the left key(37) it will move right
+            else if(key.keyCode === 37){
+                MoveTetrominoHorizontal(moveConstant);
+            }
+            //when you hit up arrow 38 it will go down
+            else if(key.keyCode == 38){
+                //Attempt to move the tetromino down
+                if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+                    FreezeTetromino()
+                }else{
+                    MoveTetrominoDown();
+                }
+            }
+            //when you hit down 40 it will go up
+            else if(key.keyCode == 40){
+                console.log(freezeflag);
+                if(freezeflag == true){
+                    RotateTetromino();
+                    DrawTetromino();
+                }
+            }
+            //when shift is pressed it will drop
+            else if(key.keyCode == 16){
+                hardDrop();
+            }
+            //when space is presses it will hold
+
+            else if(key.keyCode == 32){
+                holdTetromino();
+                console.log("Shift pressed");
+            }
+        }
     
-    if (!gameOver) { // only handle the key presses needed for game functions while the game is running
-        //KeyCode 37 is for left arrow key
-        if(key.keyCode === 37){
-            // Attempt to move the tetromino 1 unit to the left
-            MoveTetrominoHorizontal(-moveConstant)
-        }
-        //KeyCode 39 is for right arrow key
-        else if(key.keyCode === 39){
-            // Attempt to move the tetromino 1 unit to the right
-            MoveTetrominoHorizontal(moveConstant);
-        }
-        //KeyCode 40 is for down arrow key
-        else if(key.keyCode == 40){
-            //Attempt to move the tetromino down
-            if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
-                FreezeTetromino()
-            }else{
-                MoveTetrominoDown();
+    } else{
+    
+            if (!gameOver) { // only handle the key presses needed for game functions while the game is running
+                //KeyCode 37 is for left arrow key
+                if(key.keyCode === 37){
+                    // Attempt to move the tetromino 1 unit to the left
+                    MoveTetrominoHorizontal(-moveConstant)
+                }
+                //KeyCode 39 is for right arrow key
+                else if(key.keyCode === 39){
+                    // Attempt to move the tetromino 1 unit to the right
+                    MoveTetrominoHorizontal(moveConstant);
+                }
+                //KeyCode 40 is for down arrow key
+                else if(key.keyCode == 40){
+                    //Attempt to move the tetromino down
+                    if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
+                        FreezeTetromino()
+                    }else{
+                        MoveTetrominoDown();
+                    }
+                }
+                
+                //KeyCode 38 is for up arrowkey
+                else if(key.keyCode == 38){
+                    console.log(freezeflag);
+                    if(freezeflag == true){
+                        RotateTetromino();
+                        DrawTetromino();
+                    }
+                }
+                else if(key.keyCode == 32){
+                    hardDrop();
+                }
+                else if(key.keyCode == 16){
+                    holdTetromino();
+                    console.log("Shift pressed");
+                }
             }
-        }
-        
-        //KeyCode 38 is for up arrowkey
-        else if(key.keyCode == 38){
-            console.log(freezeflag);
-            if(freezeflag == true){
-                RotateTetromino();
-                DrawTetromino();
-            }
-        }
-        else if(key.keyCode == 32){
-            hardDrop();
-        }
-        else if(key.keyCode == 16){
-            holdTetromino();
-            console.log("Shift pressed");
-        }
     }
 }
 
@@ -825,26 +871,49 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
     switch(Index){
         case 'pink':
         console.log("Whhyyy am I thiiinking sooo sloooow?");
+<<<<<<< HEAD
         //crazyKeys();
         slowTimePowerUp();
+=======
+        
+        crazyKeys();
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
+
         case 'black':
        console.log("BoomBox boom!");
+<<<<<<< HEAD
        //crazyKeys();
        slowTimePowerUp();
        //put the bomb function here
+=======
+       
+       crazyKeys();
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
+
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
+<<<<<<< HEAD
         //crazyKeys();
         slowTimePowerUp();
         //put the I function here
+=======
+       
+        crazyKeys();
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
+
         case 'lime':
         console.log("Mikayle time");
+<<<<<<< HEAD
         //crazyKeys();
         slowTimePowerUp();
         //put... something here
+=======
+       
+        crazyKeys();
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
         break;
    }
 }
@@ -869,53 +938,17 @@ function numberToColor(squareColorNumber){
     }
 }
 
-
-
- function crazyKeys(key){
-   
-    if (!gameOver) { // only handle the key presses needed for game functions while the game is running
-        //when you hit the right key(39) it will move left
-        if(key.keyCode === 39){
-            MoveTetrominoHorizontal(-moveConstant)
-        }
-        //when you hit the left key(37) it will move right
-        else if(key.keyCode === 37){
-            MoveTetrominoHorizontal(moveConstant);
-        }
-        //when you hit up arrow 38 it will go down
-        else if(key.keyCode == 38){
-            //Attempt to move the tetromino down
-            if(freezeflag == false){//if the currentTetromino is dragging, pressing the down key will freeze it instantly instead of moving down
-                FreezeTetromino()
-            }else{
-                MoveTetrominoDown();
-            }
-        }
-         //when you hit down 40 it will go up
-         else if(key.keyCode == 40){
-            console.log(freezeflag);
-            if(freezeflag == true){
-                RotateTetromino();
-                DrawTetromino();
-            }
-        }
-        //when shift is pressed it will drop
-        else if(key.keyCode == 16){
-            hardDrop();
-        }
-        //when space is presses it will hold
-
-        else if(key.keyCode == 32){
-            holdTetromino();
-            console.log("Shift pressed");
-        }
+    function crazyKeys(){  
+       MikayleTime = true;
+       setTimeout(noMoreMikayleTime, 15000);
+       clearTimeout();
     }
-    
+    function noMoreMikayleTime(){
+        MikayleTime = false;
     }
- 
 
-//function that checks if rows are completed 
-function CheckForCompletedRows(){
+    //function that checks if rows are completed 
+    function CheckForCompletedRows(){
     let rowsToDelete = 0;
     let startOfDeletion = 0;
     //starting at y=0, the top of the canvas, going until the bottom of the canvas is reached 
@@ -1393,6 +1426,7 @@ function hardDrop(){
 }
 //powerup stuff will go here
 
+<<<<<<< HEAD
 //power-up that slows the time by setting the current speed to x.5 of what it was
 function slowTimePowerUp(){
         //boolean of whether time is slowed or not
@@ -1408,4 +1442,18 @@ function stopSlowTime(){
     slowedTime=false;
     console.log("time is unslowed");
     Level();
+=======
+function linePowerup(){
+    for(let i = 0; i<5; i++){
+        console.log(nextTetrominos[i]);
+    }
+    
+    for(let i = 0; i<=5; i++){
+        // let randomTetromino = ChooseTetrominoIndex();
+        nextTetrominos[i] = 1;
+
+        console.log(nextTetrominos[i]);
+    }
+    previewDrawNext();
+>>>>>>> e62a832f8ec86ac5bf04e7452a989086285a8140
 }
