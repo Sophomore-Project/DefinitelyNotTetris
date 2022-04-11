@@ -871,7 +871,7 @@ function PowerUpTime(Index){//The powerup function that will happen depends on w
         slowTimePowerUp();
         break;
         case 'black':
-       console.log("BoomBox boom!"); 
+        explosion();
         break;
         case 'brown':
         console.log("I spy something starting beggining with the letter I");
@@ -1421,4 +1421,29 @@ function linePowerup(){
         console.log(nextTetrominos[i]);
     }
     previewDrawNext();
+}
+function explosion(){
+    
+    let specialX = initX -2;
+    let specialY = initY -2;
+    for(let x=0; x<5; x++){
+        for(let y=0; y<5; y++){
+            try{
+                    if(stoppedArray[specialX][specialY] != 0 && stoppedArray[specialX][specialY] != undefined){
+                        stoppedArray[specialX][specialY] = 0;
+                        currScore += 2;
+                    }
+                    let coorX = coordinateArray[specialX][specialY].x;
+                    let coorY = coordinateArray[specialX][specialY].y;
+                    ctx.fillStyle = 'grey';
+                    ctx.fillRect(coorX, coorY, 21, 21);
+            }catch(error){
+                continue;
+            }
+            specialY++;
+        }
+        specialX++;
+        specialY-=5;
+    }
+    scoreKeeper();
 }
