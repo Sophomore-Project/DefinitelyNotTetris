@@ -99,7 +99,7 @@ function InitiateCanvas(){
     ctx.scale(2,2); //2x Scale
 
     //drawing a rectangle inside canvas
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#BE95C4';
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
    //drawing stroke around rectangle
@@ -281,7 +281,7 @@ function DeleteGhost() {
         if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
             let coorX = coordinateArray[x][y].x;
             let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#BE95C4';
             ctx.fillRect(coorX, coorY, 21, 21);
         }
     }
@@ -467,7 +467,7 @@ function DeleteTetromino(){
         if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
             let coorX = coordinateArray[x][y].x;
             let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#BE95C4';
             ctx.fillRect(coorX, coorY, 21, 21);
         }
     }
@@ -613,7 +613,7 @@ function previewNext(){
         for(let col = 0; col<4; col++){
             let x = prevCoordArray[col][row].x;
             let y = prevCoordArray[col][row].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#BE95C4';
             ctx.fillRect(x, y, 21 ,21)
         }
     }
@@ -833,7 +833,7 @@ function FreezeTetromino() {
                 if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
                     let coorX = coordinateArray[x][y].x;
                     let coorY = coordinateArray[x][y].y;
-                    ctx.fillStyle = 'grey';
+                    ctx.fillStyle = '#BE95C4';
                     ctx.fillRect(coorX, coorY, 21, 21);
                 }
         }
@@ -900,7 +900,7 @@ function numberToColor(squareColorNumber){
     }else if(squareColorNumber == 7){
         frozenColorString = 'red';
     }else {
-        frozenColorString = 'grey';
+        frozenColorString = '#BE95C4';
     }
 }
 
@@ -943,7 +943,7 @@ function numberToColor(squareColorNumber){
                 //makes the row disappear 
                 let coorX = coordinateArray[i][y].x;
                 let coorY = coordinateArray[i][y].y;
-                ctx.fillStyle = 'grey';
+                ctx.fillStyle = '#BE95C4';
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
@@ -952,7 +952,7 @@ function numberToColor(squareColorNumber){
     //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
     if (rowsToDelete > 0){
         // score += 10;
-        // ctx.fillStyle = 'grey';
+        // ctx.fillStyle = '#BE95C4';
         // ctx.fillRect(310, 109, 140, 19);
         // ctx.fillStyle = 'black';
         // ctx.fillText(score.toString(), 310, 127);
@@ -962,7 +962,7 @@ function numberToColor(squareColorNumber){
     }
 }
 function scoreKeeper(){
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#BE95C4';
     ctx.fillRect(390,13, 40, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
@@ -1001,7 +1001,7 @@ function MoveAllRowsDown(rowsToDelete, startOfDeletion){
                 stoppedArray[x][i] = 0;
                 coorX = coordinateArray[x][i].x;
                 coorY = coordinateArray[x][i].y;
-                ctx.fillStyle = 'grey';
+                ctx.fillStyle = '#BE95C4';
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
@@ -1369,16 +1369,16 @@ function levelKeeper(){
         currLevel= 5;
     }
  
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#BE95C4';
     ctx.fillRect(390,73, 40, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
     ctx.fillText(currLevel, 400, 89);         
 }
-//This function creates a brand new grey square where the hold box is on the main screen, so that
+//This function creates a brand new #BE95C4 square where the hold box is on the main screen, so that
 //it clears that area for the newest held tetromino
 function deleteHeldTetromino(){
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#BE95C4';
     ctx.fillRect(250, 26, 56, 56);
 }
 
@@ -1435,7 +1435,7 @@ function explosion(){
                     }
                     let coorX = coordinateArray[specialX][specialY].x;
                     let coorY = coordinateArray[specialX][specialY].y;
-                    ctx.fillStyle = 'grey';
+                    ctx.fillStyle = '#BE95C4';
                     ctx.fillRect(coorX, coorY, 21, 21);
             }catch(error){
                 continue;

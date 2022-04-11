@@ -1,9 +1,15 @@
 body{
     text-align: center;
-    background: #fff;
+    background-image: url("/Images/Background.png");
 }
-#my-canvas{
+#canvas{
     background: #000;
     margin-left: 10px;
     margin-top: 10px;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 4%;
+    border-color: #9B5094;
+    background-color: #F7FFF7;
+
 }
