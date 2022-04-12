@@ -16,7 +16,7 @@ let frozenColorString; //variable that holds a color dependent on what value of 
 let currScore = 0;
 
 var popSound = new Audio('/Assets/Audio/pop.mp3');
-
+var levelup = new Audio('/Assets/Audio/LevelUp.mp3');
 var boopSound = new Audio('/Assets/Audio/Boop.mp3');
 
 //Coordinate solution for previewed tetrominos
@@ -1037,19 +1037,27 @@ function DrawHeldTetromino(heldColor){
     }
 
 }
+
 //function that keeps track of the current level of the game on the screen
 function levelKeeper(){
     currLevel=1;
     if(totalClearedLines<10){
         currLevel = 1;
+        levelup.play();
+        
     }else if(totalClearedLines >= 10 &&totalClearedLines <= 29){
         currLevel =2;
+        
+        
     }else if (totalClearedLines >29 &&totalClearedLines <= 59){
         currLevel =3;
+        
     }else if (totalClearedLines > 59 && totalClearedLines <=99){
         currLevel = 4;
+        
     }else if (totalClearedLines >99 && totalClearedLines <= 149){
         currLevel= 5;
+        
     }
  
     ctx.fillStyle = 'grey';
