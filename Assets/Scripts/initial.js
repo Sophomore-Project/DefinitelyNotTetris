@@ -1043,21 +1043,30 @@ function levelKeeper(){
     currLevel=1;
     if(totalClearedLines<10){
         currLevel = 1;
-        levelup.play();
+        //levelup.play();
         
     }else if(totalClearedLines >= 10 &&totalClearedLines <= 29){
-        currLevel =2;
-        
+         currLevel =2;
+         if(totalClearedLines==10 && currLevel ==2){
+            levelup.play();
+         }
         
     }else if (totalClearedLines >29 &&totalClearedLines <= 59){
         currLevel =3;
+        if(totalClearedLines==30 && currLevel ==3){
+            levelup.play();
+         }
         
     }else if (totalClearedLines > 59 && totalClearedLines <=99){
         currLevel = 4;
-        
+        if(totalClearedLines==60 && currLevel ==4){
+            levelup.play();
+         }
     }else if (totalClearedLines >99 && totalClearedLines <= 149){
         currLevel= 5;
-        
+        if(totalClearedLines==100 && currLevel ==5){
+            levelup.play();
+         }
     }
  
     ctx.fillStyle = 'grey';
