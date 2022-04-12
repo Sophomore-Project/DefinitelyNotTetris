@@ -19,7 +19,7 @@ let currScore = 0;
 let currLevel;
 
 var popSound = new Audio('/Assets/Audio/pop.mp3');
-
+var levelup = new Audio('/Assets/Audio/LevelUp.mp3');
 var boopSound = new Audio('/Assets/Audio/Boop.mp3');
 
 //Coordinate solution for previewed tetrominos
