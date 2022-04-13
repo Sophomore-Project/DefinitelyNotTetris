@@ -16,6 +16,7 @@ let curHoldColor;
 let heldTetrominoVal;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore = 0;
+let currLevel;
 
 
 //Coordinate solution for previewed tetrominos
@@ -145,7 +146,7 @@ function InitiateCanvas(){
     CoordArray();
     DrawTetromino();
     currLevel=1;
-    levelKeeper();
+    LevelKeeper(0);
     
 }
 //Creates the Panel which previews next tetromino's that will spawn
@@ -817,9 +818,10 @@ function CheckForCompletedRows() {
     }
 
     // once all rows that need to be cleared have been cleared, update the score value and on screen
-
+    totalClearedLines += completedRows;
     ScoreGiver(completedRows);
     ScoreKeeper(currScore);
+    LevelKeeper();
 }
 
 function ScoreGiver(rowsCleared) {
@@ -1028,7 +1030,7 @@ function Level(totalClearedLines){
     else{
         levelTimer=1000;
     }
-        levelKeeper(totalClearedLines);
+        LevelKeeper();
 }
 
 
@@ -1306,39 +1308,14 @@ function DrawHeldTetromino(heldTetrominoVal) {
 }
 
 //function that keeps track of the current level of the game on the screen
-function levelKeeper(){
-    currLevel=1;
-    if(totalClearedLines<10){
-        currLevel = 1;
-    }else if(totalClearedLines >=10 && totalClearedLines <= 29){
-        currLevel =2;
-    }else if (totalClearedLines >29 && totalClearedLines <= 59){
-        currLevel =3;
-    }else if (totalClearedLines >59 && totalClearedLines <= 99){
-        currLevel = 4;
-    }else if (totalClearedLines >99 && totalClearedLines <= 149){
-        currLevel= 5;
-    }else if(totalClearedLines >149 && totalClearedLines <= 209){
-        currlevel=6;
-    }else if(totalClearedLines >209 && totalClearedLines <= 279){
-        currlevel=7;
-    }else if(totalClearedLines >279 && totalClearedLines <= 359){
-        currlevel=8;
-    }else if(totalClearedLines >359 && totalClearedLines <= 449){
-        currlevel=9;
-    }else if(totalClearedLines >449 && totalClearedLines <= 549){
-        currLevel=10;
-    }else if(totalClearedLines >549 && totalClearedLines <= 659){
-        currLevel=11;
-    }else if(totalClearedLines >659 && totalClearedLines <= 779){
-        currLevel=12;
-    }else if(totalClearedLines >779 && totalClearedLines <= 909){
-        currLevel=13;
-    }else if(totalClearedLines >909 && totalClearedLines <= 1049){
-        currLevel=14;
-    }else if(totalClearedLines >1049 && totalClearedLines <= 1199){
-        currLevel=15;
+function LevelKeeper(){
+    
+    if (Math.floor(totalClearedLines/(5*currLevel*(currLevel+1))) >= 1) {
+        currLevel++;
     }
+
+    console.log("Current Level = " + currLevel)
+    console.log("Total Lines Cleared = " + totalClearedLines);
     ctx.fillStyle = 'grey';
     ctx.fillRect(390,73, 40, 28);  
     ctx.fillStyle = 'white';
