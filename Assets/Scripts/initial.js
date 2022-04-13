@@ -630,6 +630,7 @@ function numberToColor(squareColorNumber){
     }
 }
 
+<<<<<<< HEAD
 //function that checks if rows are completed 
 function CheckForCompletedRows(){
     let rowsToDelete = 0;
@@ -645,6 +646,108 @@ function CheckForCompletedRows(){
             if(square === 0 || square === undefined){
                 completed = false;
                 break;
+=======
+
+let animations = 0; // the number of animations currently playing
+let clearedAnimations = 0; // the number of animations that have been cleared out so far
+/**
+ * Clears out the row at the specified y position, playing a random animation
+ * 
+ * @param y - the y position of the row to be cleared out
+ * @param animationType - the 'type' of animation for this clear effect - can be any value from 0 (left to right), 1 (right to left), 2 (center out), 3 (outsides in)
+ */
+function ClearRow(y, animationType) {
+    boopSound.play();
+    boopSound.playbackRate = 2;
+    animations++;
+    pause = true;
+    let i = 0;
+    // there are 4 separate clearAnimation variables because there may be multiple lines being cleared out at once, and these are handles as separate animations, so to avoid overlap there are 4
+    let clearAnimation1;
+    let clearAnimation2;
+    let clearAnimation3;
+    let clearAnimation4;
+    // determine which animation to play based on the current value of animations. As it increments, the next clearAnimation variable will be used
+    switch(animations) {
+        case 1:
+            clearAnimation1 = setInterval(AnimateClear, 40);
+            break;
+        case 2:
+            clearAnimation2 = setInterval(AnimateClear, 40);
+            break;
+        case 3:
+            clearAnimation3 = setInterval(AnimateClear, 40);
+            break;
+        case 4:
+            clearAnimation4 = setInterval(AnimateClear, 40);
+            break;
+    }
+
+    // Plays an animation to visualize the tetrominos being cleared out from a full line
+    function AnimateClear() {
+        // once i = gArrayWidth, all squares have been cleared out because each iteration clears out 1 block
+        if (i < gArrayWidth) {
+            let x;
+
+            // set the next x position to be cleared based on the animation type and current iteration value
+            switch(animationType) {
+                case 0: // left to right
+                    x = i;
+                    break;
+                case 1: // right to left
+                    x = gArrayWidth-1-i;
+                    break;
+                case 2: // inside out
+                    x = Math.floor(gArrayWidth/2)+Math.floor(i/2); // start from the center offset one unit to the right
+                    if (stoppedArray[x][y] == 0) { // if the center to the right block is already cleared out, remove the centermost to the left block
+                        x = Math.floor(gArrayWidth/2)-1-Math.floor(i/2); // remove the centermost from the left block.
+                    }
+                    break;
+                case 3: // outside in
+                    x = Math.floor(i/2); // start from the left (i/2 because it should clear one to the right every other time)
+                    if (stoppedArray[x][y] == 0) { // if the left side block is already removed, remove the right side block
+                        x = Math.floor(gArrayWidth)-1-Math.floor(i/2); // remove the next block furthest to the right
+                    }
+                    break;
+            }
+
+            stoppedArray[x][y] = 0;
+            let coorX = coordinateArray[x][y].x;
+            let coorY = coordinateArray[x][y].y;
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(coorX, coorY, 21, 21);
+            i++;
+        } else { // occurs when all blocks have been cleared out in this animation
+            pause = false;
+
+            // switch case to clear out the current animation ONLY
+            // the clearedAnimations variable holds the number of animations that have been cleared so far, the 0th clearedAnimation will always be clearAnimation1, the 1st always being clearedAnimation2, and so on because of the order the need to be cleared.
+            switch(clearedAnimations) {
+                case 0:
+                    clearInterval(clearAnimation1);
+                    break;
+                case 1:
+                    clearInterval(clearAnimation2);
+                    break;
+                case 2:
+                    clearInterval(clearAnimation3);
+                    break;
+                case 3:
+                    clearInterval(clearAnimation4);
+                    break;
+            }
+
+            // DropRowsAbove has to be called before DrawTetromino at the end of the animation. Otherwise the ghost piece is drawn before the pieces move down causing it to stay above the actually frozen blocks
+            DropRowsAbove(y); // this should be run for every row being cleared
+            clearedAnimations++;
+
+            // if the number of animations cleared is equal to the total number of animations needed, all animations have played out, so reset values and resume gameplay
+            if (animations == clearedAnimations) {
+                clearedAnimations = 0;
+                animations = 0;
+                DrawTetromino(); // draw the current tetromino because calling the update function will only update it once it has moved down
+                update(); // 'unpauses' the game
+>>>>>>> b75afd41f6fdc4ad9e286d3103ebbfcb2209dfad
             }
         }
         //gets here if every square in a row has a value other than 0, meaning it is not empty
@@ -664,21 +767,6 @@ function CheckForCompletedRows(){
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
-    }
-    //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
-    //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
-    if (rowsToDelete > 0){
-        // score += 10;
-        // ctx.fillStyle = 'grey';
-        // ctx.fillRect(310, 109, 140, 19);
-        // ctx.fillStyle = 'black';
-        // ctx.fillText(score.toString(), 310, 127);
-        //plays boop audio for cleared line
-        boopSound.play();
-        boopSound.playbackRate = 2;
-        scoreKeeper(currScore);
-        
-        MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
 
@@ -1039,6 +1127,7 @@ function DrawHeldTetromino(heldColor){
 }
 
 //function that keeps track of the current level of the game on the screen
+<<<<<<< HEAD
 function levelKeeper(){
     currLevel=1;
     if(totalClearedLines<10){
@@ -1067,6 +1156,14 @@ function levelKeeper(){
         if(totalClearedLines==100 && currLevel ==5){
             levelup.play();
          }
+=======
+function LevelKeeper(){
+    
+    if (Math.floor(totalClearedLines/(5*currLevel*(currLevel+1))) >= 1) {
+        currLevel++;
+        levelup.play();
+        levelup.playbackRate = 2;
+>>>>>>> b75afd41f6fdc4ad9e286d3103ebbfcb2209dfad
     }
  
     ctx.fillStyle = 'grey';
