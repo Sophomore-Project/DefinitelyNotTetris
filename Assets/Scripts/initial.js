@@ -860,6 +860,8 @@ let clearedAnimations = 0; // the number of animations that have been cleared ou
  * @param animationType - the 'type' of animation for this clear effect - can be any value from 0 (left to right), 1 (right to left), 2 (center out), 3 (outsides in)
  */
 function ClearRow(y, animationType) {
+    boopSound.play();
+    boopSound.playbackRate = 2;
     animations++;
     pause = true;
     let i = 0;
@@ -985,21 +987,6 @@ function DropRowsAbove(y) {
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
-    }
-    //if there is at least 1 completed row, increments score and calls MoveAllRowsDown function 
-    //increments score (this will have to be adjusted- you shouldn't only get 10 points for clearing 5 lines, for example)
-    if (rowsToDelete > 0){
-        // score += 10;
-        // ctx.fillStyle = 'grey';
-        // ctx.fillRect(310, 109, 140, 19);
-        // ctx.fillStyle = 'black';
-        // ctx.fillText(score.toString(), 310, 127);
-        //plays boop audio for cleared line
-        boopSound.play();
-        boopSound.playbackRate = 2;
-        scoreKeeper(currScore);
-        
-        MoveAllRowsDown(rowsToDelete, startOfDeletion);
     }
 }
 
@@ -1332,6 +1319,8 @@ function LevelKeeper(){
     
     if (Math.floor(totalClearedLines/(5*currLevel*(currLevel+1))) >= 1) {
         currLevel++;
+        levelup.play();
+        levelup.playbackRate = 2;
     }
 
     console.log("Current Level = " + currLevel)
