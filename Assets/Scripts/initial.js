@@ -776,10 +776,12 @@ function FreezeTetromino() {
             //set direction to idle so it doesn't move
             direction = DIRECTION.IDLE;
 
-            CheckForCompletedRows();
             
             // choose the next tetromino to attempt to draw on the board
             CreateTetromino();
+            
+            CheckForCompletedRows();
+
             // only attempt to draw the tetromino on the board if the game is still going on (!gameOver)
             if (!gameOver && !pause) {
                 DrawTetromino();
@@ -867,16 +869,16 @@ function ClearRow(y, animationType) {
     // determine which animation to play based on the current value of animations. As it increments, the next clearAnimation variable will be used
     switch(animations) {
         case 1:
-            clearAnimation1 = setInterval(AnimateClear, 40);
+            clearAnimation1 = setInterval(AnimateClear, 20);
             break;
         case 2:
-            clearAnimation2 = setInterval(AnimateClear, 40);
+            clearAnimation2 = setInterval(AnimateClear, 20);
             break;
         case 3:
-            clearAnimation3 = setInterval(AnimateClear, 40);
+            clearAnimation3 = setInterval(AnimateClear, 20);
             break;
         case 4:
-            clearAnimation4 = setInterval(AnimateClear, 40);
+            clearAnimation4 = setInterval(AnimateClear, 20);
             break;
     }
 
@@ -915,7 +917,6 @@ function ClearRow(y, animationType) {
             ctx.fillRect(coorX, coorY, 21, 21);
             i++;
         } else { // occurs when all blocks have been cleared out in this animation
-            pause = false;
 
             // switch case to clear out the current animation ONLY
             // the clearedAnimations variable holds the number of animations that have been cleared so far, the 0th clearedAnimation will always be clearAnimation1, the 1st always being clearedAnimation2, and so on because of the order the need to be cleared.
@@ -940,6 +941,7 @@ function ClearRow(y, animationType) {
 
             // if the number of animations cleared is equal to the total number of animations needed, all animations have played out, so reset values and resume gameplay
             if (animations == clearedAnimations) {
+                pause = false;
                 clearedAnimations = 0;
                 animations = 0;
                 DrawTetromino(); // draw the current tetromino because calling the update function will only update it once it has moved down
