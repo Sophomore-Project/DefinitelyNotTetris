@@ -1214,7 +1214,7 @@ let clearedAnimations = 0; // the number of animations that have been cleared ou
 }
 
 
-function scoreKeeper(){
+function ScoreKeeper(){
     ctx.fillStyle = 'grey';
     ctx.fillRect(390,13, 60, 28);  
     ctx.fillStyle = 'white';
@@ -1669,3 +1669,11 @@ function NumberToColor(squareColorNumber) {
         return 'grey';
     }
 }
+function crazyKeys(){  
+    MikayleTime = true;
+    setTimeout(noMoreMikayleTime, 15000);
+    clearTimeout();
+ }
+ function noMoreMikayleTime(){
+     MikayleTime = false;
+ }
