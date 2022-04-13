@@ -812,6 +812,7 @@ function CheckForCompletedRows() {
         while(x < gArrayWidth && stoppedArray[x][y] != 0 && stoppedArray[x][y] != undefined) {x++;} // iterate through the entire row, incrementing x and stopping of there are any blank squares 
         // if there were no blank squares, x will be equal to the total width
         if (x == gArrayWidth) {
+            DeleteTetromino();
             completedRows++;
             ClearRow(y, animationType); // clear the row at y with the animation type specified above
         }
