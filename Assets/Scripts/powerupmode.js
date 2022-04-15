@@ -103,7 +103,7 @@ function InitiateCanvas(){
     ctx.scale(2,2); //2x Scale
 
     //drawing a rectangle inside canvas
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#c27ba0';
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
    //drawing stroke around rectangle
@@ -111,7 +111,7 @@ function InitiateCanvas(){
    ctx.strokeRect(8, 8, 234, 462);
    drawDashedPattern(ctx);
     //Draws the Gameboard
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = '#bebebe';
     ctx.strokeRect(8, 8, 234, 462);
     drawDashedPattern(ctx);
     drawPreviewPanel();
@@ -286,7 +286,7 @@ function DeleteGhost() {
         if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
             let coorX = coordinateArray[x][y].x;
             let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#c27ba0';
             ctx.fillRect(coorX, coorY, 21, 21);
         }
     }
@@ -524,7 +524,7 @@ function DeleteTetromino(){
         if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
             let coorX = coordinateArray[x][y].x;
             let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#c27ba0';
             ctx.fillRect(coorX, coorY, 21, 21);
         }
     }
@@ -821,7 +821,7 @@ function previewNext(){
         for(let col = 0; col<4; col++){
             let x = prevCoordArray[col][row].x;
             let y = prevCoordArray[col][row].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#c27ba0';
             ctx.fillRect(x, y, 21 ,21)
         }
     }
@@ -1030,7 +1030,7 @@ function FreezeTetromino() {
                 if (x >= 0 && x < gArrayWidth && y >= 0 && y < gArrayHeight) {
                     let coorX = coordinateArray[x][y].x;
                     let coorY = coordinateArray[x][y].y;
-                    ctx.fillStyle = 'grey';
+                    ctx.fillStyle = '#c27ba0';
                     ctx.fillRect(coorX, coorY, 21, 21);
                 }
         }
@@ -1188,7 +1188,7 @@ let clearedAnimations = 0; // the number of animations that have been cleared ou
             stoppedArray[x][y] = 0;
             let coorX = coordinateArray[x][y].x;
             let coorY = coordinateArray[x][y].y;
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = '#c27ba0';
             ctx.fillRect(coorX, coorY, 21, 21);
             i++;
         } else { // occurs when all blocks have been cleared out in this animation
@@ -1228,7 +1228,7 @@ let clearedAnimations = 0; // the number of animations that have been cleared ou
 
 
 function ScoreKeeper(){
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#c27ba0';
     ctx.fillRect(390,13, 60, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
@@ -1258,11 +1258,11 @@ function ScoreKeeper(){
                 let coorY = coordinateArray[x][y+1].y;
                 ctx.fillRect(coorX, coorY, 21, 21);
     
-                // since the old block has been moved down from this position, set it to 0 and fill it in as grey
+                // since the old block has been moved down from this position, set it to 0 and fill it in as #c27ba0
                 stoppedArray[x][y] = 0;
                 coorX = coordinateArray[x][y].x;
                 coorY = coordinateArray[x][y].y;
-                ctx.fillStyle = 'grey';
+                ctx.fillStyle = '#c27ba0';
                 ctx.fillRect(coorX, coorY, 21, 21);
             }
         }
@@ -1575,16 +1575,16 @@ function LevelKeeper(){
 
     console.log("Current Level = " + currLevel)
     console.log("Total Lines Cleared = " + totalClearedLines);
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#c27ba0';
     ctx.fillRect(390,73, 40, 28);  
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
     ctx.fillText(currLevel, 400, 89);         
 }
-//This function creates a brand new grey square where the hold box is on the main screen, so that
+//This function creates a brand new #c27ba0 square where the hold box is on the main screen, so that
 //it clears that area for the newest held tetromino
 function deleteHeldTetromino(){
-    ctx.fillStyle = 'grey';
+    ctx.fillStyle = '#c27ba0';
     ctx.fillRect(250, 26, 56, 56);
 }
 
@@ -1643,7 +1643,7 @@ function explosion(){
                     }
                     let coorX = coordinateArray[specialX][specialY].x;
                     let coorY = coordinateArray[specialX][specialY].y;
-                    ctx.fillStyle = 'grey';
+                    ctx.fillStyle = '#c27ba0';
                     ctx.fillRect(coorX, coorY, 21, 21);
             }catch(error){
                 continue;
@@ -1660,7 +1660,7 @@ function NumberToColor(squareColorNumber) {
     if (squareColorNumber >= 1 && squareColorNumber <= 7) {
         return tetrominoColors[squareColorNumber-1];
     } else {
-        return 'grey';
+        return '#c27ba0';
     }
 }
 function crazyKeys(){  
