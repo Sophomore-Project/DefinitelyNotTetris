@@ -146,6 +146,7 @@ function InitiateCanvas(){
     DrawTetromino();
     currLevel=1;
     LevelKeeper(0);
+    Track1();
     
 }
 //Creates the Panel which previews next tetromino's that will spawn
@@ -317,7 +318,18 @@ function FindGhost() {
 
     return ghostDistance;
 }
-
+function Track1() {
+    let myMusic;
+      myMusic = new Audio("/Assets/Music/tetris-gameboy-01.mp3");
+      myMusic.play();
+      setTimeout(Track2,39000); 
+    }
+    function Track2() {
+        let myMusic;
+          myMusic = new Audio("/Assets/Music/tetris-gameboy-05.mp3");
+          myMusic.play();
+          setTimeout(Track1,57000); 
+        }
 
 /**
  * Attempts to move the current tetromino down one unit
