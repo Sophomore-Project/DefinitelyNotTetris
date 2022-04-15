@@ -226,16 +226,16 @@ function DrawPowerUp(drawX, drawY, SpecialImage){//draws the special powerup on 
         
        switch(curTetrominoColor){
             case 'pink':
-            SpecialImage.src = "Images/SlowDownSmall.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "Images/SmallBomb.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "Images/ITime.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "Images/SurpriseSmall.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
             break;
        }
         
@@ -584,16 +584,16 @@ function DrawFirstPowerUp(nextColor){//this function draws the a special tetromi
         
        switch(nextColor){
             case 'pink':
-            SpecialImage.src = "Images/SlowDownSmall.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
             break;
             case 'black':
-            SpecialImage.src = "Images/SmallBomb.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
             break;
             case 'brown':
-            SpecialImage.src = "Images/ITime.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
             break;
             case 'lime':
-            SpecialImage.src = "Images/SurpriseSmall.png";
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
             break;
        }
        let coorX = coordinateArray[initX][initY].x;
@@ -886,16 +886,16 @@ function previewDrawNext(){//an almost copy/paste of preview next. However, for 
                    
                     switch(nextTetrominoColor){
                         case 'pink':
-                        SpecialImage.src = "Images/StarSmall.png";
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/StarSmall.png";
                         break;
                         case 'black':
-                        SpecialImage.src = "Images/SmallBomb.png";
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
                         break;
                         case 'brown':
-                        SpecialImage.src = "Images/ITime.png";
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
                         break;
                         case 'lime':
-                       SpecialImage.src = "Images/Surprise.png";
+                       SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/Surprise.png";
                         break;
                    }
                    ctx.drawImage(SpecialImage,coorX,coorY,21,21);
@@ -919,16 +919,16 @@ function DrawPrevPowerUp(drawX, drawY,nextColor){
         
        switch(nextColor){
             case 'pink':
-           SpecialImage.src = "SlowDownSmall.png";
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/SlowDownSmall.png";
             break;
             case 'black':
-           SpecialImage.src = "SmallBomb.png";
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/SmallBomb.png";
             break;
             case 'brown':
-           SpecialImage.src = "ITime.png";
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/ITime.png";
             break;
             case 'lime':
-          SpecialImage.src = "SurpriseSmall.png";
+          SpecialImage.src = "/DefinitelyNotTetris/Assets/SurpriseSmall.png";
             break;
        }
         
