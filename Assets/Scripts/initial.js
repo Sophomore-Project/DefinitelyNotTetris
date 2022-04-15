@@ -998,42 +998,8 @@ function ScoreKeeper(currScore){
 
 
 //This function makes the game faster depending on how many lines have been cleared
-function Level(totalClearedLines){
-    if(totalClearedLines >=0 && totalClearedLines<10){
-        levelTimer= 1000;
-    }else if(totalClearedLines>= 10 && totalClearedLines<=29){
-        levelTimer= 750;
-    }else if(totalClearedLines>29 && totalClearedLines<=59){
-        levelTimer = 500;
-    }else if(totalClearedLines>59 && totalClearedLines <= 99){
-        levelTimer = 350;
-    }else if(totalClearedLines >99 && totalClearedLines <= 149){
-        levelTimer = 250;
-    }else if(totalClearedLines >149 && totalClearedLines <= 209){
-        levelTimer = 215;
-    }else if(totalClearedLines >209 && totalClearedLines <= 279){
-        levelTimer = 200;
-    }else if(totalClearedLines >279 && totalClearedLines <= 359){
-        levelTimer = 190;
-    }else if(totalClearedLines >359 && totalClearedLines <= 449){
-        levelTimer = 185;
-    }else if(totalClearedLines >449 && totalClearedLines <= 549){
-        levelTimer=180;
-    }else if(totalClearedLines >549 && totalClearedLines <= 659){
-        levelTimer=175;
-    }else if(totalClearedLines >659 && totalClearedLines <= 779){
-        levelTimer=170;
-    }else if(totalClearedLines >779 && totalClearedLines <= 909){
-        levelTimer=165;
-    }else if(totalClearedLines >909 && totalClearedLines <= 1049){
-        levelTimer=160;
-    }else if(totalClearedLines >1049 && totalClearedLines <= 1199){
-        levelTimer=155;
-    }
-    else{
-        levelTimer=1000;
-    }
-        LevelKeeper();
+function BlockSpeed(){
+levelTimer = levelTimer*(0.89);
 }
 
 
@@ -1312,9 +1278,10 @@ function DrawHeldTetromino(heldTetrominoVal) {
 
 //function that keeps track of the current level of the game on the screen
 function LevelKeeper(){
-    
     if (Math.floor(totalClearedLines/(5*currLevel*(currLevel+1))) >= 1) {
-        currLevel++;
+        currLevel++;    
+        //calls BlockSpeed function which increments fall speed
+        BlockSpeed();
     }
 
     console.log("Current Level = " + currLevel)

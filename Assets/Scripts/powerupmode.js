@@ -11,6 +11,7 @@ let freezeflag = true;
 let totalClearedLines = 0;
 //Current Held tetromino and the corresponding tetromino color
 let curHold;
+let leveledUp = false;
 let curHoldColor;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore =0;
@@ -1260,46 +1261,23 @@ function ScoreKeeper(){
 
 
 //This function makes the game faster depending on how many lines have been cleared
-function Level(totalClearedLines){
-    if(slowedTime ==true){
-        levelTimer=5000;
-    }else if(totalClearedLines >=0 && totalClearedLines<10 && slowedTime == false){
-        levelTimer= 1000;
-    }else if(totalClearedLines>= 10 && totalClearedLines<=29 && slowedTime == false){
-        levelTimer= 750;
-    }else if(totalClearedLines>29 && totalClearedLines<=59 && slowedTime == false){
-        levelTimer = 500;
-    }else if(totalClearedLines>59 && totalClearedLines <= 99 && slowedTime == false){
-        levelTimer = 350;
-    }else if(totalClearedLines >99 && totalClearedLines <= 149 && slowedTime == false){
-        levelTimer = 250;
-    }else if(totalClearedLines >149 && totalClearedLines <= 209){
-        levelTimer = 215;
-    }else if(totalClearedLines >209 && totalClearedLines <= 279){
-        levelTimer = 200;
-    }else if(totalClearedLines >279 && totalClearedLines <= 359){
-        levelTimer = 190;
-    }else if(totalClearedLines >359 && totalClearedLines <= 449){
-        levelTimer = 185;
-    }else if(totalClearedLines >449 && totalClearedLines <= 549){
-        levelTimer=180;
-    }else if(totalClearedLines >549 && totalClearedLines <= 659){
-        levelTimer=175;
-    }else if(totalClearedLines >659 && totalClearedLines <= 779){
-        levelTimer=170;
-    }else if(totalClearedLines >779 && totalClearedLines <= 909){
-        levelTimer=165;
-    }else if(totalClearedLines >909 && totalClearedLines <= 1049){
-        levelTimer=160;
-    }else if(totalClearedLines >1049 && totalClearedLines <= 1199){
-        levelTimer=155;
-    }else if(slowedTime==false){
-        levelTimer=1000;
-    }
-    
-        LevelKeeper();
-}
+function BlockSpeed(currLevel){
+    //levelTimer = levelTimer*(0.85);
+    if(slowedTime ==true && leveledUp==false){
+        levelTimer=levelTimer*2;
 
+    }else if (currLevel==1 && slowedTime==false){
+        levelTimer =1000;
+
+    }else if(currLevel>1 && slowedTime == false){
+        levelTimer= levelTimer*(.89**(currLevel-1));
+        
+    }else if (slowedTime == true && leveledUp==true){
+            levelTimer=(1000*(0.89**(currLevel-1)))*2;
+
+            leveledUp=false;
+    }
+}
 
 /**
  * Check if the spaces directly below any component of the current tetromino are invalid/occupied spaces
@@ -1579,6 +1557,8 @@ function LevelKeeper(){
     
     if (Math.floor(totalClearedLines/(5*currLevel*(currLevel+1))) >= 1) {
         currLevel++;
+        leveledUp = true;
+        BlockSpeed(currLevel);
     }
 
     console.log("Current Level = " + currLevel)
@@ -1610,7 +1590,8 @@ function hardDrop(){
 function slowTimePowerUp(){
         //boolean of whether time is slowed or not
         slowedTime = true;
-        levelTimer=levelTimer *2;
+        BlockSpeed();
+        slowedTime=false;
         console.log("Level Timer set as " + levelTimer);
         //after 15 seconds, call function that returns the speed to what it should be
         setTimeout(stopSlowTime,15000);
@@ -1620,7 +1601,8 @@ function slowTimePowerUp(){
 function stopSlowTime(){
     slowedTime=false;
     console.log("time is unslowed");
-    Level();
+    BlockSpeed(currLevel);
+    console.log("level timer is" + levelTimer);
 }
 
 function linePowerup(){
