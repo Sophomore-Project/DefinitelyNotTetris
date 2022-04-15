@@ -765,7 +765,7 @@ function Restart() {
 }
 
 function Exit() {
-    location.href='/index.html'; // THIS NEEDS TO BE FIXED
+    location.href='/DefinitelyNotTetris/index.html'; // THIS NEEDS TO BE FIXED
 }
 
 // iterates through the entire stoppedArray and redraws all the colors from the updated tetrominoColors
