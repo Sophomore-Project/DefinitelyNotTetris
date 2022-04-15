@@ -1,6 +1,6 @@
 body{
     text-align: center;
-    background-image: url("/DefinitelyNotTetris/Images/Background.png");
+    background-image: url("/DefinitelyNotTetris/Assets/Images/Background.png");
 }
 #canvas{
     background: #000;
