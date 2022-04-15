@@ -107,9 +107,7 @@ function InitiateCanvas(){
     ctx.fillStyle = '#c27ba0';
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
-   //drawing stroke around rectangle
-   ctx.strokeStyle = 'black';
-   ctx.strokeRect(8, 8, 234, 462);
+   
    drawDashedPattern(ctx);
     //Draws the Gameboard
     ctx.strokeStyle = '#bebebe';
@@ -120,6 +118,9 @@ function InitiateCanvas(){
     document.addEventListener('keydown', HandleKeyPress);
 
     ctx.setLineDash([]);
+    //drawing stroke around rectangle
+   ctx.strokeStyle = 'black';
+   ctx.strokeRect(8, 8, 234, 462);
     //drawing the LEVEL rectangle and lettering
     ctx.strokeRect(315, 70, 151, 50 );
     ctx.fillStyle = 'white';
