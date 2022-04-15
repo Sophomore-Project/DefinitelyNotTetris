@@ -294,13 +294,13 @@ function FindGhost() {
 
 function Track1() {
 let myMusic;
-  myMusic = new Audio("/Assets/Music/tetris-gameboy-02.mp3");
+  myMusic = new Audio("/DefinitelyNotTetris/Assets/Music/tetris-gameboy-02.mp3");
   myMusic.play();
   setTimeout(Track2,82000); 
 }
 function Track2() {
     let myMusic;
-      myMusic = new Audio("/Assets/Music/tetris-gameboy-03.mp3");
+      myMusic = new Audio("/DefinitelyNotTetris/Assets/Music/tetris-gameboy-03.mp3");
       myMusic.play();
       setTimeout(Track1,79000); 
     }
