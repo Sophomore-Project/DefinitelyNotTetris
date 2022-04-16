@@ -138,7 +138,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCRE:", 315, 28);
+    ctx.fillText("SCORE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -156,7 +156,7 @@ function InitiateCanvas(){
     currLevel=1;
     LevelKeeper(0);
     Track1();
-    ctx.drawImage(TimeImage,300,40);
+
 }
 //Creates the Panel which previews next tetromino's that will spawn
 function drawPreviewPanel(){
