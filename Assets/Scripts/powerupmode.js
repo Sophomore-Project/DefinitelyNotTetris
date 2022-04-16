@@ -17,14 +17,6 @@ let frozenColorString; //variable that holds a color dependent on what value of 
 let currScore =0;
 let slowedTime =false;
 let MikayleTime = false;
-let TimeImage = new Image(21,21);
-let BombImage = new Image(21,21);
-let IImage = new Image(21,21);
-let MikayleImage = new Image(21,21);
-TimeImage.src="/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
-BombImage.src="/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
-IImage.src="/DefinitelyNotTetris/Assets/Images/ITime.png";
-MikayleImage.src="/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
 
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
@@ -138,7 +130,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCRE:", 315, 28);
+    ctx.fillText("SCORE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
@@ -221,35 +213,35 @@ function DrawTetromino(){
             //console.log(curTetrominoColor);
             ctx.fillStyle = curTetrominoColor;
             ctx.fillRect(coorX,coorY, 21, 21);
-           
-            DrawPowerUp(coorX,coorY);
+            SpecialImage = new Image(21,21);
+            DrawPowerUp(coorX,coorY, SpecialImage);
         }
         
 
     }
    
 }
-function DrawPowerUp(drawX, drawY){//draws the special powerup on top of the 4 special colors. Same code is used for drawing the ghost.
+function DrawPowerUp(drawX, drawY, SpecialImage){//draws the special powerup on top of the 4 special colors. Same code is used for drawing the ghost.
     
     if(curTetrominoColor=='pink'||curTetrominoColor=='black'||curTetrominoColor=='brown'||curTetrominoColor=='lime'){
         console.log("Drawing current image");
         
        switch(curTetrominoColor){
             case 'pink':
-                ctx.drawImage(TimeImage,drawX,drawY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
             break;
             case 'black':
-                ctx.drawImage(BombImage,drawX,drawY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
             break;
             case 'brown':
-                ctx.drawImage(IImage,drawX,drawY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
             break;
             case 'lime':
-                ctx.drawImage(MikayleImage,drawX,drawY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
             break;
        }
         
-        
+        ctx.drawImage(SpecialImage,drawX,drawY,21,21);
     }
 }
 
@@ -599,29 +591,29 @@ function CreateTetromino(){
    setInterval(previewDrawNext,50);//draws the images on top of the speical colors in thr prev array. The delay is here to make sure previewdrawnext happens after previewnext
 }
 function DrawFirstPowerUp(nextColor){//this function draws the a special tetromino when the tetromino first enters the board.
-    
+    SpecialImage = new Image(21,21);//precisely, this draws the image wherever initX and initY first appears
     if(nextColor=='pink'||nextColor=='black'||nextColor=='brown'||nextColor=='lime'){
         console.log("Drawing current image");
-        let coorX = coordinateArray[initX][initY].x;
-        let coorY = coordinateArray[initX][initY].y;
+        
        switch(nextColor){
             case 'pink':
-                ctx.drawImage(TimeImage,coorX,coorY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
             break;
             case 'black':
-                ctx.drawImage(BombImage,coorX,coorY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
             break;
             case 'brown':
-                ctx.drawImage(IImage,coorX,coorY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
             break;
             case 'lime':
-                ctx.drawImage(MikayleImage,coorX,coorY,21,21);
+            SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
             break;
        }
+       let coorX = coordinateArray[initX][initY].x;
+       let coorY = coordinateArray[initX][initY].y;
 
 
-
-        
+        ctx.drawImage(SpecialImage,coorX,coorY,21,21);
     }
 }
 
@@ -907,19 +899,19 @@ function previewDrawNext(){//an almost copy/paste of preview next. However, for 
                    
                     switch(nextTetrominoColor){
                         case 'pink':
-                            ctx.drawImage(TimeImage,coorX,coorY,21,21);
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/StarSmall.png";
                         break;
                         case 'black':
-                            ctx.drawImage(BombImage,coorX,coorY,21,21);
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
                         break;
                         case 'brown':
-                            ctx.drawImage(IImage,coorX,coorY,21,21);
+                        SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/ITime.png";
                         break;
                         case 'lime':
-                            ctx.drawImage(MikayleImage,coorX,coorY,21,21);
+                       SpecialImage.src = "/DefinitelyNotTetris/Assets/Images/Surprise.png";
                         break;
                    }
-                   
+                   ctx.drawImage(SpecialImage,coorX,coorY,21,21);
 
             }
            
@@ -940,20 +932,20 @@ function DrawPrevPowerUp(drawX, drawY,nextColor){
         
        switch(nextColor){
             case 'pink':
-                ctx.drawImage(TimeImage,drawX,drawY,21,21);
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/SlowDownSmall.png";
             break;
             case 'black':
-                ctx.drawImage(BombImage,drawX,drawY,21,21);
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/SmallBomb.png";
             break;
             case 'brown':
-                ctx.drawImage(IImage,drawX,drawY,21,21);
+           SpecialImage.src = "/DefinitelyNotTetris/Assets/ITime.png";
             break;
             case 'lime':
-                ctx.drawImage(MikayleImage,drawX,drawY,21,21);
+          SpecialImage.src = "/DefinitelyNotTetris/Assets/SurpriseSmall.png";
             break;
        }
         
-        
+        ctx.drawImage(SpecialImage,drawX,drawY,21,21);
     }
 }
 
