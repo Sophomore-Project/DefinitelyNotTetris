@@ -138,7 +138,7 @@ function InitiateCanvas(){
     ctx.strokeRect(315, 12, 151, 50 );
     ctx.fillStyle = 'white';
     ctx.font = '21px Times New Roman';
-    ctx.fillText("SCORE:", 315, 28);
+    ctx.fillText("SCRE:", 315, 28);
 
     //Drawing box for the hold
     ctx.strokeRect(248, 25, 62, 62);
