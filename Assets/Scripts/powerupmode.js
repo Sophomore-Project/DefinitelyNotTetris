@@ -25,6 +25,8 @@ TimeImage.src="/DefinitelyNotTetris/Assets/Images/SlowDownSmall.png";
 BombImage.src="/DefinitelyNotTetris/Assets/Images/SmallBomb.png";
 IImage.src="/DefinitelyNotTetris/Assets/Images/ITime.png";
 MikayleImage.src="/DefinitelyNotTetris/Assets/Images/SurpriseSmall.png";
+let TetrisLogo = new Image(200,100);//defines the size of the image
+TetrisLogo.src = "/DefinitelyNotTetris/Assets/Images/NotTetrisLogo.png";//then we load the image
 
 //Coordinate solution for previewed tetrominos
 let prevCoordArray = [...Array(10)].map(e => Array(4).fill(0));
@@ -146,7 +148,9 @@ function InitiateCanvas(){
     ctx.font = '18px Times New Roman';
     ctx.fillText("Hold", 260, 20);
     
-
+    //draws the logo
+    ctx.drawImage(TetrisLogo,250,125);
+    
     //Function calls
     fillPrevCoordArray();
     CreateTetrominos();
