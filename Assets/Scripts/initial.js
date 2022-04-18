@@ -17,6 +17,8 @@ let heldTetrominoVal;
 let frozenColorString; //variable that holds a color dependent on what value of a stoppedArray square is passed to numberToColor() function
 let currScore = 0;
 let currLevel;
+let TetrisLogo = new Image(200,100);//defines the size of the image
+TetrisLogo.src = "/DefinitelyNotTetris/Assets/Images/NotTetrisLogo.png";//then we load the image
 
 
 //Coordinate solution for previewed tetrominos
@@ -139,7 +141,9 @@ function InitiateCanvas(){
     ctx.font = '18px Times New Roman';
     ctx.fillText("Hold", 260, 20);
     
-
+    //Draws the TetrisLogo
+    ctx.drawImage(TetrisLogo,250,125);
+    
     //Function calls
     fillPrevCoordArray();
     CreateTetrominos();
