@@ -68,6 +68,10 @@ body{
     transform: rotate(0deg);
 }
 
+#smalltxt {
+    font-size: 40px;
+}
+
 span {
     display: inline-block;
     vertical-align: middle;

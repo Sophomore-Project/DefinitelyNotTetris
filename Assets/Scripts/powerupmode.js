@@ -54,6 +54,11 @@ let gameOver = false;
 let gameOverComplete = false;
 let pause = false;
 
+// set the variable rainbowMode to true if the rainbow mode button was selected and false otherwise
+let rainbowMode = false;
+rainbowMode = sessionStorage.getItem("rainbowMode");
+console.log(`rainbow mode: ${rainbowMode}`);
+
 //stoppedArray is where all the no longer moving pieces of the game will be stored
 let stoppedArray = [...Array(gArrayHeight)].map(e => Array(gArrayWidth).fill(0));
 
@@ -823,8 +828,21 @@ function UpdateColors() {
     DrawTetromino();
 }
 function SelectColor() {
-    tetrominoColors = ['blue', 'cornflowerblue', 'cyan', 'darkcyan', 'teal', 'aqua', 'navy'];
-    
+    let colorSelection = [
+        ['#FBAF00', '#FDC31D', '#FFD639', '#FFA3AF', '#8090B7', '#007CBE', '#009689'],
+        ['#963484', '#634DA1', '#3066BE', '#488BDFD', '#60AFFF', '#28C2FF', '#29DCFF'],
+        ['#031926', '#468189', '#5F9796', '#77ACA2', '#8AB5AF', '#9DBEBB', '#C9D4C4'],
+        ['#A31621', '#AE4650', '#B9757F', '#847B8C', '#4E8098', '#6FA1C0', '#90C2E7'],
+        ['#A3D5FF', '#93CFFA', '#83C9F4', '#7EB4EC', '#799EE3', '#7489DB', '#6F73D2'],
+        ['#93788F', '#A496AF', '#A9B3CE', '#84D7DA', '#7CDEDC', '#7284A8', '#474954'],
+        ['#729EA1', '#94AE95', '#B5BD89', '#CABE91', '#DFBE99', '#E6A896', '#EC9192'],
+        ['#202030', '#2D283D', '#39304A', '#635C51', '#706859', '#7D7461', '#B0A990'],
+        ['#1F2041', '#4B3F72', '#FFC857', '#88B37E', '#119DA4', '#158191', '#19647E'],
+        ['#2F2D2E', '#41292C', '#5D2643', '#792359', '#A8246E', '#D72483', '#FD3E81']
+    ];
+    //tetrominoColors = ['blue', 'cornflowerblue', 'cyan', 'darkcyan', 'teal', 'aqua', 'navy'];
+    tetrominoColors = colorSelection[Math.floor(colorSelection.length*Math.random())];
+
     UpdateColors();
 }
 
@@ -1113,8 +1131,6 @@ function CheckForCompletedRows() {
     // once all rows that need to be cleared have been cleared, update the score value and on screen
     totalClearedLines += completedRows;
     ScoreGiver(completedRows);
-    ScoreKeeper(currScore);
-    LevelKeeper();
 }
 function ScoreGiver(rowsCleared) {
     // The increase in score depends on the number of rows cleared out
@@ -1230,6 +1246,8 @@ let clearedAnimations = 0; // the number of animations that have been cleared ou
 
             // if the number of animations cleared is equal to the total number of animations needed, all animations have played out, so reset values and resume gameplay
             if (animations == clearedAnimations) {
+                ScoreKeeper(currScore);
+                LevelKeeper();
                 clearedAnimations = 0;
                 animations = 0;
                 DrawTetromino(); // draw the current tetromino because calling the update function will only update it once it has moved down
@@ -1452,24 +1470,23 @@ let lastTime = 0;
 let dropCounter=0;
 function update(time = 0) {
   
-  
-    const deltaTime = time - lastTime;
+    if (!gameOver && ! pause) {
+        const deltaTime = time - lastTime;
 
-    dropCounter += deltaTime;
-    
-    if (dropCounter > ActiveTimer) {
-        MoveTetrominoDown();
-        ActiveTimer = 1 * levelTimer;
-        dropCounter = 0;
-       //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
-    }
-   
-    lastTime = time;
-    
-    
-    if (!gameOver&&!pause) {
+        dropCounter += deltaTime;
+        
+        if (dropCounter > ActiveTimer) {
+            MoveTetrominoDown();
+            ActiveTimer = 1 * levelTimer;
+            dropCounter = 0;
+           //every time dropcounter counts up to ActiveTimer, whatever is in the if statement happens
+        }
+       
+        lastTime = time;
+
         requestAnimationFrame(update);//this function should go on forever
     }
+    
 
 }
 function FreezeTimer(){
@@ -1584,6 +1601,11 @@ function LevelKeeper(){
         currLevel++;
         leveledUp = true;
         BlockSpeed(currLevel);
+
+        if (rainbowMode == true) {
+            console.log("selecting new color");
+            SelectColor();
+        }
     }
 
     console.log("Current Level = " + currLevel)

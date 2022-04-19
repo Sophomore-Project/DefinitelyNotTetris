@@ -16,6 +16,10 @@
     
     <h1 id="mainHeader">DEFINITELY NOT TETRIS</h1>
     <hr>
+    <label class="switch">
+        <input type="checkbox" onclick="RainbowMode()">
+        <span class="slider"></span>
+    </label>
     <!-- Button classes are used to reference the buttons in CSS-->
     <a class="button" id="normalBtn" href="/DefinitelyNotTetris/Assets/Pages/normal.html"><span>Normal</span></a>
     <a class="button" id="powerupBtn" href="/DefinitelyNotTetris/Assets/Pages/powerup.html" ><span>Power Up</span></a>
@@ -24,5 +28,21 @@
 
     <!-- Scripts -->
     <!--<script src="/Assets/Scripts/initial.js"></script>-->
+
+    <script>
+        let rainbowMode = false;
+        sessionStorage.setItem("rainbowMode", rainbowMode);
+
+        function RainbowMode() {
+            if (rainbowMode) {
+                rainbowMode = false;
+                console.log("rainbow mode off");
+            } else {
+                rainbowMode = true;
+                console.log("rainbow mode on");
+            }
+            sessionStorage.setItem("rainbowMode", rainbowMode);
+        }
+    </script>
 </body>
 </html>
