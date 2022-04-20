@@ -617,7 +617,6 @@ function Unpause() {
                 } else {
                     message = loseMessageArray[Math.floor(Math.random() * loseMessageArray.length)];
                 }
-                
                 document.getElementById("game_over_message").innerHTML = message;
                 document.getElementById("exit").innerHTML = 'Rage Quit';
                 document.getElementById("try_again").innerHTML = 'Pointlessly Try Again';
@@ -1315,7 +1314,7 @@ function LevelKeeper(){
         currLevel++;    
         //calls BlockSpeed function which increments fall speed
         BlockSpeed();
-        if (rainbowMode == true) {
+        if (rainbowMode == 'true') {
             console.log("selecting new color");
             SelectColor();
         }

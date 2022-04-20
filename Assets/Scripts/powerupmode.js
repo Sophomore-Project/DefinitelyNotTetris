@@ -1602,7 +1602,7 @@ function LevelKeeper(){
         leveledUp = true;
         BlockSpeed(currLevel);
 
-        if (rainbowMode == true) {
+        if (rainbowMode == 'true') {
             console.log("selecting new color");
             SelectColor();
         }
