@@ -608,7 +608,7 @@ function Unpause() {
 
                 // Determine the message that will show on the game over screen
                 let winMessageArray = ['wow ur not incompetent!', 'could be better', 'meh', 'not the worst i\'ve seen', 'i\'ve seen better.', 'u did okay today.', 'about average.'];
-                let loseMessageArray = ['hah loser.', 'F.', 'noob.', 'u suck.', 'git gud.', 'nerd.', 'idiot.', 'just play better.', 'my cat could do better.', 'cry.', 'lol bad.', 'eat s**t.', 'ur iq is -50', 'ur a gold mine of stupidity.', 'u have a few screws loose.']; // eat salt
+                let loseMessageArray = ['hah loser.', 'F.', 'noob.', 'u suck.', 'git gud.', 'nerd.', 'idiot.', 'just play better.', 'my cat could do better.', 'cry.', 'lol bad.', 'eat s**t. <div id="smalltxt">(salt)</div>', 'ur iq is -50', 'ur a gold mine of stupidity.', 'u have a few screws loose.']; // eat salt
                 let message = '';
                 // if score > SOME_VALUE => win
                 let win = false; // THIS IS FOR TESTING PURPOSES ONLY
